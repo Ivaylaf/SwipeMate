@@ -1,0 +1,10 @@
+<Shell
+    x:Class="SwipeMate.Mobile.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:SwipeMate.Mobile.Pages">
+
+    <ShellContent Route="Login" ContentTemplate="{DataTemplate pages:LoginPage}" />
+    <ShellContent Route="Register" ContentTemplate="{DataTemplate pages:RegisterPage}" />
+    <ShellContent Route="Home" ContentTemplate="{DataTemplate pages:HomePage}" />
+</Shell>

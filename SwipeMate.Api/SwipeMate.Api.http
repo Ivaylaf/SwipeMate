@@ -1,0 +1,381 @@
+@host = https://localhost:7193
+@tokenIva = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYmYxMjMxMy1kYjI5LTQ1ODQtOWJjOC00YWYxYWU2OThjY2MiLCJ1bmlxdWVfbmFtZSI6Iml2YSIsImVtYWlsIjoiaXZhQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJjYmYxMjMxMy1kYjI5LTQ1ODQtOWJjOC00YWYxYWU2OThjY2MiLCJleHAiOjE3Njk0OTc5NjgsImlzcyI6IlN3aXBlTWF0ZSIsImF1ZCI6IlN3aXBlTWF0ZSJ9.L3XNQmcnxUssofKUMBrhRMLKMOwHddsxBBoFni7Zeis
+@tokenMaria = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzc5ZDk1NS00NzgyLTRjOWQtYjg0Ny0xNmNmMTdjOTRhZTAiLCJ1bmlxdWVfbmFtZSI6Im1hcmlhIiwiZW1haWwiOiJtYXJpYUBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMjM3OWQ5NTUtNDc4Mi00YzlkLWI4NDctMTZjZjE3Yzk0YWUwIiwiZXhwIjoxNzY5NDk4MDU5LCJpc3MiOiJTd2lwZU1hdGUiLCJhdWQiOiJTd2lwZU1hdGUifQ.L5pDSz_McpskP1H47nct6W8Oax58qXMqGr1N7ECCHtE
+
+### Weather (public)
+GET {{host}}/weatherforecast
+Accept: application/json
+
+### Register iva (може да даде 400 ако вече съществува)
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "userName": "iva",
+  "email": "iva@example.com",
+  "password": "Pass12345!",
+  "displayName": "Iva"
+}
+
+### Register maria
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "userName": "maria",
+  "email": "maria@example.com",
+  "password": "Pass12345!",
+  "displayName": "Maria"
+}
+
+### Login iva (копирай token от отговора)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "userNameOrEmail": "iva",
+  "password": "Pass12345!"
+}
+
+### Friends - send request ( token-а е от log-in на iva)
+POST {{host}}/api/friends/request
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYmYxMjMxMy1kYjI5LTQ1ODQtOWJjOC00YWYxYWU2OThjY2MiLCJ1bmlxdWVfbmFtZSI6Iml2YSIsImVtYWlsIjoiaXZhQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJjYmYxMjMxMy1kYjI5LTQ1ODQtOWJjOC00YWYxYWU2OThjY2MiLCJleHAiOjE3Njc2MDMzMDIsImlzcyI6IlN3aXBlTWF0ZSIsImF1ZCI6IlN3aXBlTWF0ZSJ9.O5UvN_lZFXL-jjk-CxZ3ikihwAU5rPZ8E3kFvPLrbBQ
+Content-Type: application/json
+
+{
+  "toUserName": "maria"
+}
+
+### Login maria (копирай token от отговора)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+{
+  "userNameOrEmail": "maria",
+  "password": "Pass12345!"
+}
+
+### Friends - incoming requests for maria (логни maria и сложи нейния token)
+GET {{host}}/api/friends/requests
+Authorization: Bearer {{tokenMaria}}
+Accept: application/json
+
+
+
+### Create session (iva + maria)
+POST {{host}}/api/sessions
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "category": "Movie",
+  "friendUserNames": ["maria"]
+}
+
+### Next item
+GET {{host}}/api/sessions/9eddfa89-71b7-4f3c-a424-4d5e13b51ff5/next
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+
+### Swipe YES/NO
+POST {{host}}/api/sessions/9eddfa89-71b7-4f3c-a424-4d5e13b51ff5/swipe
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "itemId": "2956a673-c14c-414e-93dd-4f6d750c6701",
+  "isYes": true
+}
+
+### Friends - accept request (maria)
+POST {{host}}/api/friends/respond
+Authorization: Bearer {{tokenMaria}}
+Content-Type: application/json
+
+{
+  "requestId": "d82e3bec-8c2e-470c-8560-f5162fcb1e2d",
+  "accept": true
+}
+
+### Friends - list (iva)
+GET {{host}}/api/friends
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+### Friends - list (maria)
+GET {{host}}/api/friends
+Authorization: Bearer {{tokenMaria}}
+Accept: application/json
+
+### Create session (iva + maria)
+POST {{host}}/api/sessions
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "category": "Movie",
+  "friendUserNames": ["maria"]
+}
+
+### Next item (iva)
+GET {{host}}/api/sessions/a173027e-9301-4595-81ce-19204b39f981/next
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+### Swipe YES (iva)
+POST {{host}}/api/sessions/a173027e-9301-4595-81ce-19204b39f981/swipe
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "itemId": "38cee2e9-6efd-465b-a0ce-ce88cbe46956",
+  "isYes": true
+}
+
+### Swipe Yes (maria)
+POST {{host}}/api/sessions/a173027e-9301-4595-81ce-19204b39f981/swipe
+Authorization: Bearer {{tokenMaria}}
+Content-Type: application/json
+
+{
+  "itemId": "38cee2e9-6efd-465b-a0ce-ce88cbe46956",
+  "isYes": true
+}
+
+### Matches
+GET {{host}}/api/sessions/a173027e-9301-4595-81ce-19204b39f981/matches
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+### Next item (should skip matched)
+GET {{host}}/api/sessions/68b826c2-9fd9-4c2c-a0d1-50bd8dc9eb78/next
+Authorization: Bearer {{tokenIva}}
+
+### Close session
+POST {{host}}/api/sessions/68b826c2-9fd9-4c2c-a0d1-50bd8dc9eb78/close
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "close": true
+}
+
+### My sessions
+GET {{host}}/api/sessions/mine
+Authorization: Bearer {{tokenIva}}
+
+### My matches
+GET {{host}}/api/sessions/mine/matches
+Authorization: Bearer {{tokenIva}}
+
+
+### 7.1 Create session (iva + maria)
+# В отговора ще получиш sessionId (GUID). Копирай го и го сложи в @sessionId по-долу.
+POST {{host}}/api/sessions
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "category": "Movie",
+  "friendUserNames": ["maria"]
+}
+
+### 7.2 Set session id (Постави тук копирания GUID от create)
+@sessionId = 354e283d-453f-4fc0-b9e3-e4fcb611469f
+
+
+### PUT Movie filters
+PUT {{host}}/api/sessions/{{sessionId}}/filters/movies
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "Genres": ["Drama", "Comedy"],
+  "MinRating": 7.5,
+  "YearFrom": 1990,
+  "YearTo": 2024
+}
+
+
+### GET My Movie filters
+GET {{host}}/api/sessions/{{sessionId}}/filters/movies/me
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+
+### GET Merged Movie filters
+GET {{host}}/api/sessions/{{sessionId}}/filters/movies/merged
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+
+
+### Tests Resturants Filters ###
+
+
+
+### Create session (Restaurants) - iva + maria
+POST {{host}}/api/sessions
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "category": "Restaurant",
+  "friendUserNames": ["maria"]
+}
+
+### Copy sessionId from response:
+@sessionIdRestaurants = 9eb6f216-b7c7-48ea-83f3-b6ad17ee3f52
+
+### PUT my restaurant filters (iva)
+PUT {{host}}/api/sessions/{{sessionIdRestaurants}}/filters/restaurants
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "city": "Sofia",
+  "district": "Lozenets",
+  "cuisine": "Italian",
+  "minRating": 4.2
+}
+
+### PUT my restaurant filters (maria) - different example
+PUT {{host}}/api/sessions/{{sessionIdRestaurants}}/filters/restaurants
+Authorization: Bearer {{tokenMaria}}
+Content-Type: application/json
+
+{
+  "city": "Sofia",
+  "district": "Lozenets",
+  "cuisine": "Italian",
+  "minRating": 3.8
+}
+
+### GET my filters (iva)
+GET {{host}}/api/sessions/{{sessionIdRestaurants}}/filters/restaurants/me
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+### GET merged filters
+GET {{host}}/api/sessions/{{sessionIdRestaurants}}/filters/restaurants/merged
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+
+
+### Tests Recipes Filters ###
+
+
+
+### Create session (Recipes) - iva + maria
+POST {{host}}/api/sessions
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "category": "Recipe",
+  "friendUserNames": ["maria"]
+}
+
+### Copy sessionId from response:
+@sessionIdRecipes = 8e2b7f1a-6956-4a68-8529-bf909e86812c
+
+### PUT my recipe filters (iva)
+PUT {{host}}/api/sessions/{{sessionIdRecipes}}/filters/recipes
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "complexity": 2,
+  "cuisine": "Bulgarian",
+  "foodType": "Main",
+  "budgetLevel": 3,
+  "minRating": 4.0,
+  "ingredients": ["chicken", "tomato", "cheese"]
+}
+
+### PUT my recipe filters (maria)
+PUT {{host}}/api/sessions/{{sessionIdRecipes}}/filters/recipes
+Authorization: Bearer {{tokenMaria}}
+Content-Type: application/json
+
+{
+  "complexity": 3,
+  "cuisine": "Bulgarian",
+  "foodType": "Main",
+  "budgetLevel": 2,
+  "minRating": 3.5,
+  "ingredients": ["tomato", "basil"]
+}
+
+### GET my recipe filters (iva)
+GET {{host}}/api/sessions/{{sessionIdRecipes}}/filters/recipes/me
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+### GET merged recipe filters
+GET {{host}}/api/sessions/{{sessionIdRecipes}}/filters/recipes/merged
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+
+
+
+
+
+### Tests Board Game Filters ###
+
+
+
+
+### Create session (BoardGames) - iva + maria
+POST {{host}}/api/sessions
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "category": "BoardGame",
+  "friendUserNames": ["maria"]
+}
+
+###
+# Copy sessionId from the response and paste here:
+@sessionIdGames = 151f6e70-524e-4706-b61a-efe34ae9488b
+
+### PUT my game filters (iva)
+PUT {{host}}/api/sessions/{{sessionIdGames}}/filters/games
+Authorization: Bearer {{tokenIva}}
+Content-Type: application/json
+
+{
+  "gameType": "Cooperative",
+  "durationMin": 30,
+  "durationMax": 90,
+  "playersMin": 2,
+  "playersMax": 4,
+  "minRating": 7.0
+}
+
+### PUT my game filters (maria)
+PUT {{host}}/api/sessions/{{sessionIdGames}}/filters/games
+Authorization: Bearer {{tokenMaria}}
+Content-Type: application/json
+
+{
+  "gameType": "Cooperative",
+  "durationMin": 20,
+  "durationMax": 120,
+  "playersMin": 2,
+  "playersMax": 6,
+  "minRating": 6.5
+}
+
+### GET my game filters (iva)
+GET {{host}}/api/sessions/{{sessionIdGames}}/filters/games/me
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
+
+### GET merged game filters
+GET {{host}}/api/sessions/{{sessionIdGames}}/filters/games/merged
+Authorization: Bearer {{tokenIva}}
+Accept: application/json
