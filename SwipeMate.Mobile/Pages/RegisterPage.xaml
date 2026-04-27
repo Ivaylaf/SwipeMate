@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title=""
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FDF2F8" Offset="0.0" />
+            <GradientStop Color="#F5F3FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <Grid Padding="24" RowDefinitions="*" VerticalOptions="Center">
+            <Frame
+                Padding="24"
+                CornerRadius="24"
+                BackgroundColor="White"
+                HasShadow="True"
+                MaximumWidthRequest="420"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="14">
+                    <Label
+                        Text="Create account"
+                        FontSize="24"
+                        FontAttributes="Bold"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#111827" />
+
+                    <Label
+                        Text="Join SwipeMate"
+                        FontSize="14"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#6B7280" />
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Username" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Entry x:Name="UserNameEntry" Placeholder="Enter username" BackgroundColor="Transparent"
+                                   TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Email" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Entry x:Name="EmailEntry" Placeholder="Enter email" Keyboard="Email"
+                                   BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Display name" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Entry x:Name="DisplayNameEntry" Placeholder="How others see you" BackgroundColor="Transparent"
+                                   TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Password" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Entry x:Name="PasswordEntry" Placeholder="Enter password" IsPassword="True"
+                                   BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Server URL" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Entry x:Name="ServerUrlEntry" Placeholder="http://10.0.2.2:5274"
+                                   BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Button
+                        Text="Sign Up"
+                        HeightRequest="48"
+                        CornerRadius="14"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        Clicked="OnRegisterClicked">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#EC4899" Offset="0.0" />
+                                <GradientStop Color="#A855F7" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+
+                    <Button
+                        Text="Back to login"
+                        BackgroundColor="Transparent"
+                        TextColor="#7C3AED"
+                        FontSize="12"
+                        Clicked="OnGoLoginClicked" />
+
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+    </ScrollView>
+</ContentPage>
+

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.ProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF7FC" Offset="0.0" />
+            <GradientStop Color="#F7F2FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,24,24,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
+            <Grid ColumnDefinitions="Auto,*">
+                <Button Text="Back" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" Text="My Profile" FontSize="22" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
+            </Grid>
+
+            <Frame Padding="26" CornerRadius="16" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Border WidthRequest="88" HeightRequest="88" StrokeShape="RoundRectangle 44" StrokeThickness="0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#EC4899" Offset="0" />
+                                <GradientStop Color="#7C3AED" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Image x:Name="ProfileImage" Aspect="AspectFill" IsVisible="False" />
+                            <Label x:Name="AvatarLabel" Text="SM" TextColor="White" FontSize="28" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <Label x:Name="UserNameLabel" Text="username" FontSize="22" FontAttributes="Bold" TextColor="#111827" HorizontalTextAlignment="Center" />
+                    <Border x:Name="AdminRoleBadge" Padding="10,4" BackgroundColor="#FEF3C7" Stroke="#F59E0B" StrokeShape="RoundRectangle 999" IsVisible="False" HorizontalOptions="Center">
+                        <Label Text="Administrator" FontSize="12" FontAttributes="Bold" TextColor="#92400E" />
+                    </Border>
+                    <Label x:Name="EmailLabel" Text="email" FontSize="14" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                    <Label x:Name="BioPreviewLabel" Text="Love movies and food! Always looking for new experiences." FontSize="13" TextColor="#374151" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="22" CornerRadius="16" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Edit Profile" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
+                    <Entry x:Name="DisplayNameEntry" Placeholder="Display name" BackgroundColor="#F9FAFB" />
+                    <Editor x:Name="BioEditor" Placeholder="Short bio" AutoSize="TextChanges" HeightRequest="88" BackgroundColor="#F9FAFB" />
+                    <Entry x:Name="ProfileImageUrlEntry" Placeholder="Profile image URL" BackgroundColor="#F9FAFB" />
+                    <Button Text="Save Profile" BackgroundColor="#C026D3" TextColor="White" CornerRadius="10" HeightRequest="48" Clicked="OnSaveProfileClicked" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Frame Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Trophy" TextColor="#EAB308" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label x:Name="MatchesCountLabel" Text="0" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label Text="Matches" FontSize="12" TextColor="#6B7280" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="1" Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Chat" TextColor="#3B82F6" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label x:Name="SessionsCountLabel" Text="0" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label Text="Sessions" FontSize="12" TextColor="#6B7280" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Column="2" Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Star" TextColor="#A855F7" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label x:Name="RatingsCountLabel" Text="0" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label Text="Actions" FontSize="12" TextColor="#6B7280" />
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <Frame Padding="22" CornerRadius="16" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Badges &amp; Achievements" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
+                    <Border Padding="16" Stroke="#FACC15" BackgroundColor="#FEF9C3" StrokeShape="RoundRectangle 10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Reviewer Level 1" FontAttributes="Bold" TextColor="#111827" />
+                            <Label Text="Used the app and created decisions." FontSize="12" TextColor="#6B7280" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Padding="16" Stroke="#FACC15" BackgroundColor="#FEF3C7" StrokeShape="RoundRectangle 10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Active User" FontAttributes="Bold" TextColor="#111827" />
+                            <Label Text="Creates sessions and votes actively." FontSize="12" TextColor="#6B7280" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="22" CornerRadius="16" BackgroundColor="#FDF2F8" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Progress to Next Achievement" FontSize="16" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="Session Builder" FontSize="12" /><Label x:Name="SessionProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
+                    <ProgressBar x:Name="SessionProgress" ProgressColor="#EC4899" BackgroundColor="#E5E7EB" />
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="Super User" FontSize="12" /><Label x:Name="RatingProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
+                    <ProgressBar x:Name="RatingProgress" ProgressColor="#A855F7" BackgroundColor="#E5E7EB" />
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="Match Master" FontSize="12" /><Label x:Name="MatchProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
+                    <ProgressBar x:Name="MatchProgress" ProgressColor="#EC4899" BackgroundColor="#E5E7EB" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+

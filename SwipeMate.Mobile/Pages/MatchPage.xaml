@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.MatchPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF1F7" Offset="0.0" />
+            <GradientStop Color="#F4F0FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,36,24,24" Spacing="18" MaximumWidthRequest="620" HorizontalOptions="Center">
+            <Frame Padding="0" CornerRadius="28" BackgroundColor="White" HasShadow="False" BorderColor="#E9D5FF">
+                <VerticalStackLayout Spacing="0">
+                    <Grid Padding="24,22" RowDefinitions="Auto,Auto,Auto" BackgroundColor="#C026D3">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#EC4899" Offset="0" />
+                                <GradientStop Color="#9333EA" Offset="1" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Label Text="It's a Match!" Grid.Row="1" HorizontalTextAlignment="Center" FontSize="30" FontAttributes="Bold" TextColor="White" />
+                        <Label x:Name="MatchMessageLabel" Grid.Row="2" Margin="0,8,0,0" Text="You all agreed on this choice." HorizontalTextAlignment="Center" FontSize="14" TextColor="#FCE7F3" />
+                    </Grid>
+
+                    <Image x:Name="MatchImage" HeightRequest="220" Aspect="AspectFill" />
+
+                    <VerticalStackLayout Padding="24,20,24,24" Spacing="12">
+                        <Label x:Name="MatchTitleLabel" FontSize="24" FontAttributes="Bold" TextColor="#111827" />
+                        <Label x:Name="MatchMetaLabel" FontSize="14" TextColor="#4B5563" />
+                        <FlexLayout x:Name="MatchTagsLayout" Wrap="Wrap" Direction="Row" />
+                        <Label x:Name="MatchDescriptionLabel" FontSize="15" TextColor="#374151" />
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Matched with:" FontSize="13" FontAttributes="Bold" TextColor="#6B7280" />
+                            <CollectionView x:Name="MatchedUsersCollectionView" ItemsLayout="HorizontalList" SelectionMode="None" HeightRequest="42">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <HorizontalStackLayout Spacing="8" Margin="0,0,12,0">
+                                            <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0" StrokeShape="RoundRectangle 17" BackgroundColor="#FCE7F3">
+                                                <Label Text="{Binding Initials}" FontAttributes="Bold" TextColor="#BE185D" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                            </Border>
+                                            <Label Text="{Binding Name}" VerticalTextAlignment="Center" TextColor="#111827" />
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+
+                        <Button Text="Back to Home" HeightRequest="52" CornerRadius="14" BackgroundColor="#111827" TextColor="White" Clicked="OnHomeClicked" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35913.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwipeMate.Api", "SwipeMate.Api\SwipeMate.Api.csproj", "{6BD68C55-CA26-41BE-AA49-B6DB6D5143CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwipeMate.Mobile", "SwipeMate.Mobile\SwipeMate.Mobile.csproj", "{8C75FC7D-0C20-4AEE-9FC7-81731626382F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BD68C55-CA26-41BE-AA49-B6DB6D5143CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BD68C55-CA26-41BE-AA49-B6DB6D5143CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BD68C55-CA26-41BE-AA49-B6DB6D5143CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BD68C55-CA26-41BE-AA49-B6DB6D5143CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C75FC7D-0C20-4AEE-9FC7-81731626382F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C75FC7D-0C20-4AEE-9FC7-81731626382F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C75FC7D-0C20-4AEE-9FC7-81731626382F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C75FC7D-0C20-4AEE-9FC7-81731626382F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D47F3AAE-1B09-4827-BDAE-C054A70F8307}
+	EndGlobalSection
+EndGlobal

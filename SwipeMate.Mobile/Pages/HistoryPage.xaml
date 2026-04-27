@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.HistoryPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF1F7" Offset="0.0" />
+            <GradientStop Color="#F4F0FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,56,24,24" Spacing="16" MaximumWidthRequest="980" HorizontalOptions="Center">
+            <Grid ColumnDefinitions="Auto,*">
+                <Button Text="Back" BackgroundColor="White" TextColor="#7C3AED" CornerRadius="14" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" Text="History" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontAttributes="Bold" TextColor="#111827" />
+            </Grid>
+
+            <Frame Padding="18" CornerRadius="24" BackgroundColor="White" HasShadow="False" BorderColor="#E5E7EB">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Recent sessions" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="Tap a session to see participants, swipes, and the merged filters used." FontSize="12" TextColor="#6B7280" />
+                    <CollectionView x:Name="SessionsCollectionView" SelectionMode="Single" SelectionChanged="OnSessionSelected">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,0,0,10" Padding="14" CornerRadius="18" BackgroundColor="#F9FAFB" HasShadow="False" BorderColor="#E5E7EB">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <VerticalStackLayout Spacing="5">
+                                            <Label Text="{Binding Category}" FontAttributes="Bold" FontSize="16" TextColor="#111827" />
+                                            <Label Text="{Binding StatusText}" FontSize="13" TextColor="{Binding StatusColor}" FontAttributes="Bold" />
+                                            <Label Text="{Binding ParticipantText}" FontSize="12" TextColor="#6B7280" />
+                                            <Label Text="{Binding CreatedText}" FontSize="12" TextColor="#9CA3AF" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1" Text="Details" VerticalTextAlignment="Center" TextColor="#C026D3" FontAttributes="Bold" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label x:Name="NoSessionsLabel" Text="No sessions yet." IsVisible="False" TextColor="#6B7280" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="18" CornerRadius="24" BackgroundColor="White" HasShadow="False" BorderColor="#E5E7EB">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Recent matches" FontSize="18" FontAttributes="Bold" />
+                    <CollectionView x:Name="MatchesCollectionView" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,0,0,14" Padding="0" CornerRadius="20" BackgroundColor="#FFFFFF" HasShadow="False" BorderColor="#E5E7EB">
+                                    <Grid ColumnDefinitions="120,*" ColumnSpacing="0" MinimumHeightRequest="118">
+                                        <Grid WidthRequest="120" HeightRequest="118">
+                                            <Image Source="{Binding ImageSource}" Aspect="AspectFill" />
+                                            <Border Margin="10" WidthRequest="34" HeightRequest="34" HorizontalOptions="Start" VerticalOptions="Start" StrokeThickness="0" BackgroundColor="{Binding CategoryColor}" StrokeShape="RoundRectangle 17">
+                                                <Label Text="{Binding CategoryBadge}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" FontAttributes="Bold" FontSize="14" />
+                                            </Border>
+                                        </Grid>
+
+                                        <VerticalStackLayout Grid.Column="1" Padding="14,12" Spacing="7">
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" TextColor="#111827" LineBreakMode="TailTruncation" />
+                                                <Label Grid.Column="1" Text="{Binding DateText}" FontSize="12" TextColor="#6B7280" VerticalTextAlignment="Start" />
+                                            </Grid>
+
+                                            <Label Text="{Binding RatingText}" FontSize="14" TextColor="#374151" />
+
+                                            <HorizontalStackLayout Spacing="6" IsVisible="{Binding HasMatchedUsers}">
+                                                <Label Text="With:" FontSize="12" TextColor="#6B7280" VerticalTextAlignment="Center" />
+                                                <HorizontalStackLayout BindableLayout.ItemsSource="{Binding MatchedUsers}" Spacing="-8">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border WidthRequest="24" HeightRequest="24" StrokeThickness="2" Stroke="#FFFFFF" BackgroundColor="#FBCFE8" StrokeShape="RoundRectangle 12">
+                                                                <Label Text="{Binding Initials}" FontSize="10" FontAttributes="Bold" TextColor="#9D174D" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </HorizontalStackLayout>
+                                            </HorizontalStackLayout>
+
+                                            <FlexLayout BindableLayout.ItemsSource="{Binding Tags}" Wrap="Wrap" Direction="Row" AlignItems="Center">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border StrokeThickness="0" BackgroundColor="#EEF2FF" StrokeShape="RoundRectangle 8" Padding="8,4" Margin="0,0,8,6">
+                                                            <Label Text="{Binding Text}" FontSize="11" TextColor="#312E81" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </FlexLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label x:Name="NoMatchesLabel" Text="No matches yet." IsVisible="False" TextColor="#6B7280" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

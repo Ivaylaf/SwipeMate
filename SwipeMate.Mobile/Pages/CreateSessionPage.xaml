@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.CreateSessionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF7FC" Offset="0.0" />
+            <GradientStop Color="#F7F2FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,24,24,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                <Border WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 21" BackgroundColor="White">
+                    <Button Text="←" BackgroundColor="Transparent" TextColor="#111827" FontSize="20" Padding="0" Clicked="OnBackClicked" />
+                </Border>
+                <Label x:Name="PageTitleLabel" Grid.Column="1" Text="Create Match Session" FontSize="24" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
+            </Grid>
+
+            <Frame Padding="18" CornerRadius="12" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <HorizontalStackLayout Spacing="14">
+                    <Border WidthRequest="58" HeightRequest="58" StrokeThickness="0" StrokeShape="RoundRectangle 29">
+                        <Border.Background>
+                            <LinearGradientBrush x:Name="CategoryGradientBrush" StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop x:Name="CategoryGradientStart" Color="#0EA5E9" Offset="0" />
+                                <GradientStop x:Name="CategoryGradientEnd" Color="#A855F7" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Path x:Name="MovieCategoryIconPath" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center" VerticalOptions="Center" Stroke="White" StrokeThickness="2.8" StrokeLineCap="Round" StrokeLineJoin="Round" Data="M6,6 L26,6 L26,26 L6,26 Z M14,6 L14,26 M6,14 L26,14" />
+                            <Path x:Name="RestaurantCategoryIconPath" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center" VerticalOptions="Center" Stroke="White" StrokeThickness="2.8" StrokeLineCap="Round" StrokeLineJoin="Round" IsVisible="False" Data="M12,6 L12,30 M7,6 L7,18 M17,6 L17,18 M23,6 C19,12 19,19 23,24 L23,30" />
+                            <Path x:Name="RecipeCategoryIconPath" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center" VerticalOptions="Center" Stroke="White" StrokeThickness="2.8" StrokeLineCap="Round" StrokeLineJoin="Round" IsVisible="False" Data="M8,18 C4,16 5,10 10,10 C12,5 20,5 22,10 C27,10 28,16 24,18 L24,28 L8,28 Z M11,22 L21,22" />
+                            <Path x:Name="BoardGameCategoryIconPath" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center" VerticalOptions="Center" Stroke="White" StrokeThickness="2.8" StrokeLineCap="Round" StrokeLineJoin="Round" IsVisible="False" Data="M8,12 L18,6 L24,16 L14,22 Z M6,18 L16,12 L22,22 L12,28 Z" />
+                        </Grid>
+                    </Border>
+                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                        <Label x:Name="CategoryTitleLabel" Text="Movies &amp; TV" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
+                        <Label x:Name="CategorySubtitleLabel" Text="Select friends to match with" FontSize="13" TextColor="#6B7280" />
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <Frame x:Name="FriendsCard" Padding="18" CornerRadius="12" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="14">
+                    <Label x:Name="SelectedFriendsLabel" Text="Select Friends (0 selected)" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
+                    <CollectionView x:Name="FriendsCollectionView" SelectionMode="None" HeightRequest="260">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,Auto,*" Padding="0,8" ColumnSpacing="12">
+                                    <CheckBox CheckedChanged="OnFriendCheckedChanged" />
+                                    <Border Grid.Column="1" WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 21" BackgroundColor="#FCE7F3">
+                                        <Label Text="{Binding AvatarInitials}" TextColor="#DB2777" FontSize="12" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding UserName}" FontAttributes="Bold" TextColor="#111827" />
+                                        <Label Text="{Binding DisplayName}" FontSize="12" TextColor="#6B7280" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label x:Name="NoFriendsHintLabel" Text="You need at least one friend before creating a match session. Open Friends and add someone by username." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="18" CornerRadius="12" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Set Filters" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
+
+                    <VerticalStackLayout x:Name="MovieFiltersLayout" Spacing="12" IsVisible="False">
+                        <Label Text="Genres" FontAttributes="Bold" TextColor="#111827" />
+                        <FlexLayout x:Name="MovieGenresFlexLayout" Wrap="Wrap" Direction="Row" />
+                        <Label x:Name="MovieMinRatingLabel" Text="Minimum Rating: 0.0+" FontAttributes="Bold" />
+                        <Slider x:Name="MovieMinRatingSlider" Minimum="0" Maximum="10" Value="0" DragCompleted="OnMovieRatingChanged" ValueChanged="OnMovieRatingValueChanged" />
+                        <Label x:Name="MovieYearLabel" Text="Release Year: 1990 - 2024" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout>
+                                <Label Text="From" FontSize="12" TextColor="#6B7280" />
+                                <Slider x:Name="MovieYearFromSlider" Minimum="1970" Maximum="2024" Value="1990" DragCompleted="OnMovieYearChanged" ValueChanged="OnMovieYearValueChanged" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="To" FontSize="12" TextColor="#6B7280" />
+                                <Slider x:Name="MovieYearToSlider" Minimum="1970" Maximum="2024" Value="2024" DragCompleted="OnMovieYearChanged" ValueChanged="OnMovieYearValueChanged" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="RestaurantFiltersLayout" Spacing="12" IsVisible="False">
+                        <Label Text="City" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RestaurantCityPicker" Title="All cities" BackgroundColor="#F9FAFB" />
+                        <Label Text="District" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RestaurantDistrictPicker" Title="All districts" BackgroundColor="#F9FAFB" />
+                        <Label Text="Cuisine" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RestaurantCuisinePicker" Title="All cuisines" BackgroundColor="#F9FAFB" />
+                        <Label x:Name="RestaurantMinRatingLabel" Text="Minimum Rating: 0.0+" FontAttributes="Bold" />
+                        <Slider x:Name="RestaurantMinRatingSlider" Minimum="0" Maximum="5" Value="0" ValueChanged="OnRestaurantRatingValueChanged" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="RecipeFiltersLayout" Spacing="12" IsVisible="False">
+                        <Label Text="Cuisine" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RecipeCuisinePicker" Title="All cuisines" BackgroundColor="#F9FAFB" />
+                        <Label Text="Food type" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RecipeFoodTypePicker" Title="All types" BackgroundColor="#F9FAFB" />
+                        <Label x:Name="RecipeComplexityLabel" Text="Max Complexity: 5" FontAttributes="Bold" />
+                        <Slider x:Name="RecipeComplexitySlider" Minimum="1" Maximum="5" Value="5" ValueChanged="OnRecipeComplexityValueChanged" />
+                        <Label x:Name="RecipeBudgetLabel" Text="Max Budget: 3" FontAttributes="Bold" />
+                        <Slider x:Name="RecipeBudgetSlider" Minimum="1" Maximum="3" Value="3" ValueChanged="OnRecipeBudgetValueChanged" />
+                        <Label x:Name="RecipeMinRatingLabel" Text="Minimum Rating: 0.0+" FontAttributes="Bold" />
+                        <Slider x:Name="RecipeMinRatingSlider" Minimum="0" Maximum="5" Value="0" ValueChanged="OnRecipeRatingValueChanged" />
+                        <Label Text="Ingredients" FontAttributes="Bold" TextColor="#111827" />
+                        <FlexLayout x:Name="RecipeIngredientsFlexLayout" Wrap="Wrap" Direction="Row" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="GameFiltersLayout" Spacing="12" IsVisible="False">
+                        <Label Text="Game type" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="GameTypePicker" Title="All game types" BackgroundColor="#F9FAFB" />
+                        <Label x:Name="GamePlayersLabel" Text="Players: 1 - 8" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout>
+                                <Label Text="Min" FontSize="12" TextColor="#6B7280" />
+                                <Slider x:Name="GamePlayersMinSlider" Minimum="1" Maximum="8" Value="1" ValueChanged="OnGamePlayersValueChanged" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Max" FontSize="12" TextColor="#6B7280" />
+                                <Slider x:Name="GamePlayersMaxSlider" Minimum="1" Maximum="8" Value="8" ValueChanged="OnGamePlayersValueChanged" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Label x:Name="GameDurationLabel" Text="Duration: 15 - 180 min" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout>
+                                <Label Text="Min" FontSize="12" TextColor="#6B7280" />
+                                <Slider x:Name="GameDurationMinSlider" Minimum="15" Maximum="180" Value="15" ValueChanged="OnGameDurationValueChanged" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Max" FontSize="12" TextColor="#6B7280" />
+                                <Slider x:Name="GameDurationMaxSlider" Minimum="15" Maximum="180" Value="180" ValueChanged="OnGameDurationValueChanged" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Label x:Name="GameMinRatingLabel" Text="Minimum Rating: 0.0+" FontAttributes="Bold" />
+                        <Slider x:Name="GameMinRatingSlider" Minimum="0" Maximum="5" Value="0" ValueChanged="OnGameRatingValueChanged" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Button Text="Cancel" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" HeightRequest="48" CornerRadius="8" Clicked="OnBackClicked" />
+                <Button x:Name="ContinueButton" Grid.Column="1" Text="Send Invitations" IsEnabled="False" BackgroundColor="#C026D3" TextColor="White" HeightRequest="48" CornerRadius="8" Clicked="OnStartClicked" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+

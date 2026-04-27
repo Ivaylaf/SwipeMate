@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.SwipePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF7FC" Offset="0.0" />
+            <GradientStop Color="#F7F2FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid RowDefinitions="64,*">
+        <Grid Padding="24,0" ColumnDefinitions="Auto,*,Auto" BackgroundColor="White">
+            <Button Text="Back" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnHomeClicked" />
+            <Label x:Name="SwipeProgressLabel" Grid.Column="1" Text="0 / 5" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="#111827" />
+            <ActivityIndicator x:Name="LoadingIndicator" Grid.Column="2" IsVisible="False" IsRunning="False" Color="#C026D3" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="28,30,28,24" Spacing="22" MaximumWidthRequest="900" HorizontalOptions="Center">
+                <Frame Padding="0" CornerRadius="10" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False" IsClippedToBounds="True">
+                    <VerticalStackLayout Spacing="0">
+                        <Grid HeightRequest="310">
+                            <Image x:Name="ItemImage" Aspect="AspectFill" />
+                            <BoxView VerticalOptions="End" HeightRequest="120">
+                                <BoxView.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#00000000" Offset="0" />
+                                        <GradientStop Color="#CC000000" Offset="1" />
+                                    </LinearGradientBrush>
+                                </BoxView.Background>
+                            </BoxView>
+                            <Label x:Name="ItemTitleLabel" Margin="24" VerticalOptions="End" FontSize="28" FontAttributes="Bold" TextColor="White" />
+                        </Grid>
+
+                        <VerticalStackLayout Padding="24" Spacing="14" MinimumHeightRequest="250">
+                            <Label x:Name="SwipeTitleLabel" IsVisible="False" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Border Padding="10,5" BackgroundColor="#050014" StrokeThickness="0" StrokeShape="RoundRectangle 6">
+                                    <Label Text="SwipeMate" TextColor="White" FontSize="12" FontAttributes="Bold" />
+                                </Border>
+                                <Border Padding="10,5" BackgroundColor="#F3F4F6" StrokeThickness="0" StrokeShape="RoundRectangle 6">
+                                    <Label x:Name="ItemMetaLabel" TextColor="#111827" FontSize="12" />
+                                </Border>
+                            </HorizontalStackLayout>
+                            <Label x:Name="ItemDescriptionLabel" FontSize="16" TextColor="#374151" LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <HorizontalStackLayout Spacing="28" HorizontalOptions="Center">
+                    <Button Text="X" WidthRequest="62" HeightRequest="62" CornerRadius="31" BorderWidth="1" BorderColor="#EF4444" BackgroundColor="White" TextColor="#EF4444" FontSize="20" Clicked="OnRejectClicked" />
+                    <Button Text="Like" WidthRequest="72" HeightRequest="72" CornerRadius="36" BackgroundColor="#C026D3" TextColor="White" FontAttributes="Bold" Clicked="OnLikeClicked" />
+                </HorizontalStackLayout>
+
+                <Label Text="Tap Like to vote yes or X to skip. A match appears when all selected friends like the same option." FontSize="13" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

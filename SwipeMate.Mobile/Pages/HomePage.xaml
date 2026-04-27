@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <Style TargetType="Frame">
+            <Setter Property="HasShadow" Value="False" />
+            <Setter Property="BorderColor" Value="#E5E7EB" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF7FC" Offset="0.0" />
+            <GradientStop Color="#F7F2FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid RowDefinitions="74,*">
+        <Grid Padding="20,0" ColumnDefinitions="*,Auto" BackgroundColor="White">
+            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                <Border WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 21">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#EC4899" Offset="0" />
+                            <GradientStop Color="#A855F7" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Label Text="SM" TextColor="White" FontAttributes="Bold" FontSize="13" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                </Border>
+                <Label Text="SwipeMate" FontSize="22" FontAttributes="Bold" TextColor="#D946EF" VerticalTextAlignment="Center" LineBreakMode="NoWrap" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                <Button Text="?" BackgroundColor="Transparent" TextColor="#111827" WidthRequest="40" />
+                <Button Text="Exit" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnLogoutClicked" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,26,16,24" Spacing="18" MaximumWidthRequest="1280" HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                    <Label x:Name="WelcomeLabel" Text="Welcome back!" FontSize="31" FontAttributes="Bold" TextColor="#030712" HorizontalTextAlignment="Center" />
+                    <Label x:Name="SubtitleLabel" Text="Choose a category to start matching with friends" FontSize="16" TextColor="#4B5563" HorizontalTextAlignment="Center" />
+                    <Border x:Name="AdminBadge" Padding="10,4" BackgroundColor="#FEF3C7" Stroke="#F59E0B" StrokeShape="RoundRectangle 999" IsVisible="False" HorizontalOptions="Center">
+                        <Label Text="Admin" FontSize="12" FontAttributes="Bold" TextColor="#92400E" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <Grid x:Name="CategoryGrid" ColumnDefinitions="*,*" RowDefinitions="192,192" ColumnSpacing="18" RowSpacing="18">
+                    <Frame x:Name="MoviesCard" Padding="0" CornerRadius="16" IsClippedToBounds="True">
+                        <Grid>
+                            <Image Source="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;q=80&amp;w=900" Aspect="AspectFill" />
+                            <BoxView Opacity="0.68">
+                                <BoxView.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#0EA5E9" Offset="0" />
+                                        <GradientStop Color="#0369A1" Offset="1" />
+                                    </LinearGradientBrush>
+                                </BoxView.Background>
+                            </BoxView>
+                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center" Padding="12">
+                                <Path x:Name="MoviesIcon" WidthRequest="54" HeightRequest="54" Aspect="Uniform" Stroke="White" StrokeThickness="4" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M8,8 L46,8 L46,46 L8,46 Z M20,8 L20,46 M34,8 L34,46 M8,20 L46,20 M8,34 L46,34" />
+                                <Label x:Name="MoviesLabel" Text="Movies &amp; TV" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Button BackgroundColor="Transparent" Clicked="OnMoviesClicked" />
+                        </Grid>
+                    </Frame>
+
+                    <Frame x:Name="RestaurantsCard" Grid.Column="1" Padding="0" CornerRadius="16" IsClippedToBounds="True">
+                        <Grid>
+                            <Image Source="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;q=80&amp;w=900" Aspect="AspectFill" />
+                            <BoxView Opacity="0.68">
+                                <BoxView.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#F97316" Offset="0" />
+                                        <GradientStop Color="#DC2626" Offset="1" />
+                                    </LinearGradientBrush>
+                                </BoxView.Background>
+                            </BoxView>
+                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center" Padding="12">
+                                <Path x:Name="RestaurantsIcon" WidthRequest="54" HeightRequest="54" Aspect="Uniform" Stroke="White" StrokeThickness="4" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M16,8 L16,46 M10,8 L10,22 M22,8 L22,22 M38,8 C32,16 32,28 38,34 L38,46 M14,30 L40,8" />
+                                <Label x:Name="RestaurantsLabel" Text="Restaurants" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Button BackgroundColor="Transparent" Clicked="OnRestaurantsClicked" />
+                        </Grid>
+                    </Frame>
+
+                    <Frame x:Name="RecipesCard" Grid.Row="1" Padding="0" CornerRadius="16" IsClippedToBounds="True">
+                        <Grid>
+                            <Image Source="https://images.unsplash.com/photo-1514986888952-8cd320577b68?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;q=80&amp;w=900" Aspect="AspectFill" />
+                            <BoxView Opacity="0.68">
+                                <BoxView.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#22C55E" Offset="0" />
+                                        <GradientStop Color="#059669" Offset="1" />
+                                    </LinearGradientBrush>
+                                </BoxView.Background>
+                            </BoxView>
+                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center" Padding="12">
+                                <Path x:Name="RecipesIcon" WidthRequest="54" HeightRequest="54" Aspect="Uniform" Stroke="White" StrokeThickness="4" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M14,28 C6,24 9,12 19,14 C23,4 37,4 41,14 C51,12 54,24 46,28 L46,44 L14,44 Z M18,36 L42,36" />
+                                <Label x:Name="RecipesLabel" Text="Recipes" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Button BackgroundColor="Transparent" Clicked="OnRecipesClicked" />
+                        </Grid>
+                    </Frame>
+
+                    <Frame x:Name="GamesCard" Grid.Row="1" Grid.Column="1" Padding="0" CornerRadius="16" IsClippedToBounds="True">
+                        <Grid>
+                            <Image Source="https://images.unsplash.com/photo-1629760946220-5693ee4c46ac?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;q=80&amp;w=900" Aspect="AspectFill" />
+                            <BoxView Opacity="0.68">
+                                <BoxView.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#8B5CF6" Offset="0" />
+                                        <GradientStop Color="#EC4899" Offset="1" />
+                                    </LinearGradientBrush>
+                                </BoxView.Background>
+                            </BoxView>
+                            <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center" Padding="12">
+                                <Path x:Name="GamesIcon" WidthRequest="54" HeightRequest="54" Aspect="Uniform" Stroke="White" StrokeThickness="4" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M14,20 L34,8 L46,28 L26,40 Z M10,30 L30,18 L42,38 L22,50 Z M26,22 L26,22 M34,30 L34,30 M22,38 L22,38" />
+                                <Label x:Name="GamesLabel" Text="Board Games" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Button BackgroundColor="Transparent" Clicked="OnGamesClicked" />
+                        </Grid>
+                    </Frame>
+                </Grid>
+
+                <Grid x:Name="QuickActionsGrid" ColumnDefinitions="*,*,*,*" RowDefinitions="Auto" ColumnSpacing="12" RowSpacing="12">
+                    <Frame x:Name="FriendsActionCard" Padding="0" CornerRadius="14" BackgroundColor="White">
+                        <Grid x:Name="FriendsActionGrid" HeightRequest="94" Padding="10">
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Path x:Name="FriendsActionIcon" WidthRequest="20" HeightRequest="20" Aspect="Uniform" Stroke="#111827" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M12,12 C16,12 19,9 19,5 C19,2 16,0 12,0 C8,0 5,2 5,5 C5,9 8,12 12,12 Z M2,24 C3,17 8,15 12,15 C16,15 21,17 22,24" />
+                                <Label x:Name="FriendsActionLabel" Text="Friends" FontAttributes="Bold" TextColor="#111827" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Border x:Name="RequestsBadge" Padding="8,3" BackgroundColor="#EF4444" StrokeThickness="0" StrokeShape="RoundRectangle 999" HorizontalOptions="End" VerticalOptions="Start" Margin="0,8,10,0" IsVisible="False">
+                                <Label x:Name="RequestsBadgeLabel" TextColor="White" FontSize="12" FontAttributes="Bold" />
+                            </Border>
+                            <Button BackgroundColor="Transparent" Clicked="OnFriendsClicked" />
+                        </Grid>
+                    </Frame>
+
+                    <Frame x:Name="ActiveSessionsActionCard" Grid.Column="1" Padding="0" CornerRadius="14" BackgroundColor="White">
+                        <Grid x:Name="ActiveSessionsActionGrid" HeightRequest="94" Padding="10">
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Path x:Name="ActiveSessionsActionIcon" WidthRequest="20" HeightRequest="20" Aspect="Uniform" Stroke="#111827" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M5,12 L12,5 L19,12 M12,5 L12,22 M4,22 L20,22" />
+                                <Label x:Name="ActiveSessionsActionLabel" Text="Active Sessions" FontAttributes="Bold" TextColor="#111827" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Button BackgroundColor="Transparent" Clicked="OnActiveSessionsClicked" />
+                        </Grid>
+                    </Frame>
+
+                    <Frame x:Name="HistoryActionCard" Grid.Column="2" Padding="0" CornerRadius="14" BackgroundColor="White">
+                        <Grid x:Name="HistoryActionGrid" HeightRequest="94" Padding="10">
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Path x:Name="HistoryActionIcon" WidthRequest="20" HeightRequest="20" Aspect="Uniform" Stroke="#111827" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M4,12 C4,7 8,3 13,3 C18,3 22,7 22,12 C22,17 18,21 13,21 C10,21 7,20 5,18 M4,12 L1,9 M4,12 L7,9 M13,7 L13,13 L17,15" />
+                                <Label x:Name="HistoryActionLabel" Text="Match History" FontAttributes="Bold" TextColor="#111827" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Button BackgroundColor="Transparent" Clicked="OnHistoryClicked" />
+                        </Grid>
+                    </Frame>
+
+                    <Frame x:Name="ProfileActionCard" Grid.Column="3" Padding="0" CornerRadius="14" BackgroundColor="White">
+                        <Grid x:Name="ProfileActionGrid" HeightRequest="94" Padding="10">
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Path x:Name="ProfileActionIcon" WidthRequest="20" HeightRequest="20" Aspect="Uniform" Stroke="#111827" StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+                                      Data="M12,12 C16,12 19,9 19,5 C19,2 16,0 12,0 C8,0 5,2 5,5 C5,9 8,12 12,12 Z M2,24 C3,17 8,15 12,15 C16,15 21,17 22,24" />
+                                <Label x:Name="ProfileActionLabel" Text="My Profile" FontAttributes="Bold" TextColor="#111827" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <Button BackgroundColor="Transparent" Clicked="OnProfileClicked" />
+                        </Grid>
+                    </Frame>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

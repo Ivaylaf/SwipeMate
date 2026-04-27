@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SwipeMate.Mobile.Pages.FriendsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFF7FC" Offset="0.0" />
+            <GradientStop Color="#F7F2FF" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,24,24,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
+            <Grid ColumnDefinitions="Auto,*">
+                <Button Text="Back" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" Text="Friends" FontSize="22" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
+            </Grid>
+
+            <Frame Padding="20" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Add New Friend" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
+                    <Entry x:Name="FriendUserNameEntry" Placeholder="Search by username or email" BackgroundColor="#F9FAFB" TextChanged="OnFriendSearchChanged" />
+                    <CollectionView x:Name="SuggestionsCollectionView" SelectionMode="None" IsVisible="False" MaximumHeightRequest="220">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,0,0,10" Padding="14" CornerRadius="12" BackgroundColor="#F9FAFB" HasShadow="False" BorderColor="#E5E7EB">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Border WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 21" BackgroundColor="#FCE7F3">
+                                            <Label Text="{Binding AvatarInitials}" TextColor="#DB2777" FontSize="11" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                            <Label Text="{Binding UserName}" FontAttributes="Bold" FontSize="15" TextColor="#111827" />
+                                            <Label Text="{Binding Email}" FontSize="12" TextColor="#6B7280" />
+                                        </VerticalStackLayout>
+                                        <Button Grid.Column="2" Text="Add" BackgroundColor="#C026D3" TextColor="White" Clicked="OnSuggestionAddClicked" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label x:Name="NoSuggestionsLabel" Text="Start typing to find existing users." TextColor="#6B7280" FontSize="12" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="20" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="14">
+                    <Label x:Name="RequestsHeaderLabel" Text="Requests" FontSize="18" FontAttributes="Bold" />
+                    <CollectionView x:Name="RequestsCollectionView" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,0,0,10" Padding="14" CornerRadius="12" BackgroundColor="#F9FAFB" HasShadow="False" BorderColor="#E5E7EB">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Border WidthRequest="42" HeightRequest="42" StrokeThickness="0" StrokeShape="RoundRectangle 21" BackgroundColor="#FCE7F3">
+                                            <Label Text="{Binding AvatarInitials}" TextColor="#DB2777" FontSize="11" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                            <Label Text="{Binding UserName}" FontAttributes="Bold" FontSize="15" TextColor="#111827" />
+                                            <Label Text="{Binding DisplayName}" FontSize="12" TextColor="#6B7280" />
+                                        </VerticalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="8">
+                                            <Button Text="Accept" BackgroundColor="#10B981" TextColor="White" Clicked="OnAcceptClicked" />
+                                            <Button Text="Reject" BackgroundColor="#EF4444" TextColor="White" Clicked="OnRejectClicked" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label x:Name="NoRequestsLabel" Text="No pending friend requests." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="20" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
+                <VerticalStackLayout Spacing="14">
+                    <Label x:Name="FriendsHeaderLabel" Text="My Friends" FontSize="18" FontAttributes="Bold" />
+                    <CollectionView x:Name="FriendsCollectionView" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="0,0,0,10" Padding="14" CornerRadius="12" BackgroundColor="#F9FAFB" HasShadow="False" BorderColor="#E5E7EB">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <Border WidthRequest="44" HeightRequest="44" StrokeThickness="0" StrokeShape="RoundRectangle 22" BackgroundColor="#EDE9FE">
+                                            <Label Text="{Binding AvatarInitials}" TextColor="#7C3AED" FontSize="10" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                            <Label Text="{Binding UserName}" FontAttributes="Bold" FontSize="16" TextColor="#111827" />
+                                            <Label Text="{Binding DisplayName}" FontSize="12" TextColor="#6B7280" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label x:Name="NoFriendsLabel" Text="No friends yet. Add a friend by searching for an existing user." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

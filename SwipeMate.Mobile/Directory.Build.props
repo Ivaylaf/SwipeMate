@@ -1,0 +1,5 @@
+<Project>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'SwipeMate.Mobile'">
+		<DefaultItemExcludes>$(DefaultItemExcludes);$(MSBuildProjectDirectory)\bin\**;$(MSBuildProjectDirectory)\obj\**</DefaultItemExcludes>
+	</PropertyGroup>
+</Project>
