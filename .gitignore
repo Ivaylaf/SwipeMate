@@ -36,3 +36,4 @@ SwipeMate.Api/appsettings.Development.json
 .buildcheck/
 # Local handoff archives
 *.zip
+/SwipeMate.apk
