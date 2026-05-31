@@ -14,8 +14,8 @@
 
     <Grid RowDefinitions="64,*">
         <Grid Padding="24,0" ColumnDefinitions="Auto,*,Auto" BackgroundColor="White">
-            <Button Text="Back" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnHomeClicked" />
-            <Label x:Name="SwipeProgressLabel" Grid.Column="1" Text="0 / 5" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="#111827" />
+            <Button Text="Назад" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnHomeClicked" />
+            <Label x:Name="SwipeProgressLabel" Grid.Column="1" Text="Прегледани карти: 0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="#111827" />
             <ActivityIndicator x:Name="LoadingIndicator" Grid.Column="2" IsVisible="False" IsRunning="False" Color="#C026D3" />
         </Grid>
 
@@ -53,10 +53,10 @@
 
                 <HorizontalStackLayout Spacing="28" HorizontalOptions="Center">
                     <Button Text="X" WidthRequest="62" HeightRequest="62" CornerRadius="31" BorderWidth="1" BorderColor="#EF4444" BackgroundColor="White" TextColor="#EF4444" FontSize="20" Clicked="OnRejectClicked" />
-                    <Button Text="Like" WidthRequest="72" HeightRequest="72" CornerRadius="36" BackgroundColor="#C026D3" TextColor="White" FontAttributes="Bold" Clicked="OnLikeClicked" />
+                    <Button Text="✓" WidthRequest="72" HeightRequest="72" CornerRadius="36" BackgroundColor="#C026D3" TextColor="White" FontSize="28" FontAttributes="Bold" Clicked="OnLikeClicked" />
                 </HorizontalStackLayout>
 
-                <Label Text="Tap Like to vote yes or X to skip. A match appears when all selected friends like the same option." FontSize="13" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                <Label Text="Натисни ✓ за положителен вот или X за пропускане. Съвпадение се появява, когато всички участници харесат един и същ вариант." FontSize="13" TextColor="#6B7280" HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

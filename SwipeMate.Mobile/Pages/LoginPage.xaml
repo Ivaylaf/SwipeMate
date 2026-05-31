@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="SwipeMate.Mobile.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -15,131 +15,51 @@
 
     <ScrollView>
         <Grid Padding="24" RowDefinitions="*" VerticalOptions="Center">
-            <Frame
-                Padding="24"
-                CornerRadius="24"
-                BackgroundColor="White"
-                HasShadow="True"
-                MaximumWidthRequest="420"
-                HorizontalOptions="Center"
-                VerticalOptions="Center">
-
+            <Frame Padding="24" CornerRadius="24" BackgroundColor="White" HasShadow="True" MaximumWidthRequest="420" HorizontalOptions="Center" VerticalOptions="Center">
                 <VerticalStackLayout Spacing="18">
-                    <Frame
-                        WidthRequest="84"
-                        HeightRequest="84"
-                        CornerRadius="42"
-                        Padding="0"
-                        HorizontalOptions="Center"
-                        HasShadow="False">
+                    <Frame WidthRequest="84" HeightRequest="84" CornerRadius="42" Padding="0" HorizontalOptions="Center" HasShadow="False">
                         <Frame.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                 <GradientStop Color="#EC4899" Offset="0.0" />
                                 <GradientStop Color="#A855F7" Offset="1.0" />
                             </LinearGradientBrush>
                         </Frame.Background>
-
                         <Grid WidthRequest="84" HeightRequest="84">
-                            <Border
-                                WidthRequest="30"
-                                HeightRequest="44"
-                                StrokeShape="RoundRectangle 8"
-                                BackgroundColor="White"
-                                Opacity="0.42"
-                                Rotation="-16"
-                                TranslationX="-8"
-                                TranslationY="4" />
-                            <Border
-                                WidthRequest="30"
-                                HeightRequest="44"
-                                StrokeShape="RoundRectangle 8"
-                                BackgroundColor="White"
-                                Opacity="0.78"
-                                Rotation="12"
-                                TranslationX="10"
-                                TranslationY="2" />
-                            <Label
-                                Text="S"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"
-                                FontSize="34"
-                                FontAttributes="Bold"
-                                TextColor="White" />
+                            <Border WidthRequest="30" HeightRequest="44" StrokeShape="RoundRectangle 8" BackgroundColor="White" Opacity="0.42" Rotation="-16" TranslationX="-8" TranslationY="4" />
+                            <Border WidthRequest="30" HeightRequest="44" StrokeShape="RoundRectangle 8" BackgroundColor="White" Opacity="0.78" Rotation="12" TranslationX="10" TranslationY="2" />
+                            <Label Text="S" HorizontalOptions="Center" VerticalOptions="Center" FontSize="34" FontAttributes="Bold" TextColor="White" />
                         </Grid>
                     </Frame>
 
-                    <Label
-                        Text="SwipeMate"
-                        FontSize="30"
-                        FontAttributes="Bold"
-                        HorizontalTextAlignment="Center"
-                        TextColor="#B84CF3" />
-
-                    <Label
-                        Text="Make decisions together"
-                        FontSize="14"
-                        HorizontalTextAlignment="Center"
-                        TextColor="#6B7280" />
+                    <Label Text="SwipeMate" FontSize="30" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="#B84CF3" />
+                    <Label Text="Вземайте решения заедно" FontSize="14" HorizontalTextAlignment="Center" TextColor="#6B7280" />
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Username" FontSize="12" TextColor="#111827" />
-                        <Border
-                            StrokeShape="RoundRectangle 12"
-                            BackgroundColor="#F3F4F6"
-                            Padding="14,10">
-                            <Entry
-                                x:Name="UsernameEntry"
-                                Placeholder="Enter your username"
-                                BackgroundColor="Transparent"
-                                TextColor="#111827"
-                                PlaceholderColor="#9CA3AF"
-                                ReturnType="Next" />
+                        <Label Text="Потребителско име" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Entry x:Name="UsernameEntry" Placeholder="Въведи потребителско име" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" ReturnType="Next" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Password" FontSize="12" TextColor="#111827" />
-                        <Border
-                            StrokeShape="RoundRectangle 12"
-                            BackgroundColor="#F3F4F6"
-                            Padding="14,10">
-                            <Entry
-                                x:Name="PasswordEntry"
-                                Placeholder="Enter your password"
-                                IsPassword="True"
-                                BackgroundColor="Transparent"
-                                TextColor="#111827"
-                                PlaceholderColor="#9CA3AF"
-                                ReturnType="Done" />
+                        <Label Text="Парола" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Entry x:Name="PasswordEntry" Placeholder="Въведи парола" IsPassword="True" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" ReturnType="Done" />
+                                <Button x:Name="TogglePasswordButton" Grid.Column="1" Text="Покажи" BackgroundColor="Transparent" TextColor="#7C3AED" FontSize="12" Padding="0" Clicked="OnTogglePasswordClicked" />
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Server URL" FontSize="12" TextColor="#111827" />
-                        <Border
-                            StrokeShape="RoundRectangle 12"
-                            BackgroundColor="#F3F4F6"
-                            Padding="14,10">
-                            <Entry
-                                x:Name="ServerUrlEntry"
-                                Placeholder="http://10.0.2.2:5274"
-                                BackgroundColor="Transparent"
-                                TextColor="#111827"
-                                PlaceholderColor="#9CA3AF" />
+                    <VerticalStackLayout x:Name="ServerUrlSection" Spacing="6" IsVisible="False">
+                        <Label Text="Адрес на сървъра" FontSize="12" TextColor="#111827" />
+                        <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
+                            <Entry x:Name="ServerUrlEntry" Placeholder="http://10.0.2.2:5274" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
                         </Border>
-                        <Label
-                            Text="Windows: http://localhost:5280 | Android emulator: http://10.0.2.2:5274"
-                            FontSize="11"
-                            TextColor="#6B7280" />
+                        <Label Text="Windows: http://localhost:5274 | Android емулатор: http://10.0.2.2:5274" FontSize="11" TextColor="#6B7280" />
                     </VerticalStackLayout>
 
-                    <Button
-                        Text="Log In"
-                        HeightRequest="48"
-                        CornerRadius="14"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        Clicked="OnLoginClicked">
+                    <Button Text="Вход" HeightRequest="48" CornerRadius="14" TextColor="White" FontAttributes="Bold" Clicked="OnLoginClicked">
                         <Button.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                 <GradientStop Color="#EC4899" Offset="0.0" />
@@ -148,16 +68,9 @@
                         </Button.Background>
                     </Button>
 
-                    <Button
-                        Text="Don't have an account? Sign up"
-                        BackgroundColor="Transparent"
-                        TextColor="#7C3AED"
-                        FontSize="12"
-                        Clicked="OnGoRegisterClicked" />
-
+                    <Button Text="Нямаш акаунт? Регистрирай се" BackgroundColor="Transparent" TextColor="#7C3AED" FontSize="12" Clicked="OnGoRegisterClicked" />
                 </VerticalStackLayout>
             </Frame>
         </Grid>
     </ScrollView>
 </ContentPage>
-

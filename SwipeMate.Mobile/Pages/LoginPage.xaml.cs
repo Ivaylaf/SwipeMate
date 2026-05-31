@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Services;
+﻿using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
 
@@ -7,6 +7,7 @@ public partial class LoginPage : ContentPage
     private readonly AuthService _auth;
     private readonly AppState _appState;
     private readonly ApiClient _apiClient;
+    private bool _isPasswordVisible;
 
     public LoginPage(AuthService auth, AppState appState, ApiClient apiClient)
     {
@@ -15,6 +16,33 @@ public partial class LoginPage : ContentPage
         _appState = appState;
         _apiClient = apiClient;
         ServerUrlEntry.Text = _apiClient.CurrentBaseUrl;
+        UpdatePasswordToggle();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (!_appState.IsAuthenticated)
+        {
+            UsernameEntry.Text = string.Empty;
+            PasswordEntry.Text = string.Empty;
+            _isPasswordVisible = false;
+            PasswordEntry.IsPassword = true;
+            UpdatePasswordToggle();
+        }
+    }
+
+    private void OnTogglePasswordClicked(object sender, EventArgs e)
+    {
+        _isPasswordVisible = !_isPasswordVisible;
+        PasswordEntry.IsPassword = !_isPasswordVisible;
+        UpdatePasswordToggle();
+    }
+
+    private void UpdatePasswordToggle()
+    {
+        TogglePasswordButton.Text = _isPasswordVisible ? "Скрий" : "Покажи";
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -24,7 +52,7 @@ public partial class LoginPage : ContentPage
 
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            await DisplayAlert("Missing info", "Please enter username and password.", "OK");
+            await DisplayAlert("Липсваща информация", "Моля, въведи потребителско име и парола.", "OK");
             return;
         }
 
@@ -33,12 +61,11 @@ public partial class LoginPage : ContentPage
             _apiClient.UpdateBaseUrl(ServerUrlEntry.Text ?? _apiClient.CurrentBaseUrl);
             var token = await _auth.LoginAsync(username, password);
             await _appState.SetAuthenticatedAsync(token);
-
             await Shell.Current.GoToAsync("//Home");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Login failed", ex.Message, "OK");
+            await DisplayAlert("Неуспешен вход", ex.Message, "OK");
         }
     }
 

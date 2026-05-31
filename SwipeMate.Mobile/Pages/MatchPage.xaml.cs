@@ -25,7 +25,7 @@ public partial class MatchPage : ContentPage
 
         MatchTitleLabel.Text = match.Title;
         MatchMessageLabel.Text = string.IsNullOrWhiteSpace(_appState.CurrentMatchMessage)
-            ? "You all agreed on this choice."
+            ? "Всички се съгласихте с този избор."
             : _appState.CurrentMatchMessage;
         MatchDescriptionLabel.Text = GetText(match.Meta, "description");
         MatchMetaLabel.Text = BuildMetaText(match.Meta, match.Category);
@@ -86,10 +86,10 @@ public partial class MatchPage : ContentPage
     {
         return category switch
         {
-            "Restaurant" => $"? {GetNumber(meta, "rating")}  �  {GetTextValue(meta, "priceRange")}  �  {GetTextValue(meta, "district")}, {GetTextValue(meta, "city")}",
-            "Recipe" => $"? {GetNumber(meta, "rating")}  �  {GetTextValue(meta, "cuisine")}  �  {GetNumber(meta, "prepTime")} min",
-            "BoardGame" => $"? {GetNumber(meta, "rating")}  �  {GetNumber(meta, "playersMin")}-{GetNumber(meta, "playersMax")} players",
-            _ => $"? {GetNumber(meta, "rating")}  �  {GetNumber(meta, "year")}  �  {JoinArray(meta, "genres")}"
+            "Restaurant" => $"★ {GetNumber(meta, "rating")}  •  {GetTextValue(meta, "priceRange")}  •  {GetTextValue(meta, "district")}, {GetTextValue(meta, "city")}",
+            "Recipe" => $"★ {GetNumber(meta, "rating")}  •  {GetTextValue(meta, "cuisine")}  •  {GetNumber(meta, "prepTime")} мин",
+            "BoardGame" => $"★ {GetNumber(meta, "rating")}  •  {GetNumber(meta, "playersMin")}-{GetNumber(meta, "playersMax")} играчи",
+            _ => $"★ {GetNumber(meta, "rating")}  •  {GetNumber(meta, "year")}  •  {JoinArray(meta, "genres")}"
         };
     }
 
@@ -136,4 +136,3 @@ public partial class MatchPage : ContentPage
         public string Initials => string.Concat(Name.Split([' ', '_', '-'], StringSplitOptions.RemoveEmptyEntries).Select(x => x[0]).Take(2)).ToUpperInvariant();
     }
 }
-

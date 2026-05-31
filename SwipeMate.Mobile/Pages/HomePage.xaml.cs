@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Services;
+﻿using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
 
@@ -18,8 +18,9 @@ public partial class HomePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        WelcomeLabel.Text = $"Welcome back, {_appState.User?.UserName ?? "friend"}!";
+        WelcomeLabel.Text = $"Добре дошъл, {_appState.User?.UserName ?? "приятелю"}!";
         AdminBadge.IsVisible = _appState.User?.IsAdmin == true;
+        AdminPanelCard.IsVisible = _appState.User?.IsAdmin == true;
         UpdateResponsiveLayout(Width);
 
         try
@@ -181,6 +182,7 @@ public partial class HomePage : ContentPage
     private async void OnHistoryClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync(nameof(HistoryPage));
     private async void OnProfileClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync(nameof(ProfilePage));
     private async void OnActiveSessionsClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync(nameof(ActiveSessionsPage));
+    private async void OnAdminClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync(nameof(AdminPage));
 
     private async void OnLogoutClicked(object sender, EventArgs e)
     {

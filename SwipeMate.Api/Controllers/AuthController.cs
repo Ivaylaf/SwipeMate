@@ -55,6 +55,9 @@ public class AuthController : ControllerBase
         if (user == null)
             return Unauthorized("Invalid credentials");
 
+        if (user.IsBlocked)
+            return StatusCode(StatusCodes.Status403Forbidden, "User account is blocked.");
+
         var ok = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!ok)
             return Unauthorized("Invalid credentials");
@@ -75,6 +78,7 @@ public class AuthController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName ?? ""),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+            new Claim("name", user.DisplayName ?? user.UserName ?? ""),
             new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
 

@@ -23,7 +23,7 @@ public static class AdminSeeder
         var adminUserName = config["AdminSeed:UserName"] ?? "admin";
         var adminEmail = config["AdminSeed:Email"] ?? "admin@swipemate.bg";
         var adminDisplayName = config["AdminSeed:DisplayName"] ?? "SwipeMate Admin";
-        var adminPassword = config["AdminSeed:Password"] ?? "admin123";
+        var adminPassword = config["AdminSeed:Password"] ?? "Admin123!";
 
         var admin = await userManager.FindByNameAsync(adminUserName)
             ?? await userManager.FindByEmailAsync(adminEmail);
@@ -48,6 +48,27 @@ public static class AdminSeeder
         if (!await userManager.IsInRoleAsync(admin, adminRole))
         {
             await userManager.AddToRoleAsync(admin, adminRole);
+        }
+
+        admin.IsBlocked = false;
+        admin.BlockedAtUtc = null;
+        admin.BlockedReason = null;
+        admin.EmailConfirmed = true;
+        admin.DisplayName = string.IsNullOrWhiteSpace(admin.DisplayName) ? adminDisplayName : admin.DisplayName;
+        await userManager.UpdateAsync(admin);
+
+        if (!await userManager.CheckPasswordAsync(admin, adminPassword))
+        {
+            if (await userManager.HasPasswordAsync(admin))
+            {
+                await userManager.RemovePasswordAsync(admin);
+            }
+
+            var passwordResult = await userManager.AddPasswordAsync(admin, adminPassword);
+            if (!passwordResult.Succeeded)
+            {
+                throw new InvalidOperationException("Could not update admin password: " + string.Join(", ", passwordResult.Errors.Select(x => x.Description)));
+            }
         }
     }
 }

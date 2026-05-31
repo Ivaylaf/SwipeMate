@@ -15,14 +15,14 @@
     <ScrollView>
         <VerticalStackLayout Padding="24,56,24,24" Spacing="16" MaximumWidthRequest="980" HorizontalOptions="Center">
             <Grid ColumnDefinitions="Auto,*">
-                <Button Text="Back" BackgroundColor="White" TextColor="#7C3AED" CornerRadius="14" Clicked="OnBackClicked" />
-                <Label Grid.Column="1" Text="History" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontAttributes="Bold" TextColor="#111827" />
+                <Button Text="Назад" BackgroundColor="White" TextColor="#7C3AED" CornerRadius="14" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" Text="История" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontAttributes="Bold" TextColor="#111827" />
             </Grid>
 
             <Frame Padding="18" CornerRadius="24" BackgroundColor="White" HasShadow="False" BorderColor="#E5E7EB">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Recent sessions" FontSize="18" FontAttributes="Bold" />
-                    <Label Text="Tap a session to see participants, swipes, and the merged filters used." FontSize="12" TextColor="#6B7280" />
+                    <Label Text="Последни сесии" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="Натисни сесия, за да видиш участници, гласувания и използваните обединени филтри." FontSize="12" TextColor="#6B7280" />
                     <CollectionView x:Name="SessionsCollectionView" SelectionMode="Single" SelectionChanged="OnSessionSelected">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -34,19 +34,19 @@
                                             <Label Text="{Binding ParticipantText}" FontSize="12" TextColor="#6B7280" />
                                             <Label Text="{Binding CreatedText}" FontSize="12" TextColor="#9CA3AF" />
                                         </VerticalStackLayout>
-                                        <Label Grid.Column="1" Text="Details" VerticalTextAlignment="Center" TextColor="#C026D3" FontAttributes="Bold" />
+                                        <Label Grid.Column="1" Text="Детайли" VerticalTextAlignment="Center" TextColor="#C026D3" FontAttributes="Bold" />
                                     </Grid>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label x:Name="NoSessionsLabel" Text="No sessions yet." IsVisible="False" TextColor="#6B7280" />
+                    <Label x:Name="NoSessionsLabel" Text="Все още няма сесии." IsVisible="False" TextColor="#6B7280" />
                 </VerticalStackLayout>
             </Frame>
 
             <Frame Padding="18" CornerRadius="24" BackgroundColor="White" HasShadow="False" BorderColor="#E5E7EB">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Recent matches" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="Последни съвпадения" FontSize="18" FontAttributes="Bold" />
                     <CollectionView x:Name="MatchesCollectionView" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -68,7 +68,7 @@
                                             <Label Text="{Binding RatingText}" FontSize="14" TextColor="#374151" />
 
                                             <HorizontalStackLayout Spacing="6" IsVisible="{Binding HasMatchedUsers}">
-                                                <Label Text="With:" FontSize="12" TextColor="#6B7280" VerticalTextAlignment="Center" />
+                                                <Label Text="С:" FontSize="12" TextColor="#6B7280" VerticalTextAlignment="Center" />
                                                 <HorizontalStackLayout BindableLayout.ItemsSource="{Binding MatchedUsers}" Spacing="-8">
                                                     <BindableLayout.ItemTemplate>
                                                         <DataTemplate>
@@ -95,7 +95,7 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label x:Name="NoMatchesLabel" Text="No matches yet." IsVisible="False" TextColor="#6B7280" />
+                    <Label x:Name="NoMatchesLabel" Text="Все още няма съвпадения." IsVisible="False" TextColor="#6B7280" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>

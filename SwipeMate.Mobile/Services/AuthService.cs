@@ -19,7 +19,7 @@ public class AuthService
         await EnsureSuccessAsync(resp, ct);
 
         var json = await resp.Content.ReadFromJsonAsync<LoginResponse>(cancellationToken: ct);
-        if (json?.Token is null) throw new Exception("Login response missing token.");
+        if (json?.Token is null) throw new Exception("Отговорът при вход не съдържа токен.");
         return json.Token;
     }
 

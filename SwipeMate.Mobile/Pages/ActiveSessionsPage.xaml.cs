@@ -1,4 +1,4 @@
-﻿using SwipeMate.Mobile.Models;
+using SwipeMate.Mobile.Models;
 using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
@@ -37,9 +37,7 @@ public partial class ActiveSessionsPage : ContentPage
 
             var sessions = await _apiService.GetMySessionsAsync();
             _currentSessions = sessions
-                .Where(x => !string.Equals(x.Status, "Finished", StringComparison.OrdinalIgnoreCase)
-                         && !string.Equals(x.Status, "Closed", StringComparison.OrdinalIgnoreCase)
-                         && !string.Equals(x.Status, "Declined", StringComparison.OrdinalIgnoreCase))
+                .Where(x => SwipeMateDisplayText.IsCurrentSessionStatus(x.Status))
                 .OrderByDescending(x => x.CreatedAtUtc)
                 .ToList();
 
@@ -48,10 +46,11 @@ public partial class ActiveSessionsPage : ContentPage
 
             SessionsCollectionView.ItemsSource = _currentSessions;
             NoSessionsLabel.IsVisible = _currentSessions.Count == 0;
+            LastRefreshLabel.Text = $"Последно обновяване: {DateTime.Now:HH:mm:ss}";
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
         finally
         {
@@ -71,11 +70,11 @@ public partial class ActiveSessionsPage : ContentPage
         {
             await _apiService.RespondToSessionInvitationAsync(invitation.Id, true);
             await LoadSessionsAsync();
-            await DisplayAlert("Joined", "You accepted the invitation. Open 'My Filters' to add your own filters before swiping.", "OK");
+            await DisplayAlert("Приета покана", "Поканата беше приета. Отвори „Моите филтри“, за да добавиш предпочитанията си преди гласуването.", "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -93,7 +92,7 @@ public partial class ActiveSessionsPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -106,12 +105,13 @@ public partial class ActiveSessionsPage : ContentPage
 
         if (!string.Equals(session.Status, "Active", StringComparison.OrdinalIgnoreCase))
         {
-            await DisplayAlert("Session not ready", "This session is not active yet. Wait for invitations to be accepted, or use 'My Filters' to save your preferences first.", "OK");
+            await DisplayAlert("Сесията още не е готова", "Тази сесия още не е активна. Изчакай поканите да бъдат приети или първо запази предпочитанията си чрез „Моите филтри“.", "OK");
             return;
         }
 
         _appState.CurrentSessionId = session.Id;
         _appState.CurrentCategory = session.Category;
+        _appState.CurrentSessionIsOwner = session.IsOwner;
         _appState.CurrentMatch = null;
 
         await Shell.Current.GoToAsync(nameof(SwipePage));
@@ -125,6 +125,35 @@ public partial class ActiveSessionsPage : ContentPage
         }
 
         await Shell.Current.GoToAsync($"{nameof(CreateSessionPage)}?category={Uri.EscapeDataString(session.Category)}&sessionId={session.Id}");
+    }
+
+    private async void OnCloseSessionClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button || button.BindingContext is not SessionSummary session)
+        {
+            return;
+        }
+
+        var confirm = await DisplayAlert(
+            "Приключване на сесия",
+            "Искаш ли да приключиш тази сесия? Тя ще се премести в историята и чакащите покани ще бъдат отменени.",
+            "Приключи",
+            "Отказ");
+
+        if (!confirm)
+        {
+            return;
+        }
+
+        try
+        {
+            await _apiService.CloseSessionAsync(session.Id, true);
+            await LoadSessionsAsync();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Грешка", ex.Message, "OK");
+        }
     }
 
     private async void OnRefreshClicked(object sender, EventArgs e) => await LoadSessionsAsync();

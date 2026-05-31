@@ -15,14 +15,14 @@
     <ScrollView>
         <VerticalStackLayout Padding="24,24,24,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
             <Grid ColumnDefinitions="Auto,*">
-                <Button Text="Back" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
-                <Label Grid.Column="1" Text="Friends" FontSize="22" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
+                <Button Text="Назад" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" Text="Приятели" FontSize="22" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
             </Grid>
 
             <Frame Padding="20" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="14">
-                    <Label Text="Add New Friend" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
-                    <Entry x:Name="FriendUserNameEntry" Placeholder="Search by username or email" BackgroundColor="#F9FAFB" TextChanged="OnFriendSearchChanged" />
+                    <Label Text="Добави нов приятел" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
+                    <Entry x:Name="FriendUserNameEntry" Placeholder="Търси по потребителско име или имейл" BackgroundColor="#F9FAFB" TextChanged="OnFriendSearchChanged" />
                     <CollectionView x:Name="SuggestionsCollectionView" SelectionMode="None" IsVisible="False" MaximumHeightRequest="220">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -35,19 +35,19 @@
                                             <Label Text="{Binding UserName}" FontAttributes="Bold" FontSize="15" TextColor="#111827" />
                                             <Label Text="{Binding Email}" FontSize="12" TextColor="#6B7280" />
                                         </VerticalStackLayout>
-                                        <Button Grid.Column="2" Text="Add" BackgroundColor="#C026D3" TextColor="White" Clicked="OnSuggestionAddClicked" />
+                                        <Button Grid.Column="2" Text="Добави" BackgroundColor="#C026D3" TextColor="White" Clicked="OnSuggestionAddClicked" />
                                     </Grid>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label x:Name="NoSuggestionsLabel" Text="Start typing to find existing users." TextColor="#6B7280" FontSize="12" />
+                    <Label x:Name="NoSuggestionsLabel" Text="Започни да пишеш, за да откриеш съществуващи потребители." TextColor="#6B7280" FontSize="12" />
                 </VerticalStackLayout>
             </Frame>
 
             <Frame Padding="20" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="14">
-                    <Label x:Name="RequestsHeaderLabel" Text="Requests" FontSize="18" FontAttributes="Bold" />
+                    <Label x:Name="RequestsHeaderLabel" Text="Покани" FontSize="18" FontAttributes="Bold" />
                     <CollectionView x:Name="RequestsCollectionView" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -61,21 +61,21 @@
                                             <Label Text="{Binding DisplayName}" FontSize="12" TextColor="#6B7280" />
                                         </VerticalStackLayout>
                                         <HorizontalStackLayout Grid.Column="2" Spacing="8">
-                                            <Button Text="Accept" BackgroundColor="#10B981" TextColor="White" Clicked="OnAcceptClicked" />
-                                            <Button Text="Reject" BackgroundColor="#EF4444" TextColor="White" Clicked="OnRejectClicked" />
+                                            <Button Text="Приеми" BackgroundColor="#10B981" TextColor="White" Clicked="OnAcceptClicked" />
+                                            <Button Text="Откажи" BackgroundColor="#EF4444" TextColor="White" Clicked="OnRejectClicked" />
                                         </HorizontalStackLayout>
                                     </Grid>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label x:Name="NoRequestsLabel" Text="No pending friend requests." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                    <Label x:Name="NoRequestsLabel" Text="Няма чакащи покани за приятелство." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </Frame>
 
             <Frame Padding="20" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="14">
-                    <Label x:Name="FriendsHeaderLabel" Text="My Friends" FontSize="18" FontAttributes="Bold" />
+                    <Label x:Name="FriendsHeaderLabel" Text="Моите приятели" FontSize="18" FontAttributes="Bold" />
                     <CollectionView x:Name="FriendsCollectionView" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -93,7 +93,7 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label x:Name="NoFriendsLabel" Text="No friends yet. Add a friend by searching for an existing user." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                    <Label x:Name="NoFriendsLabel" Text="Все още нямаш приятели. Добави приятел чрез търсене на съществуващ потребител." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>

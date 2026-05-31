@@ -39,7 +39,7 @@ public partial class HistoryPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -62,24 +62,24 @@ public partial class HistoryPage : ContentPage
         {
             var details = await _apiService.GetSessionDetailsAsync(session.Id);
             var participants = details.Participants.Count == 0
-                ? "No participants"
+                ? "Няма участници"
                 : string.Join(", ", details.Participants.Select(x => string.IsNullOrWhiteSpace(x.DisplayName) ? x.UserName : $"{x.DisplayName} ({x.UserName})"));
 
             var message = new StringBuilder()
-                .AppendLine($"Status: {details.Status}")
-                .AppendLine($"Created: {details.CreatedAtUtc:dd.MM.yyyy HH:mm}")
-                .AppendLine($"Participants: {participants}")
-                .AppendLine($"Swipes: {details.SwipeCount}")
-                .AppendLine($"Matches: {details.MatchCount}")
-                .AppendLine($"Pending invitations: {details.PendingInvitationCount}")
-                .AppendLine($"Filters: {details.FiltersSummary ?? "No filters saved"}")
+                .AppendLine($"Статус: {GetStatusTitle(details.Status)}")
+                .AppendLine($"Създадена: {details.CreatedAtUtc:dd.MM.yyyy HH:mm}")
+                .AppendLine($"Участници: {participants}")
+                .AppendLine($"Гласувания: {details.SwipeCount}")
+                .AppendLine($"Съвпадения: {details.MatchCount}")
+                .AppendLine($"Чакащи покани: {details.PendingInvitationCount}")
+                .AppendLine($"Филтри: {details.FiltersSummary ?? "Няма запазени филтри"}")
                 .ToString();
 
-            await DisplayAlert($"{details.Category} session", message, "OK");
+            await DisplayAlert($"{GetCategoryTitle(details.Category)} - сесия", message, "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -92,8 +92,8 @@ public partial class HistoryPage : ContentPage
             Category = GetCategoryTitle(session.Category),
             StatusText = GetStatusTitle(session.Status),
             StatusColor = GetStatusColor(session.Status),
-            ParticipantText = $"Participants: {session.ParticipantCount}",
-            CreatedText = $"Created: {session.CreatedAtUtc:dd.MM.yyyy HH:mm}"
+            ParticipantText = $"Участници: {session.ParticipantCount}",
+            CreatedText = $"Създадена: {session.CreatedAtUtc:dd.MM.yyyy HH:mm}"
         };
 
     private static MatchHistoryCard MapMatchCard(SessionItemSummary item)
@@ -125,8 +125,8 @@ public partial class HistoryPage : ContentPage
 
         return category switch
         {
-            "Restaurant" => $"Rating {rating}  �  {GetText(meta, "priceRange")}",
-            _ => $"Rating {rating}"
+            "Restaurant" => $"Оценка {rating}  •  {GetText(meta, "priceRange")}",
+            _ => $"Оценка {rating}"
         };
     }
 
@@ -152,17 +152,17 @@ public partial class HistoryPage : ContentPage
 
         if (days <= 0)
         {
-            return "Today";
+            return "Днес";
         }
 
         if (days == 1)
         {
-            return "Yesterday";
+            return "Вчера";
         }
 
         if (days < 7)
         {
-            return $"{days} days ago";
+            return $"Преди {days} дни";
         }
 
         return createdAtUtc.Value.ToLocalTime().ToString("dd.MM.yyyy");
@@ -171,22 +171,24 @@ public partial class HistoryPage : ContentPage
     private static string GetCategoryTitle(string category)
         => category switch
         {
-            "Movie" => "Movies & TV",
-            "Restaurant" => "Restaurants",
-            "Recipe" => "Recipes",
-            "BoardGame" => "Board Games",
+            "Movie" => "Филми и сериали",
+            "Restaurant" => "Ресторанти",
+            "Recipe" => "Рецепти",
+            "BoardGame" => "Настолни игри",
             _ => category
         };
 
     private static string GetStatusTitle(string status)
         => status switch
         {
-            "Active" => "Active",
-            "Pending" => "Pending invitations",
-            "Finished" => "Finished",
-            "Partial" => "Partially accepted",
-            "Closed" => "Closed",
-            "Declined" => "Declined",
+            "Active" => "Активна",
+            "Pending" => "Чакащи покани",
+            "Finished" => "Приключила",
+            "Partial" => "Частично приета",
+            "Closed" => "Приключена от създателя",
+            "Expired" => "Изтекла",
+            "Cancelled" => "Отменена",
+            "Declined" => "Отказана",
             _ => status
         };
 
@@ -198,10 +200,11 @@ public partial class HistoryPage : ContentPage
             "Finished" => "#059669",
             "Partial" => "#7C3AED",
             "Closed" => "#6B7280",
+            "Expired" => "#6B7280",
+            "Cancelled" => "#6B7280",
             "Declined" => "#DC2626",
             _ => "#6B7280"
         };
-
     private static string GetCategoryBadge(string category)
         => category switch
         {
@@ -286,5 +289,3 @@ public partial class HistoryPage : ContentPage
         public string Text { get; } = text;
     }
 }
-
-

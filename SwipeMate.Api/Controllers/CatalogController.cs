@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SwipeMate.Api.Data;
@@ -43,6 +43,14 @@ public class CatalogController : ControllerBase
             {
                 cities = DistinctStrings(restaurants.Select(x => GetString(x, "city"))),
                 districts = DistinctStrings(restaurants.Select(x => GetString(x, "district"))),
+                districtsByCity = restaurants
+                    .Select(x => new { City = GetString(x, "city"), District = GetString(x, "district") })
+                    .Where(x => !string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.District))
+                    .GroupBy(x => x.City!, StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(x => x.District!).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x).ToList(),
+                        StringComparer.OrdinalIgnoreCase),
                 cuisines = DistinctStrings(
                     restaurants.Select(x => GetString(x, "cuisine"))
                         .Concat(restaurants.SelectMany(x => GetStrings(x, "cuisines"))))
@@ -112,3 +120,4 @@ public class CatalogController : ControllerBase
             ? number
             : 0;
 }
+

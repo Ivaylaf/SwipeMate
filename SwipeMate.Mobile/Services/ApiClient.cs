@@ -5,6 +5,7 @@ namespace SwipeMate.Mobile.Services;
 public class ApiClient
 {
     public const string ApiBaseUrlPreferenceKey = "api_base_url";
+    private static readonly bool AllowRuntimeServerUrlOverride = false;
 
     private HttpClient _http;
 
@@ -45,6 +46,11 @@ public class ApiClient
 
     public void UpdateBaseUrl(string url)
     {
+        if (!AllowRuntimeServerUrlOverride)
+        {
+            return;
+        }
+
         var normalized = NormalizeBaseUrl(url);
 
         if (string.Equals(normalized, CurrentBaseUrl, StringComparison.OrdinalIgnoreCase))
@@ -62,6 +68,11 @@ public class ApiClient
 
     public static string GetSavedOrDefaultBaseUrl()
     {
+        if (!AllowRuntimeServerUrlOverride)
+        {
+            return GetDefaultBaseUrl();
+        }
+
         var saved = Preferences.Get(ApiBaseUrlPreferenceKey, string.Empty);
         return string.IsNullOrWhiteSpace(saved) ? GetDefaultBaseUrl() : NormalizeBaseUrl(saved);
     }

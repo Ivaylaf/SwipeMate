@@ -7,6 +7,9 @@ public static class CatalogSeeder
     public static async Task SeedAsync(AppDbContext db)
     {
         var seedItems = DemoCatalog.CreateCatalogItems();
+        var seededExternalIds = seedItems
+            .Select(x => x.ExternalId)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         foreach (var item in seedItems)
         {
@@ -23,7 +26,12 @@ public static class CatalogSeeder
             existing.Title = item.Title;
             existing.ImageUrl = item.ImageUrl;
             existing.MetaJson = item.MetaJson;
-            existing.IsActive = true;
+        }
+
+        var existingItems = await db.CatalogItems.ToListAsync();
+        foreach (var retiredItem in existingItems.Where(x => !seededExternalIds.Contains(x.ExternalId)))
+        {
+            retiredItem.IsActive = false;
         }
 
         await db.SaveChangesAsync();

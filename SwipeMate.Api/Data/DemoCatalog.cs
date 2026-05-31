@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using SwipeMate.Api.Models;
 
 namespace SwipeMate.Api.Data;
@@ -11,6 +11,8 @@ public sealed record DemoCatalogItem(
 
 public static class DemoCatalog
 {
+    private const string DataSnapshot = "2026-05-30";
+
     public static IReadOnlyList<CatalogItem> CreateCatalogItems()
     {
         return new[] { "Movie", "Restaurant", "Recipe", "BoardGame" }
@@ -65,302 +67,251 @@ public static class DemoCatalog
 
     private static readonly IReadOnlyList<DemoCatalogItem> Movies =
     [
-        new(
-            "movie_interstellar",
-            "Interstellar",
-            "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                kind = "movie",
-                genres = new[] { "Sci-Fi", "Drama", "Adventure" },
-                rating = 8.7,
-                year = 2014,
-                duration = 169,
-                description = "Епично sci-fi пътешествие за оцеляването на човечеството."
-            }),
-        new(
-            "movie_knives_out",
-            "Knives Out",
-            "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                kind = "movie",
-                genres = new[] { "Mystery", "Comedy", "Crime" },
-                rating = 7.9,
-                year = 2019,
-                duration = 130,
-                description = "Стилен и забавен криминален пъзел с много обрати."
-            }),
-        new(
-            "movie_stranger_things",
-            "Stranger Things",
-            "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                kind = "series",
-                genres = new[] { "Fantasy", "Horror", "Sci-Fi" },
-                rating = 8.6,
-                year = 2016,
-                duration = 50,
-                description = "Носталгичен сериал с свръхестествени събития и силна приятелска динамика."
-            }),
-        new(
-            "movie_lalaland",
-            "La La Land",
-            "https://images.unsplash.com/photo-1513106580091-1d82408b8cd6?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                kind = "movie",
-                genres = new[] { "Romance", "Drama", "Music" },
-                rating = 8.0,
-                year = 2016,
-                duration = 128,
-                description = "Цветен, емоционален и музикален филм за мечти и избори."
-            }),
-        new(
-            "movie_dark",
-            "Dark",
-            "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                kind = "series",
-                genres = new[] { "Thriller", "Mystery", "Sci-Fi" },
-                rating = 8.7,
-                year = 2017,
-                duration = 55,
-                description = "Интелигентен сериал с тайни, време и семейни мистерии."
-            })
+        Movie("movie_tt0111161", "The Shawshank Redemption", "movie", 9.3, 1994, 142, ["Drama"],
+            "Двама затворници изграждат приятелство и надежда в продължение на години.",
+            "https://www.imdb.com/title/tt0111161/"),
+        Movie("movie_tt0068646", "The Godfather", "movie", 9.2, 1972, 175, ["Crime", "Drama"],
+            "Криминална драма за семейство Корлеоне и цената на властта.",
+            "https://www.imdb.com/title/tt0068646/"),
+        Movie("movie_tt0468569", "The Dark Knight", "movie", 9.0, 2008, 152, ["Action", "Crime", "Drama"],
+            "Батман се изправя срещу Жокера в мрачен и напрегнат Готъм.",
+            "https://www.imdb.com/title/tt0468569/"),
+        Movie("movie_tt0816692", "Interstellar", "movie", 8.7, 2014, 169, ["Adventure", "Drama", "Sci-Fi"],
+            "Научнофантастично пътешествие за оцеляването на човечеството.",
+            "https://www.imdb.com/title/tt0816692/"),
+        Movie("movie_tt1375666", "Inception", "movie", 8.8, 2010, 148, ["Action", "Adventure", "Sci-Fi"],
+            "Трилър за сънища, подсъзнание и внимателно планиран обир.",
+            "https://www.imdb.com/title/tt1375666/"),
+        Movie("movie_tt0110912", "Pulp Fiction", "movie", 8.9, 1994, 154, ["Crime", "Drama"],
+            "Нелинейна криминална история с култови персонажи и диалози.",
+            "https://www.imdb.com/title/tt0110912/"),
+        Movie("movie_tt6751668", "Parasite", "movie", 8.5, 2019, 132, ["Drama", "Thriller"],
+            "Социален трилър за класи, измама и напрежение в едно семейство.",
+            "https://www.imdb.com/title/tt6751668/"),
+        Movie("movie_tt7286456", "Joker", "movie", 8.4, 2019, 122, ["Crime", "Drama", "Thriller"],
+            "Психологическа история за изолация, гняв и превръщане в злодей.",
+            "https://www.imdb.com/title/tt7286456/"),
+        Movie("movie_tt8946378", "Knives Out", "movie", 7.9, 2019, 130, ["Comedy", "Crime", "Mystery"],
+            "Стилен криминален пъзел с много обрати и черен хумор.",
+            "https://www.imdb.com/title/tt8946378/"),
+        Movie("movie_tt0120737", "The Lord of the Rings: The Fellowship of the Ring", "movie", 8.9, 2001, 178, ["Adventure", "Drama", "Fantasy"],
+            "Началото на епично фентъзи пътешествие през Средната земя.",
+            "https://www.imdb.com/title/tt0120737/"),
+        Movie("movie_tt0903747", "Breaking Bad", "series", 9.5, 2008, 49, ["Crime", "Drama", "Thriller"],
+            "Учител по химия постепенно навлиза в света на престъпността.",
+            "https://www.imdb.com/title/tt0903747/"),
+        Movie("movie_tt4574334", "Stranger Things", "series", 8.7, 2016, 51, ["Drama", "Fantasy", "Horror"],
+            "Група приятели се сблъскват със свръхестествени събития в малък град.",
+            "https://www.imdb.com/title/tt4574334/")
     ];
 
     private static readonly IReadOnlyList<DemoCatalogItem> Restaurants =
     [
-        new(
-            "restaurant_cosmos",
-            "Cosmos Bistro",
-            "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                city = "Plovdiv",
-                district = "Center",
-                cuisine = "European",
-                cuisines = new[] { "European", "Bistro" },
-                rating = 4.7,
-                priceRange = "$$",
-                description = "Модерно бистро в центъра с уютна атмосфера."
-            }),
-        new(
-            "restaurant_aylyak_grill",
-            "Aylyak Grill",
-            "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                city = "Plovdiv",
-                district = "Kapana",
-                cuisine = "Bulgarian",
-                cuisines = new[] { "Bulgarian", "BBQ" },
-                rating = 4.6,
-                priceRange = "$$",
-                description = "Българска кухня, скара и настроение за компания."
-            }),
-        new(
-            "restaurant_sakura",
-            "Sakura House",
-            "https://images.unsplash.com/photo-1579027989536-b7b1f875659b?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                city = "Plovdiv",
-                district = "Trakia",
-                cuisine = "Japanese",
-                cuisines = new[] { "Japanese", "Asian" },
-                rating = 4.5,
-                priceRange = "$$$",
-                description = "Суши и азиатски специалитети за по-специална вечер."
-            }),
-        new(
-            "restaurant_la_pasta",
-            "La Pasta Fresca",
-            "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                city = "Plovdiv",
-                district = "Smirnenski",
-                cuisine = "Italian",
-                cuisines = new[] { "Italian", "Pasta" },
-                rating = 4.4,
-                priceRange = "$$",
-                description = "Прясна паста и уютна обстановка за приятелска вечеря."
-            }),
-        new(
-            "restaurant_green_garden",
-            "Green Garden",
-            "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                city = "Plovdiv",
-                district = "Center",
-                cuisine = "Healthy",
-                cuisines = new[] { "Healthy", "Vegan" },
-                rating = 4.3,
-                priceRange = "$$",
-                description = "Леки и здравословни ястия, подходящи и за обяд."
-            })
+        Restaurant("restaurant_pavaj_plovdiv", "Pavaj", "Plovdiv", "Kapana", "Bulgarian", ["Bulgarian", "Modern", "European"], 4.6, "$$$",
+            "Популярен ресторант в Капана с модерен прочит на българската кухня.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295391-d7322856-Reviews-Pavaj-Plovdiv_Plovdiv_Province.html"),
+        Restaurant("restaurant_rahat_tepe_plovdiv", "Rahat Tepe", "Plovdiv", "Old Town", "Bulgarian", ["Bulgarian", "BBQ", "Traditional"], 4.4, "$$",
+            "Заведение в Стария град с традиционни ястия и панорамна гледка.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295391-d2309235-Reviews-Rahat_Tepe-Plovdiv_Plovdiv_Province.html"),
+        Restaurant("restaurant_smolini_plovdiv", "Smokini", "Plovdiv", "Center", "European", ["European", "Modern", "Fusion"], 4.5, "$$$",
+            "Модерно място в центъра с авторски ястия и елегантна атмосфера.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295391-d8074677-Reviews-Smokini-Plovdiv_Plovdiv_Province.html"),
+        Restaurant("restaurant_hemingway_plovdiv", "Hemingway", "Plovdiv", "Center", "European", ["European", "Mediterranean"], 4.4, "$$",
+            "Ресторант с европейска кухня, подходящ за вечеря с приятели.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295391-d1044807-Reviews-Hemingway-Plovdiv_Plovdiv_Province.html"),
+        Restaurant("restaurant_torro_grande_plovdiv", "Torro Grande", "Plovdiv", "Center", "Steakhouse", ["Steakhouse", "European", "Pasta"], 4.3, "$$$",
+            "Място за месни специалитети, паста и по-дълга вечеря.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295391-d7905182-Reviews-Torro_Grande-Plovdiv_Plovdiv_Province.html"),
+        Restaurant("restaurant_happy_plovdiv", "Happy Bar & Grill", "Plovdiv", "Center", "International", ["International", "Sushi", "Burgers"], 4.2, "$$",
+            "Разнообразно меню за групи с различни предпочитания.",
+            "https://happy.bg/"),
+        Restaurant("restaurant_jagerhof_plovdiv", "Jagerhof", "Plovdiv", "Trakia", "German", ["German", "Beerhouse", "European"], 4.5, "$$",
+            "Бирен ресторант с немска кухня и просторна атмосфера.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295391-d21270719-Reviews-Jagerhof-Plovdiv_Plovdiv_Province.html"),
+        Restaurant("restaurant_sasa_sofia", "Sasa Asian Pub", "Sofia", "Center", "Asian", ["Asian", "Japanese", "Sushi"], 4.4, "$$",
+            "Азиатски вкусове, суши и коктейли за вечер с приятели.",
+            "https://www.tripadvisor.com/Restaurant_Review-g294452-d8484124-Reviews-SASA_Asian_Pub-Sofia_Sofia_Region.html"),
+        Restaurant("restaurant_made_in_home_sofia", "Made in Home", "Sofia", "Center", "Bulgarian", ["Bulgarian", "European", "Homemade"], 4.6, "$$",
+            "Домашна кухня с уютна атмосфера и модерен стил.",
+            "https://www.tripadvisor.com/Restaurant_Review-g294452-d3785288-Reviews-Made_in_Home-Sofia_Sofia_Region.html"),
+        Restaurant("restaurant_shtastlivetsa_sofia", "Shtastlivetsa", "Sofia", "Vitosha Blvd", "Bulgarian", ["Bulgarian", "European", "Traditional"], 4.5, "$$",
+            "Популярен ресторант с богато меню и традиционни български вкусове.",
+            "https://www.tripadvisor.com/Restaurant_Review-g294452-d6956502-Reviews-Shtastlivetsa_Vitoshka-Sofia_Sofia_Region.html"),
+        Restaurant("restaurant_cosmos_sofia", "Cosmos", "Sofia", "Center", "European", ["European", "Contemporary", "Bulgarian"], 4.7, "$$$",
+            "Съвременна кухня и дегустационно изживяване в центъра на София.",
+            "https://guide.michelin.com/bg/en/sofia-region/sofia/restaurant/cosmos"),
+        Restaurant("restaurant_moma_sofia", "Moma", "Sofia", "Center", "Bulgarian", ["Bulgarian", "Traditional", "European"], 4.5, "$$$",
+            "Изискани български вкусове в стилен интериор.",
+            "https://www.tripadvisor.com/Restaurant_Review-g294452-d10632765-Reviews-Moma_Bulgarian_Food_and_Wine-Sofia_Sofia_Region.html"),
+        Restaurant("restaurant_raketa_sofia", "Raketa Rakia Bar", "Sofia", "Lozenets", "Bulgarian", ["Bulgarian", "Eastern European", "Bar"], 4.4, "$$",
+            "Атрактивно място с българска кухня и ретро атмосфера.",
+            "https://www.tripadvisor.com/Restaurant_Review-g294452-d8435609-Reviews-Raketa_Rakia_Bar-Sofia_Sofia_Region.html"),
+        Restaurant("restaurant_mr_baba_varna", "Mr Baba", "Varna", "Center", "Seafood", ["Seafood", "European", "Mediterranean"], 4.5, "$$",
+            "Ресторант на кораб във Варна с морско меню и гледка.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295392-d3703381-Reviews-Mr_Baba-Varna_Varna_Province.html"),
+        Restaurant("restaurant_staria_chinar_varna", "Staria Chinar", "Varna", "Center", "Bulgarian", ["Bulgarian", "European", "BBQ"], 4.4, "$$",
+            "Познат варненски ресторант с българска кухня и месни специалитети.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295392-d4239547-Reviews-Staria_Chinar-Varna_Varna_Province.html"),
+        Restaurant("restaurant_the_martini_varna", "The Martini Food & Cocktails", "Varna", "Sea Garden", "International", ["International", "Cocktails", "Fusion"], 4.4, "$$$",
+            "Съвременно място край Морската градина за вечеря и коктейли.",
+            "https://www.tripadvisor.com/Restaurant_Review-g295392-d8655624-Reviews-The_Martini_Food_Cocktails-Varna_Varna_Province.html"),
+        Restaurant("restaurant_happy_varna", "Happy Bar & Grill Varna", "Varna", "Center", "International", ["International", "Sushi", "Burgers"], 4.2, "$$",
+            "Разнообразно меню и удобно място за голяма компания.",
+            "https://happy.bg/"),
+        Restaurant("restaurant_di_jamie_burgas", "Di Jamie", "Burgas", "Center", "Italian", ["Italian", "Pizza", "Mediterranean"], 4.5, "$$",
+            "Италианска кухня и пица в центъра на Бургас.",
+            "https://www.tripadvisor.com/Restaurant_Review-g303653-d12139167-Reviews-Di_Jamie-Burgas_Burgas_Province.html"),
+        Restaurant("restaurant_ti_bar_burgas", "Ti Bar & Kitchen", "Burgas", "Center", "European", ["European", "Seafood", "Modern"], 4.4, "$$$",
+            "Модерно меню и градска атмосфера за вечерно излизане.",
+            "https://www.tripadvisor.com/Restaurant_Review-g303653-d12240425-Reviews-Ti_Bar_Kitchen-Burgas_Burgas_Province.html"),
+        Restaurant("restaurant_neptune_burgas", "Neptune", "Burgas", "Center", "Seafood", ["Seafood", "European", "Mediterranean"], 4.3, "$$$",
+            "Ресторант с морски специалитети и централна локация в Бургас.",
+            "https://www.tripadvisor.com/Restaurant_Review-g303653-d2251570-Reviews-Neptune-Burgas_Burgas_Province.html")
     ];
-
     private static readonly IReadOnlyList<DemoCatalogItem> Recipes =
     [
-        new(
-            "recipe_pasta_alfredo",
-            "Creamy Alfredo Pasta",
-            "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                complexity = 2,
-                cuisine = "Italian",
-                foodType = "Dinner",
-                budgetLevel = 2,
-                rating = 4.7,
-                prepTime = 25,
-                ingredients = new[] { "pasta", "cream", "parmesan", "garlic" },
-                description = "Бърза кремообразна паста за вечеря след училище или работа."
-            }),
-        new(
-            "recipe_shopska_salad",
-            "Shopska Salad",
-            "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                complexity = 1,
-                cuisine = "Bulgarian",
-                foodType = "Salad",
-                budgetLevel = 1,
-                rating = 4.8,
-                prepTime = 10,
-                ingredients = new[] { "tomatoes", "cucumbers", "peppers", "sirene" },
-                description = "Класическа българска салата, лесна и винаги добра идея."
-            }),
-        new(
-            "recipe_tacos",
-            "Chicken Tacos",
-            "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                complexity = 2,
-                cuisine = "Mexican",
-                foodType = "Dinner",
-                budgetLevel = 2,
-                rating = 4.5,
-                prepTime = 30,
-                ingredients = new[] { "chicken", "tortillas", "corn", "avocado" },
-                description = "Свежи и засищащи tacos за споделена вечер."
-            }),
-        new(
-            "recipe_pancakes",
-            "Berry Pancakes",
-            "https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                complexity = 1,
-                cuisine = "American",
-                foodType = "Breakfast",
-                budgetLevel = 1,
-                rating = 4.6,
-                prepTime = 20,
-                ingredients = new[] { "flour", "milk", "eggs", "berries" },
-                description = "Лесна рецепта за сладка закуска през уикенда."
-            }),
-        new(
-            "recipe_ramen",
-            "Homemade Ramen",
-            "https://images.unsplash.com/photo-1617093727343-374698b1b08d?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                complexity = 4,
-                cuisine = "Japanese",
-                foodType = "Dinner",
-                budgetLevel = 3,
-                rating = 4.9,
-                prepTime = 55,
-                ingredients = new[] { "noodles", "broth", "egg", "mushrooms" },
-                description = "По-амбициозна рецепта за ден, в който ви се готви нещо специално."
-            })
+        Recipe("recipe_52977", "Corba", "Turkish", "Soup", 2, 1, 4.4, 40, ["lentils", "onion", "carrots", "spices"],
+            "Топла супа с леща, подходяща за лека вечеря.",
+            "https://www.themealdb.com/meal/52977"),
+        Recipe("recipe_52893", "Apple & Blackberry Crumble", "British", "Dessert", 2, 2, 4.6, 50, ["apples", "blackberries", "flour", "sugar"],
+            "Плодов десерт с хрупкава коричка.",
+            "https://www.themealdb.com/meal/52893"),
+        Recipe("recipe_52772", "Teriyaki Chicken Casserole", "Japanese", "Dinner", 3, 2, 4.7, 60, ["chicken", "rice", "soy sauce", "vegetables"],
+            "Пилешко ястие с ориз и терияки вкус.",
+            "https://www.themealdb.com/meal/52772"),
+        Recipe("recipe_52844", "Lasagne", "Italian", "Dinner", 4, 3, 4.8, 90, ["beef", "pasta", "tomato", "cheese"],
+            "Класическа италианска лазаня за споделена вечеря.",
+            "https://www.themealdb.com/meal/52844"),
+        Recipe("recipe_52959", "Burek", "Balkan", "Breakfast", 3, 1, 4.6, 70, ["filo pastry", "cheese", "egg", "oil"],
+            "Балканска закуска с кори и сирене.",
+            "https://www.themealdb.com/meal/52959"),
+        Recipe("recipe_52795", "Chicken Handi", "Indian", "Dinner", 3, 2, 4.7, 45, ["chicken", "tomato", "cream", "spices"],
+            "Индийско пилешко ястие с богат сос.",
+            "https://www.themealdb.com/meal/52795"),
+        Recipe("recipe_52855", "Banana Pancakes", "American", "Breakfast", 1, 1, 4.5, 20, ["banana", "eggs", "flour", "milk"],
+            "Бърза сладка закуска с банани.",
+            "https://www.themealdb.com/meal/52855"),
+        Recipe("recipe_52906", "Flamiche", "French", "Lunch", 3, 2, 4.3, 55, ["leek", "pastry", "cream", "cheese"],
+            "Френски солен пай с праз и кремообразна плънка.",
+            "https://www.themealdb.com/meal/52906"),
+        Recipe("recipe_52948", "Wontons", "Chinese", "Dinner", 4, 2, 4.6, 65, ["pork", "wonton wrappers", "ginger", "soy sauce"],
+            "Китайски пълнени хапки, подходящи за по-специална вечер.",
+            "https://www.themealdb.com/meal/52948"),
+        Recipe("recipe_53013", "Big Mac", "American", "Dinner", 2, 2, 4.2, 35, ["beef", "bun", "lettuce", "cheese"],
+            "Домашна версия на познат бургер.",
+            "https://www.themealdb.com/meal/53013")
     ];
 
     private static readonly IReadOnlyList<DemoCatalogItem> BoardGames =
     [
-        new(
-            "game_catan",
-            "Catan",
-            "https://images.unsplash.com/photo-1606503153255-59d8b8b25150?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                gameType = "Strategy",
-                durationMin = 60,
-                durationMax = 120,
-                playersMin = 3,
-                playersMax = 4,
-                rating = 4.8,
-                complexity = 3,
-                description = "Класическа стратегическа игра за строене, ресурси и сделки."
-            }),
-        new(
-            "game_codenames",
-            "Codenames",
-            "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                gameType = "Party",
-                durationMin = 15,
-                durationMax = 30,
-                playersMin = 4,
-                playersMax = 8,
-                rating = 4.7,
-                complexity = 2,
-                description = "Бърза отборна игра с думи, идеална за повече хора."
-            }),
-        new(
-            "game_ticket_to_ride",
-            "Ticket to Ride",
-            "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                gameType = "Family",
-                durationMin = 45,
-                durationMax = 75,
-                playersMin = 2,
-                playersMax = 5,
-                rating = 4.6,
-                complexity = 2,
-                description = "Лека и приятна игра за маршрути и планиране."
-            }),
-        new(
-            "game_dixit",
-            "Dixit",
-            "https://images.unsplash.com/photo-1553481187-be93c21490a9?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                gameType = "Creative",
-                durationMin = 30,
-                durationMax = 45,
-                playersMin = 3,
-                playersMax = 6,
-                rating = 4.5,
-                complexity = 1,
-                description = "Креативна и красива игра с асоциации и въображение."
-            }),
-        new(
-            "game_terraforming_mars",
-            "Terraforming Mars",
-            "https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=1200&auto=format&fit=crop",
-            new
-            {
-                gameType = "Strategy",
-                durationMin = 120,
-                durationMax = 180,
-                playersMin = 1,
-                playersMax = 5,
-                rating = 4.9,
-                complexity = 5,
-                description = "Дълга стратегическа игра за по-запалени геймъри."
-            })
+        BoardGame("game_13", "Catan", "Strategy", 60, 120, 3, 4, 7.1, 3,
+            "Стратегическа игра за ресурси, строене и преговори.",
+            "https://boardgamegeek.com/boardgame/13/catan"),
+        BoardGame("game_178900", "Codenames", "Party", 15, 30, 2, 8, 7.5, 2,
+            "Отборна игра с думи, асоциации и внимателни подсказки.",
+            "https://boardgamegeek.com/boardgame/178900/codenames"),
+        BoardGame("game_9209", "Ticket to Ride", "Family", 30, 60, 2, 5, 7.4, 2,
+            "Семейна игра за влакови маршрути и планиране.",
+            "https://boardgamegeek.com/boardgame/9209/ticket-to-ride"),
+        BoardGame("game_39856", "Dixit", "Creative", 30, 45, 3, 8, 7.2, 1,
+            "Креативна игра с изображения, истории и асоциации.",
+            "https://boardgamegeek.com/boardgame/39856/dixit"),
+        BoardGame("game_167791", "Terraforming Mars", "Strategy", 120, 180, 1, 5, 8.3, 5,
+            "Дълга стратегическа игра за развитие на Марс.",
+            "https://boardgamegeek.com/boardgame/167791/terraforming-mars"),
+        BoardGame("game_230802", "Azul", "Abstract", 30, 45, 2, 4, 7.7, 2,
+            "Красива абстрактна игра с плочки и тактическо мислене.",
+            "https://boardgamegeek.com/boardgame/230802/azul"),
+        BoardGame("game_266192", "Wingspan", "Strategy", 40, 70, 1, 5, 8.0, 3,
+            "Игра за птици, карти и изграждане на двигател.",
+            "https://boardgamegeek.com/boardgame/266192/wingspan"),
+        BoardGame("game_148228", "Splendor", "Strategy", 30, 45, 2, 4, 7.4, 2,
+            "Игра с карти, ресурси и плавно надграждане.",
+            "https://boardgamegeek.com/boardgame/148228/splendor"),
+        BoardGame("game_822", "Carcassonne", "Tile Placement", 30, 45, 2, 5, 7.4, 2,
+            "Класическа игра с плочки, градове, пътища и ферми.",
+            "https://boardgamegeek.com/boardgame/822/carcassonne"),
+        BoardGame("game_169786", "Scythe", "Strategy", 90, 115, 1, 5, 8.1, 4,
+            "Стратегическа игра с контрол на територии и развитие.",
+            "https://boardgamegeek.com/boardgame/169786/scythe")
     ];
+
+    private static DemoCatalogItem Movie(string id, string title, string kind, double rating, int year, int duration, string[] genres, string description, string sourceUrl) =>
+        new(
+            id,
+            title,
+            "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200&auto=format&fit=crop",
+            new
+            {
+                kind,
+                genres,
+                rating,
+                year,
+                duration,
+                description,
+                sourceName = "IMDb",
+                sourceUrl,
+                dataSnapshot = DataSnapshot
+            });
+
+    private static DemoCatalogItem Restaurant(string id, string title, string city, string district, string cuisine, string[] cuisines, double rating, string priceRange, string description, string sourceUrl) =>
+        new(
+            id,
+            title,
+            "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1200&auto=format&fit=crop",
+            new
+            {
+                city,
+                district,
+                cuisine,
+                cuisines,
+                rating,
+                priceRange,
+                description,
+                sourceName = "Tripadvisor / official website snapshot",
+                sourceUrl,
+                dataSnapshot = DataSnapshot
+            });
+
+    private static DemoCatalogItem Recipe(string id, string title, string cuisine, string foodType, int complexity, int budgetLevel, double rating, int prepTime, string[] ingredients, string description, string sourceUrl) =>
+        new(
+            id,
+            title,
+            "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1200&auto=format&fit=crop",
+            new
+            {
+                complexity,
+                cuisine,
+                foodType,
+                budgetLevel,
+                rating,
+                prepTime,
+                ingredients,
+                description,
+                sourceName = "TheMealDB",
+                sourceUrl,
+                dataSnapshot = DataSnapshot
+            });
+
+    private static DemoCatalogItem BoardGame(string id, string title, string gameType, int durationMin, int durationMax, int playersMin, int playersMax, double rating, int complexity, string description, string sourceUrl) =>
+        new(
+            id,
+            title,
+            "https://images.unsplash.com/photo-1629760946220-5693ee4c46ac?q=80&w=1200&auto=format&fit=crop",
+            new
+            {
+                gameType,
+                durationMin,
+                durationMax,
+                playersMin,
+                playersMax,
+                rating,
+                complexity,
+                description,
+                sourceName = "BoardGameGeek",
+                sourceUrl,
+                dataSnapshot = DataSnapshot
+            });
 }
+
+

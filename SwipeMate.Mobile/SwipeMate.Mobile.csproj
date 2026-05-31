@@ -119,6 +119,9 @@
 	  <MauiXaml Update="Pages\SwipePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\AdminPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<Target Name="EnsureAndroidAaptAssetDirectories" BeforeTargets="_CreateBaseApkWithAapt2">

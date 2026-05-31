@@ -30,14 +30,14 @@ public partial class FriendsPage : ContentPage
 
             FriendsCollectionView.ItemsSource = friends;
             RequestsCollectionView.ItemsSource = requests;
-            FriendsHeaderLabel.Text = $"My Friends ({friends.Count})";
-            RequestsHeaderLabel.Text = $"Requests ({requests.Count})";
+            FriendsHeaderLabel.Text = $"Моите приятели ({friends.Count})";
+            RequestsHeaderLabel.Text = $"Покани ({requests.Count})";
             NoFriendsLabel.IsVisible = friends.Count == 0;
             NoRequestsLabel.IsVisible = requests.Count == 0;
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -64,7 +64,7 @@ public partial class FriendsPage : ContentPage
         {
             SuggestionsCollectionView.ItemsSource = null;
             SuggestionsCollectionView.IsVisible = false;
-            NoSuggestionsLabel.Text = "Start typing to find existing users.";
+            NoSuggestionsLabel.Text = "Започни да пишеш, за да откриеш съществуващи потребители.";
             return;
         }
 
@@ -74,8 +74,8 @@ public partial class FriendsPage : ContentPage
             SuggestionsCollectionView.ItemsSource = suggestions;
             SuggestionsCollectionView.IsVisible = suggestions.Count > 0;
             NoSuggestionsLabel.Text = suggestions.Count == 0
-                ? "No matching users found."
-                : "Choose an existing user to send a request.";
+                ? "Не бяха открити съвпадащи потребители."
+                : "Избери съществуващ потребител, за да изпратиш покана.";
         }
         catch (TaskCanceledException)
         {
@@ -102,7 +102,7 @@ public partial class FriendsPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(userName))
         {
-            await DisplayAlert("Missing username", "Choose an existing user first.", "OK");
+            await DisplayAlert("Липсва потребител", "Първо избери съществуващ потребител.", "OK");
             return;
         }
 
@@ -112,13 +112,13 @@ public partial class FriendsPage : ContentPage
             FriendUserNameEntry.Text = string.Empty;
             SuggestionsCollectionView.ItemsSource = null;
             SuggestionsCollectionView.IsVisible = false;
-            NoSuggestionsLabel.Text = "Friend request was sent.";
-            await DisplayAlert("Sent", "Friend request was sent.", "OK");
+            NoSuggestionsLabel.Text = "Поканата за приятелство беше изпратена.";
+            await DisplayAlert("Изпратено", "Поканата за приятелство беше изпратена.", "OK");
             await LoadDataAsync();
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Could not add friend", ex.Message, "OK");
+            await DisplayAlert("Неуспешно добавяне на приятел", ex.Message, "OK");
         }
     }
 
@@ -136,7 +136,7 @@ public partial class FriendsPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -154,7 +154,7 @@ public partial class FriendsPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 

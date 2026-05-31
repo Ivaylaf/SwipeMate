@@ -23,8 +23,8 @@
                                 <GradientStop Color="#9333EA" Offset="1" />
                             </LinearGradientBrush>
                         </Grid.Background>
-                        <Label Text="It's a Match!" Grid.Row="1" HorizontalTextAlignment="Center" FontSize="30" FontAttributes="Bold" TextColor="White" />
-                        <Label x:Name="MatchMessageLabel" Grid.Row="2" Margin="0,8,0,0" Text="You all agreed on this choice." HorizontalTextAlignment="Center" FontSize="14" TextColor="#FCE7F3" />
+                        <Label Text="Имате съвпадение!" Grid.Row="1" HorizontalTextAlignment="Center" FontSize="30" FontAttributes="Bold" TextColor="White" />
+                        <Label x:Name="MatchMessageLabel" Grid.Row="2" Margin="0,8,0,0" Text="Всички се съгласихте с този избор." HorizontalTextAlignment="Center" FontSize="14" TextColor="#FCE7F3" />
                     </Grid>
 
                     <Image x:Name="MatchImage" HeightRequest="220" Aspect="AspectFill" />
@@ -36,7 +36,7 @@
                         <Label x:Name="MatchDescriptionLabel" FontSize="15" TextColor="#374151" />
 
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="Matched with:" FontSize="13" FontAttributes="Bold" TextColor="#6B7280" />
+                            <Label Text="Съвпадение с:" FontSize="13" FontAttributes="Bold" TextColor="#6B7280" />
                             <CollectionView x:Name="MatchedUsersCollectionView" ItemsLayout="HorizontalList" SelectionMode="None" HeightRequest="42">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
@@ -51,7 +51,7 @@
                             </CollectionView>
                         </VerticalStackLayout>
 
-                        <Button Text="Back to Home" HeightRequest="52" CornerRadius="14" BackgroundColor="#111827" TextColor="White" Clicked="OnHomeClicked" />
+                        <Button Text="Обратно към началото" HeightRequest="52" CornerRadius="14" BackgroundColor="#111827" TextColor="White" Clicked="OnHomeClicked" />
                     </VerticalStackLayout>
                 </VerticalStackLayout>
             </Frame>

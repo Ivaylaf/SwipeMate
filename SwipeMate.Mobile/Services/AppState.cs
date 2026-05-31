@@ -19,6 +19,7 @@ public sealed class AppState
     public CurrentUser? User { get; private set; }
     public Guid? CurrentSessionId { get; set; }
     public string? CurrentCategory { get; set; }
+    public bool CurrentSessionIsOwner { get; set; }
     public SessionItemSummary? CurrentMatch { get; set; }
     public string? CurrentMatchMessage { get; set; }
     public List<string> CurrentMatchedUsers { get; set; } = [];
@@ -86,6 +87,7 @@ public sealed class AppState
         User = null;
         CurrentSessionId = null;
         CurrentCategory = null;
+        CurrentSessionIsOwner = false;
         CurrentMatch = null;
         CurrentMatchMessage = null;
         CurrentMatchedUsers = [];

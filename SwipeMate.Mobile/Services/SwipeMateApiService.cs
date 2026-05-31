@@ -1,4 +1,4 @@
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Text.Json;
 using SwipeMate.Mobile.Models;
 
@@ -38,7 +38,7 @@ public sealed class SwipeMateApiService
         {
             category,
             friendUserNames = friendUserNames.ToArray()
-        }, ct) ?? throw new InvalidOperationException("Missing session response.");
+        }, ct) ?? throw new InvalidOperationException("Липсва отговор за сесията.");
 
     public Task SaveMovieFiltersAsync(Guid sessionId, string genres, string minRating, string yearFrom, string yearTo, CancellationToken ct = default)
         => PutAsync($"/api/sessions/{sessionId}/filters/movies", new
@@ -58,13 +58,12 @@ public sealed class SwipeMateApiService
             minRating = ParseDouble(minRating)
         }, ct);
 
-    public Task SaveRecipeFiltersAsync(Guid sessionId, string complexity, string cuisine, string foodType, string budgetLevel, string minRating, string ingredients, CancellationToken ct = default)
+    public Task SaveRecipeFiltersAsync(Guid sessionId, string complexity, string cuisine, string foodType, string minRating, string ingredients, CancellationToken ct = default)
         => PutAsync($"/api/sessions/{sessionId}/filters/recipes", new
         {
             complexity = ParseInt(complexity),
             cuisine = NullIfEmpty(cuisine),
             foodType = NullIfEmpty(foodType),
-            budgetLevel = ParseInt(budgetLevel),
             minRating = ParseDouble(minRating),
             ingredients = SplitCsv(ingredients)
         }, ct);
@@ -95,7 +94,7 @@ public sealed class SwipeMateApiService
 
     public async Task<SessionDetailsSummary> GetSessionDetailsAsync(Guid sessionId, CancellationToken ct = default)
         => await GetAsync<SessionDetailsSummary>($"/api/sessions/{sessionId}/details", ct)
-           ?? throw new InvalidOperationException("Missing session details response.");
+           ?? throw new InvalidOperationException("Липсва отговор с детайли за сесията.");
 
     public async Task<List<SessionInvitationSummary>> GetSessionInvitationsAsync(CancellationToken ct = default)
         => await GetAsync<List<SessionInvitationSummary>>("/api/sessions/invitations", ct) ?? [];
@@ -109,9 +108,12 @@ public sealed class SwipeMateApiService
     public Task CloseSessionAsync(Guid sessionId, bool close = true, CancellationToken ct = default)
         => PostAsync($"/api/sessions/{sessionId}/close", new { close }, ct);
 
+    public async Task<int> GetAvailableSuggestionCountAsync(Guid sessionId, CancellationToken ct = default)
+        => (await GetAsync<AvailableSuggestionCountResponse>($"/api/sessions/{sessionId}/available-count", ct))?.Count ?? 0;
+
     public async Task<ProfileSummary> GetProfileAsync(CancellationToken ct = default)
         => await GetAsync<ProfileSummary>("/api/profile/me", ct)
-           ?? throw new InvalidOperationException("Missing profile response.");
+           ?? throw new InvalidOperationException("Липсва отговор за профила.");
 
     public async Task<CatalogOptionsSummary> GetCatalogOptionsAsync(CancellationToken ct = default)
         => await GetAsync<CatalogOptionsSummary>("/api/catalog/options", ct)
@@ -123,7 +125,38 @@ public sealed class SwipeMateApiService
             displayName = NullIfEmpty(displayName),
             bio = NullIfEmpty(bio),
             profileImageUrl = NullIfEmpty(profileImageUrl)
-        }, ct) ?? throw new InvalidOperationException("Missing profile response.");
+        }, ct) ?? throw new InvalidOperationException("Липсва отговор за профила.");
+
+    public async Task<List<AdminUserSummary>> GetAdminUsersAsync(CancellationToken ct = default)
+        => await GetAsync<List<AdminUserSummary>>("/api/admin/users", ct) ?? [];
+
+    public async Task<AdminUserDetailsSummary> GetAdminUserDetailsAsync(string userId, CancellationToken ct = default)
+        => await GetAsync<AdminUserDetailsSummary>($"/api/admin/users/{Uri.EscapeDataString(userId)}", ct)
+           ?? throw new InvalidOperationException("Липсват детайли за потребителя.");
+
+    public Task BlockAdminUserAsync(string userId, string? reason, CancellationToken ct = default)
+        => PostAsync($"/api/admin/users/{Uri.EscapeDataString(userId)}/block", new { reason = NullIfEmpty(reason) }, ct);
+
+    public Task UnblockAdminUserAsync(string userId, CancellationToken ct = default)
+        => PostAsync($"/api/admin/users/{Uri.EscapeDataString(userId)}/unblock", new { }, ct);
+
+    public async Task<List<AdminCatalogItemSummary>> GetAdminCatalogAsync(CancellationToken ct = default)
+        => await GetAsync<List<AdminCatalogItemSummary>>("/api/admin/catalog", ct) ?? [];
+
+    public async Task<AdminCatalogItemDetailsSummary> GetAdminCatalogDetailsAsync(Guid itemId, CancellationToken ct = default)
+        => await GetAsync<AdminCatalogItemDetailsSummary>($"/api/admin/catalog/{itemId}", ct)
+           ?? throw new InvalidOperationException("Липсват детайли за елемента от каталога.");
+
+    public Task SetAdminCatalogStatusAsync(Guid itemId, bool isActive, CancellationToken ct = default)
+        => PostAsync($"/api/admin/catalog/{itemId}/status", new { isActive }, ct);
+
+    public async Task<string> GetAdminBackupJsonAsync(CancellationToken ct = default)
+    {
+        await _api.EnsureBearerAsync();
+        using var response = await _api.Http.GetAsync("/api/admin/backup", ct);
+        await EnsureSuccessAsync(response, ct);
+        return await response.Content.ReadAsStringAsync(ct);
+    }
 
     private async Task<T?> GetAsync<T>(string url, CancellationToken ct)
     {
@@ -185,7 +218,7 @@ public sealed class SwipeMateApiService
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            throw new HttpRequestException("Unauthorized. Please log in again.");
+            throw new HttpRequestException("Неоторизиран достъп. Моля, влез отново.");
         }
 
         var body = await response.Content.ReadAsStringAsync(ct);

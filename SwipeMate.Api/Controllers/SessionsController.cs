@@ -141,9 +141,12 @@ public class SessionsController : ControllerBase
     {
         var meId = CurrentUserId;
 
+        var terminalStatuses = new[] { "Finished", "Closed", "Declined", "Expired", "Cancelled" };
+
         var invitations = await _db.SessionInvitations
             .Where(x => x.InvitedUserId == meId && x.Status == "Pending")
             .Join(_db.MatchSessions, x => x.SessionId, s => s.Id, (x, s) => new { Invitation = x, Session = s })
+            .Where(x => !terminalStatuses.Contains(x.Session.Status))
             .Join(_userManager.Users,
                 x => x.Invitation.InvitedByUserId,
                 u => u.Id,
@@ -271,6 +274,27 @@ public class SessionsController : ControllerBase
         });
     }
 
+
+    [HttpGet("{id:guid}/available-count")]
+    public async Task<IActionResult> AvailableCount(Guid id)
+    {
+        var meId = CurrentUserId;
+
+        var isParticipant = await _db.MatchSessionParticipants.AnyAsync(p => p.SessionId == id && p.UserId == meId);
+        if (!isParticipant) return Forbid();
+
+        var session = await _db.MatchSessions.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
+        if (session == null) return NotFound();
+
+        var candidates = await _db.SessionItems
+            .Where(i => i.SessionId == id)
+            .Where(i => !_db.SessionMatches.Any(m => m.SessionId == id && m.ItemId == i.Id))
+            .OrderBy(i => i.Id)
+            .ToListAsync();
+
+        var filtered = await ApplyFiltersAsync(id, session.Category, candidates);
+        return Ok(new { Count = filtered.Count });
+    }
     // GET /api/sessions/{id}/next  -> vrushta purviya item, za koyto tekushtiyat user oshte nyama vote
     [HttpGet("{id:guid}/next")]
     public async Task<IActionResult> Next(Guid id)
@@ -295,7 +319,18 @@ public class SessionsController : ControllerBase
             .ToListAsync();
 
         var filtered = await ApplyFiltersAsync(id, session.Category, candidates);
-        var next = filtered.FirstOrDefault();
+        var filteredIds = filtered.Select(i => i.Id).ToHashSet();
+        var votedItemIds = await _db.SwipeVotes
+            .Where(v => v.SessionId == id)
+            .Select(v => v.ItemId)
+            .Distinct()
+            .ToListAsync();
+        var votedItemIdSet = votedItemIds.ToHashSet();
+
+        var next = filtered
+            .Concat(candidates.Where(i => votedItemIdSet.Contains(i.Id) && !filteredIds.Contains(i.Id)))
+            .OrderBy(i => i.Id)
+            .FirstOrDefault();
 
         if (next == null)
         {
@@ -441,6 +476,20 @@ public class SessionsController : ControllerBase
         if (session.CreatedByUserId != meId) return Forbid("Only creator can close session");
 
         session.Status = dto.Close ? "Closed" : "Active";
+
+        if (dto.Close)
+        {
+            var pendingInvitations = await _db.SessionInvitations
+                .Where(x => x.SessionId == id && x.Status == "Pending")
+                .ToListAsync();
+
+            foreach (var invitation in pendingInvitations)
+            {
+                invitation.Status = "Cancelled";
+                invitation.RespondedAtUtc = DateTime.UtcNow;
+            }
+        }
+
         await _db.SaveChangesAsync();
 
         return Ok(new { session.Id, session.Status });
@@ -459,6 +508,7 @@ public class SessionsController : ControllerBase
 
         foreach (var sessionId in sessionIds)
         {
+            await ExpireStaleSessionAsync(sessionId);
             await RefreshSessionStatusAsync(sessionId);
             await RefreshSessionCompletionAsync(sessionId);
         }
@@ -482,6 +532,7 @@ public class SessionsController : ControllerBase
             s.Status,
             s.CreatedAtUtc,
             s.CreatedByUserId,
+            IsOwner = s.CreatedByUserId == meId,
             ParticipantCount = participantCounts.GetValueOrDefault(s.Id, 0)
         }));
     }
@@ -583,8 +634,8 @@ public class SessionsController : ControllerBase
             .Select(f => f.FilterJson)
             .ToListAsync();
 
-        // MVP: връщаме списък от JSON-и и UI решава как да ги “обедини”
-        // (по-късно можем да направим истинско merge в бекенда)
+        // MVP: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ JSON-пїЅ пїЅ UI пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        // (пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ merge пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
         return Ok(new { filters });
     }
 
@@ -685,9 +736,9 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
     }
 
     existing.Complexity = dto.Complexity;
-    existing.Cuisine = dto.Cuisine;
+    existing.Cuisine = NormalizeCsv(dto.Cuisine);
     existing.FoodType = dto.FoodType;
-    existing.BudgetLevel = dto.BudgetLevel;
+    existing.BudgetLevel = null;
     existing.MinRating = dto.MinRating;
     existing.IngredientsCsv = string.Join(",", ingredientsCsv);
 
@@ -712,7 +763,6 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
             Complexity = f.Complexity,
             Cuisine = f.Cuisine,
             FoodType = f.FoodType,
-            BudgetLevel = f.BudgetLevel,
             MinRating = f.MinRating,
             Ingredients = string.IsNullOrWhiteSpace(f.IngredientsCsv)
                 ? new List<string>()
@@ -733,11 +783,11 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
 
         int? complexity = rows.Where(r => r.Complexity.HasValue).Select(r => r.Complexity!.Value).DefaultIfEmpty().Min();
         double? minRating = rows.Where(r => r.MinRating.HasValue).Select(r => r.MinRating!.Value).DefaultIfEmpty().Min();
-        int? budget = rows.Where(r => r.BudgetLevel.HasValue).Select(r => r.BudgetLevel!.Value).DefaultIfEmpty().Max();
-
-        string? cuisine = rows.Select(r => r.Cuisine).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().Count() == 1
-            ? rows.Select(r => r.Cuisine).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
-            : null;
+        var cuisines = rows
+            .SelectMany(r => SplitCsv(r.Cuisine))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x)
+            .ToList();
 
         string? foodType = rows.Select(r => r.FoodType).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().Count() == 1
             ? rows.Select(r => r.FoodType).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
@@ -754,8 +804,7 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         {
             Complexity = complexity == 0 ? null : complexity,
             MinRating = minRating == 0 ? null : minRating,
-            BudgetLevel = budget == 0 ? null : budget,
-            Cuisine = cuisine,
+            Cuisine = cuisines.Count == 0 ? null : string.Join(",", cuisines),
             FoodType = foodType,
             Ingredients = ingredients
         });
@@ -780,7 +829,7 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
             _db.BoardGameSessionFilters.Add(existing);
         }
 
-        existing.GameType = string.IsNullOrWhiteSpace(dto.GameType) ? null : dto.GameType.Trim();
+        existing.GameType = NormalizeCsv(dto.GameType);
         existing.DurationMin = dto.DurationMin;
         existing.DurationMax = dto.DurationMax;
         existing.PlayersMin = dto.PlayersMin;
@@ -825,12 +874,10 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         if (rows.Count == 0) return Ok(new BoardGameFiltersDto());
 
         var gameTypes = rows
-            .Select(r => r.GameType)
-            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .SelectMany(r => SplitCsv(r.GameType))
             .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x)
             .ToList();
-
-        string? gameType = gameTypes.Count == 1 ? gameTypes[0] : null;
 
         int? durationMin = rows.Where(r => r.DurationMin.HasValue).Select(r => r.DurationMin!.Value).DefaultIfEmpty().Min();
         if (!rows.Any(r => r.DurationMin.HasValue)) durationMin = null;
@@ -849,7 +896,7 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
 
         return Ok(new BoardGameFiltersDto
         {
-            GameType = gameType,
+            GameType = gameTypes.Count == 0 ? null : string.Join(",", gameTypes),
             DurationMin = durationMin,
             DurationMax = durationMax,
             PlayersMin = playersMin,
@@ -863,6 +910,11 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
     {
         var session = await _db.MatchSessions.FirstOrDefaultAsync(x => x.Id == sessionId);
         if (session == null)
+        {
+            return;
+        }
+
+        if (IsTerminalSessionStatus(session.Status))
         {
             return;
         }
@@ -881,6 +933,42 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
 
         await _db.SaveChangesAsync();
     }
+
+    private async Task ExpireStaleSessionAsync(Guid sessionId)
+    {
+        var session = await _db.MatchSessions.FirstOrDefaultAsync(x => x.Id == sessionId);
+        if (session == null || IsTerminalSessionStatus(session.Status))
+        {
+            return;
+        }
+
+        if (session.CreatedAtUtc > DateTime.UtcNow.AddHours(-24))
+        {
+            return;
+        }
+
+        session.Status = "Expired";
+
+        var pendingInvitations = await _db.SessionInvitations
+            .Where(x => x.SessionId == sessionId && x.Status == "Pending")
+            .ToListAsync();
+
+        foreach (var invitation in pendingInvitations)
+        {
+            invitation.Status = "Expired";
+            invitation.RespondedAtUtc = DateTime.UtcNow;
+        }
+
+        await _db.SaveChangesAsync();
+    }
+
+    private static bool IsTerminalSessionStatus(string? status)
+        => string.Equals(status, "Finished", StringComparison.OrdinalIgnoreCase)
+           || string.Equals(status, "Closed", StringComparison.OrdinalIgnoreCase)
+           || string.Equals(status, "Declined", StringComparison.OrdinalIgnoreCase)
+           || string.Equals(status, "Expired", StringComparison.OrdinalIgnoreCase)
+           || string.Equals(status, "Cancelled", StringComparison.OrdinalIgnoreCase);
+
     private async Task RefreshSessionCompletionAsync(Guid sessionId)
     {
         var session = await _db.MatchSessions.FirstOrDefaultAsync(x => x.Id == sessionId);
@@ -897,10 +985,38 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
             return;
         }
 
-        var hasRemaining = await _db.SessionItems
+        var candidates = await _db.SessionItems
             .Where(i => i.SessionId == sessionId)
             .Where(i => !_db.SessionMatches.Any(m => m.SessionId == sessionId && m.ItemId == i.Id))
-            .AnyAsync(i => _db.SwipeVotes.Count(v => v.SessionId == sessionId && v.ItemId == i.Id) < participantCount);
+            .OrderBy(i => i.Id)
+            .ToListAsync();
+
+        var filteredItems = await ApplyFiltersAsync(sessionId, session.Category, candidates);
+        var trackedItemIds = filteredItems.Select(i => i.Id).ToHashSet();
+
+        var votedItemIds = await _db.SwipeVotes
+            .Where(v => v.SessionId == sessionId)
+            .Select(v => v.ItemId)
+            .Distinct()
+            .ToListAsync();
+
+        foreach (var itemId in votedItemIds)
+        {
+            trackedItemIds.Add(itemId);
+        }
+
+        var trackedItemIdList = trackedItemIds.ToList();
+        var voteCountsByItem = await _db.SwipeVotes
+            .Where(v => v.SessionId == sessionId && trackedItemIdList.Contains(v.ItemId))
+            .GroupBy(v => v.ItemId)
+            .Select(g => new { ItemId = g.Key, Count = g.Select(v => v.UserId).Distinct().Count() })
+            .ToListAsync();
+
+        var hasRemaining = trackedItemIdList.Any(itemId =>
+        {
+            var voteCount = voteCountsByItem.FirstOrDefault(v => v.ItemId == itemId)?.Count ?? 0;
+            return voteCount < participantCount;
+        });
 
         if (!hasRemaining)
         {
@@ -955,15 +1071,14 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         var rows = await _db.RecipeSessionFilters.AsNoTracking().Where(x => x.SessionId == sessionId).ToListAsync();
         if (rows.Count == 0) return "No filters saved";
 
-        var cuisines = rows.Select(r => r.Cuisine).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        var cuisines = rows.SelectMany(r => SplitCsv(r.Cuisine)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
         var foodTypes = rows.Select(r => r.FoodType).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
         var ingredients = rows.SelectMany(r => string.IsNullOrWhiteSpace(r.IngredientsCsv) ? Array.Empty<string>() : r.IngredientsCsv.Split(','))
             .Select(x => x.Trim()).Where(x => x.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
         var minRating = rows.Any(r => r.MinRating.HasValue) ? rows.Where(r => r.MinRating.HasValue).Min(r => r.MinRating) : null;
         var maxComplexity = rows.Any(r => r.Complexity.HasValue) ? rows.Where(r => r.Complexity.HasValue).Min(r => r.Complexity) : null;
-        var maxBudget = rows.Any(r => r.BudgetLevel.HasValue) ? rows.Where(r => r.BudgetLevel.HasValue).Max(r => r.BudgetLevel) : null;
 
-        return $"Cuisine: {(cuisines.Count == 1 ? cuisines[0] : cuisines.Count > 1 ? "Mixed" : "Any")}; Type: {(foodTypes.Count == 1 ? foodTypes[0] : foodTypes.Count > 1 ? "Mixed" : "Any")}; Complexity <= {(maxComplexity?.ToString() ?? "Any")}; Budget <= {(maxBudget?.ToString() ?? "Any")}; Rating: {(minRating.HasValue ? minRating.Value.ToString("0.0") + "+" : "Any")}; Ingredients: {(ingredients.Count == 0 ? "Any" : string.Join(", ", ingredients))}";
+        return $"Cuisine: {(cuisines.Count == 0 ? "Any" : string.Join(", ", cuisines))}; Type: {(foodTypes.Count == 1 ? foodTypes[0] : foodTypes.Count > 1 ? "Mixed" : "Any")}; Complexity <= {(maxComplexity?.ToString() ?? "Any")}; Rating: {(minRating.HasValue ? minRating.Value.ToString("0.0") + "+" : "Any")}; Ingredients: {(ingredients.Count == 0 ? "Any" : string.Join(", ", ingredients))}";
     }
 
     private async Task<string> BuildBoardGameFilterSummaryAsync(Guid sessionId)
@@ -971,14 +1086,14 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         var rows = await _db.BoardGameSessionFilters.AsNoTracking().Where(x => x.SessionId == sessionId).ToListAsync();
         if (rows.Count == 0) return "No filters saved";
 
-        var gameTypes = rows.Select(r => r.GameType).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        var gameTypes = rows.SelectMany(r => SplitCsv(r.GameType)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
         var playersMin = rows.Any(r => r.PlayersMin.HasValue) ? rows.Where(r => r.PlayersMin.HasValue).Min(r => r.PlayersMin) : null;
         var playersMax = rows.Any(r => r.PlayersMax.HasValue) ? rows.Where(r => r.PlayersMax.HasValue).Max(r => r.PlayersMax) : null;
         var durationMin = rows.Any(r => r.DurationMin.HasValue) ? rows.Where(r => r.DurationMin.HasValue).Min(r => r.DurationMin) : null;
         var durationMax = rows.Any(r => r.DurationMax.HasValue) ? rows.Where(r => r.DurationMax.HasValue).Max(r => r.DurationMax) : null;
         var minRating = rows.Any(r => r.MinRating.HasValue) ? rows.Where(r => r.MinRating.HasValue).Min(r => r.MinRating) : null;
 
-        return $"Type: {(gameTypes.Count == 1 ? gameTypes[0] : gameTypes.Count > 1 ? "Mixed" : "Any")}; Players: {(playersMin?.ToString() ?? "Any")}-{(playersMax?.ToString() ?? "Any")}; Duration: {(durationMin?.ToString() ?? "Any")}-{(durationMax?.ToString() ?? "Any")} min; Rating: {(minRating.HasValue ? minRating.Value.ToString("0.0") + "+" : "Any")}";
+        return $"Type: {(gameTypes.Count == 0 ? "Any" : string.Join(", ", gameTypes))}; Players: {(playersMin?.ToString() ?? "Any")}-{(playersMax?.ToString() ?? "Any")}; Duration: {(durationMin?.ToString() ?? "Any")}-{(durationMax?.ToString() ?? "Any")} min; Rating: {(minRating.HasValue ? minRating.Value.ToString("0.0") + "+" : "Any")}";
     }
 
     private static object ToItemResponse(SessionItem item)
@@ -1111,7 +1226,7 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
 
             return (string.IsNullOrWhiteSpace(city) || string.Equals(itemCity, city, StringComparison.OrdinalIgnoreCase))
                    && (string.IsNullOrWhiteSpace(district) || string.Equals(itemDistrict, district, StringComparison.OrdinalIgnoreCase))
-                   && (string.IsNullOrWhiteSpace(cuisine) || string.Equals(itemCuisine, cuisine, StringComparison.OrdinalIgnoreCase))
+                   && (cuisines.Count == 0 || (!string.IsNullOrWhiteSpace(itemCuisine) && cuisines.Contains(itemCuisine)))
                    && (!minRating.HasValue || rating >= minRating.Value);
         }).ToList();
     }
@@ -1128,13 +1243,13 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         int? complexity = filter.Any(x => x.Complexity.HasValue)
             ? filter.Where(x => x.Complexity.HasValue).Min(x => x.Complexity)
             : null;
-        int? budget = filter.Any(x => x.BudgetLevel.HasValue)
-            ? filter.Where(x => x.BudgetLevel.HasValue).Max(x => x.BudgetLevel)
-            : null;
         double? minRating = filter.Any(x => x.MinRating.HasValue)
             ? filter.Where(x => x.MinRating.HasValue).Min(x => x.MinRating)
             : null;
-        var cuisine = SingleOrNull(filter.Select(x => x.Cuisine));
+        var cuisines = filter
+            .SelectMany(x => SplitCsv(x.Cuisine))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var foodType = SingleOrNull(filter.Select(x => x.FoodType));
         var ingredients = filter
             .SelectMany(x => string.IsNullOrWhiteSpace(x.IngredientsCsv) ? [] : x.IngredientsCsv.Split(',', StringSplitOptions.RemoveEmptyEntries))
@@ -1147,16 +1262,14 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         {
             var meta = ParseMeta(item);
             var itemComplexity = GetInt(meta, "complexity");
-            var itemBudget = GetInt(meta, "budgetLevel");
             var rating = GetDouble(meta, "rating");
             var itemCuisine = GetString(meta, "cuisine");
             var itemFoodType = GetString(meta, "foodType");
             var itemIngredients = GetStrings(meta, "ingredients");
 
             return (!complexity.HasValue || itemComplexity <= complexity.Value)
-                   && (!budget.HasValue || itemBudget <= budget.Value)
                    && (!minRating.HasValue || rating >= minRating.Value)
-                   && (string.IsNullOrWhiteSpace(cuisine) || string.Equals(itemCuisine, cuisine, StringComparison.OrdinalIgnoreCase))
+                   && (cuisines.Count == 0 || (!string.IsNullOrWhiteSpace(itemCuisine) && cuisines.Contains(itemCuisine)))
                    && (string.IsNullOrWhiteSpace(foodType) || string.Equals(itemFoodType, foodType, StringComparison.OrdinalIgnoreCase))
                    && (ingredients.Count == 0 || ingredients.Any(i => itemIngredients.Contains(i, StringComparer.OrdinalIgnoreCase)));
         }).ToList();
@@ -1171,7 +1284,10 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
 
         if (filter.Count == 0) return items;
 
-        var gameType = SingleOrNull(filter.Select(x => x.GameType));
+        var gameTypes = filter
+            .SelectMany(x => SplitCsv(x.GameType))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         int? durationMin = filter.Any(x => x.DurationMin.HasValue)
             ? filter.Where(x => x.DurationMin.HasValue).Min(x => x.DurationMin)
             : null;
@@ -1198,7 +1314,7 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
             var itemPlayersMax = GetInt(meta, "playersMax");
             var rating = GetDouble(meta, "rating");
 
-            return (string.IsNullOrWhiteSpace(gameType) || string.Equals(itemType, gameType, StringComparison.OrdinalIgnoreCase))
+            return (gameTypes.Count == 0 || (!string.IsNullOrWhiteSpace(itemType) && gameTypes.Contains(itemType)))
                    && (!durationMin.HasValue || itemDurationMin >= durationMin.Value)
                    && (!durationMax.HasValue || itemDurationMax <= durationMax.Value)
                    && (!playersMin.HasValue || itemPlayersMin >= playersMin.Value)
@@ -1240,6 +1356,22 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
             .ToList();
     }
 
+
+    private static string? NormalizeCsv(string? value)
+    {
+        var values = SplitCsv(value)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x)
+            .ToList();
+
+        return values.Count == 0 ? null : string.Join(",", values);
+    }
+
+    private static IEnumerable<string> SplitCsv(string? value)
+        => string.IsNullOrWhiteSpace(value)
+            ? []
+            : value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(x => !string.IsNullOrWhiteSpace(x));
     private static string? SingleOrNull(IEnumerable<string?> values)
     {
         var distinct = values
@@ -1263,6 +1395,8 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         return groups.Count == 0 ? null : groups[0].Key;
     }
 }
+
+
 
 
 

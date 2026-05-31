@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="SwipeMate.Mobile.Pages.ActiveSessionsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -15,43 +15,44 @@
     <ScrollView>
         <VerticalStackLayout Padding="24,24,24,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
             <Grid ColumnDefinitions="Auto,*,Auto">
-                <Button Text="Back" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
+                <Button Text="Назад" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
                 <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                    <Label Text="Active Sessions" FontSize="22" FontAttributes="Bold" TextColor="#111827" />
-                    <Label Text="Open a group session, save your filters, and continue swiping." FontSize="13" TextColor="#6B7280" />
+                    <Label Text="Активни сесии" FontSize="22" FontAttributes="Bold" TextColor="#111827" />
+                    <Label Text="Отвори групова сесия, запази филтрите си и продължи с изборите." FontSize="13" TextColor="#6B7280" />
                 </VerticalStackLayout>
-                <Button Grid.Column="2" Text="Refresh" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnRefreshClicked" />
+                <Button Grid.Column="2" Text="Обнови" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnRefreshClicked" />
             </Grid>
 
             <ActivityIndicator x:Name="LoadingIndicator" IsVisible="False" IsRunning="False" Color="#C026D3" />
+            <Label x:Name="LastRefreshLabel" Text="Натисни Обнови, за да провериш за нови покани и промени." FontSize="12" TextColor="#9CA3AF" HorizontalTextAlignment="Center" />
 
             <Frame Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Pending invitations" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
+                    <Label Text="Чакащи покани" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
                     <CollectionView x:Name="InvitationsCollectionView" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Frame Margin="0,0,0,10" Padding="16" CornerRadius="12" BackgroundColor="#FDF2F8" BorderColor="#FBCFE8" HasShadow="False">
                                     <VerticalStackLayout Spacing="10">
-                                        <Label Text="{Binding Category}" FontSize="17" FontAttributes="Bold" TextColor="#111827" />
-                                        <Label Text="{Binding InvitedByUserName, StringFormat='Invited by: {0}'}" FontSize="13" TextColor="#6B7280" />
-                                        <Label Text="{Binding CreatedAtUtc, StringFormat='Sent: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#9CA3AF" />
+                                        <Label Text="{Binding CategoryDisplayName}" FontSize="17" FontAttributes="Bold" TextColor="#111827" />
+                                        <Label Text="{Binding InvitedByUserName, StringFormat='Поканен от: {0}'}" FontSize="13" TextColor="#6B7280" />
+                                        <Label Text="{Binding CreatedAtUtc, StringFormat='Изпратена: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#9CA3AF" />
                                         <HorizontalStackLayout Spacing="10">
-                                            <Button Text="Accept" BackgroundColor="#10B981" TextColor="White" Clicked="OnAcceptInvitationClicked" />
-                                            <Button Text="Decline" BackgroundColor="#EF4444" TextColor="White" Clicked="OnDeclineInvitationClicked" />
+                                            <Button Text="Приеми" BackgroundColor="#10B981" TextColor="White" Clicked="OnAcceptInvitationClicked" />
+                                            <Button Text="Откажи" BackgroundColor="#EF4444" TextColor="White" Clicked="OnDeclineInvitationClicked" />
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label x:Name="NoInvitationsLabel" Text="No pending session invitations." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                    <Label x:Name="NoInvitationsLabel" Text="Няма чакащи покани за сесии." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </Frame>
 
             <Frame Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Your current sessions" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
+                    <Label Text="Твоите текущи сесии" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
                     <CollectionView x:Name="SessionsCollectionView" SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -59,23 +60,24 @@
                                     <VerticalStackLayout Spacing="10">
                                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                                             <VerticalStackLayout Spacing="4">
-                                                <Label Text="{Binding Category}" FontSize="17" FontAttributes="Bold" TextColor="#111827" />
-                                                <Label Text="{Binding Status}" FontSize="13" TextColor="#C026D3" />
-                                                <Label Text="{Binding ParticipantCount, StringFormat='Participants: {0}'}" FontSize="13" TextColor="#6B7280" />
-                                                <Label Text="{Binding CreatedAtUtc, StringFormat='Created: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#9CA3AF" />
+                                                <Label Text="{Binding CategoryDisplayName}" FontSize="17" FontAttributes="Bold" TextColor="#111827" />
+                                                <Label Text="{Binding StatusDisplayName}" FontSize="13" TextColor="{Binding StatusColor}" />
+                                                <Label Text="{Binding ParticipantCount, StringFormat='Участници: {0}'}" FontSize="13" TextColor="#6B7280" />
+                                                <Label Text="{Binding CreatedAtUtc, StringFormat='Създадена: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#9CA3AF" />
                                             </VerticalStackLayout>
-                                            <Label Grid.Column="1" Text="Session" TextColor="#9CA3AF" VerticalTextAlignment="Center" />
+                                            <Label Grid.Column="1" Text="Сесия" TextColor="#9CA3AF" VerticalTextAlignment="Center" />
                                         </Grid>
                                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                                            <Button Text="My Filters" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnSessionFiltersClicked" />
-                                            <Button Grid.Column="1" Text="Open" BackgroundColor="#C026D3" TextColor="White" Clicked="OnOpenSessionClicked" />
+                                            <Button Text="Моите филтри" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnSessionFiltersClicked" />
+                                            <Button Grid.Column="1" Text="Отвори" BackgroundColor="#C026D3" TextColor="White" Clicked="OnOpenSessionClicked" />
                                         </Grid>
+                                        <Button Text="Приключи сесията" IsVisible="{Binding CanClose}" BackgroundColor="#FEF2F2" BorderColor="#FCA5A5" BorderWidth="1" TextColor="#DC2626" Clicked="OnCloseSessionClicked" />
                                     </VerticalStackLayout>
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label x:Name="NoSessionsLabel" Text="No current sessions yet. Ask a friend to create one with you, or create one from the category cards." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
+                    <Label x:Name="NoSessionsLabel" Text="Все още няма активни сесии. Помоли приятел да създаде сесия с теб или създай нова от картите с категории." IsVisible="False" TextColor="#6B7280" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>

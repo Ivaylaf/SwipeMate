@@ -56,6 +56,7 @@ public class FriendsController : ControllerBase
 
         var users = await _userManager.Users
             .Where(u => !blockedIds.Contains(u.Id))
+            .Where(u => !u.IsBlocked)
             .Where(u =>
                 (u.UserName != null && EF.Functions.Like(u.UserName, $"%{query}%")) ||
                 (u.DisplayName != null && EF.Functions.Like(u.DisplayName, $"%{query}%")) ||
@@ -83,6 +84,9 @@ public class FriendsController : ControllerBase
 
         if (toUser == null)
             return NotFound("User not found");
+
+        if (toUser.IsBlocked)
+            return BadRequest("This user is blocked and cannot receive friend requests.");
 
         if (toUser.Id == meId)
             return BadRequest("You cannot add yourself");
@@ -184,6 +188,7 @@ public class FriendsController : ControllerBase
 
         var friends = await _userManager.Users
             .Where(u => friendIds.Contains(u.Id))
+            .Where(u => !u.IsBlocked)
             .Select(u => new
             {
                 u.Id,

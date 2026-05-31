@@ -21,7 +21,7 @@ public partial class SwipePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        SwipeTitleLabel.Text = _appState.CurrentCategory ?? "Swipe";
+        SwipeTitleLabel.Text = _appState.CurrentCategory ?? "Избор";
         await LoadNextItemAsync();
     }
 
@@ -29,7 +29,7 @@ public partial class SwipePage : ContentPage
     {
         if (_appState.CurrentSessionId is null)
         {
-            await DisplayAlert("Missing session", "There is no active session selected.", "OK");
+            await DisplayAlert("Липсва сесия", "Няма избрана активна сесия.", "OK");
             await Shell.Current.GoToAsync("//Home");
             return;
         }
@@ -41,16 +41,21 @@ public partial class SwipePage : ContentPage
 
             if (_currentItem is null)
             {
-                await DisplayAlert("Done", "No more suggestions in this session.", "OK");
+                await DisplayAlert("Готово", "Няма повече предложения в тази сесия. Ако всички участници са приключили, сесията ще се премести в историята.", "OK");
                 await Shell.Current.GoToAsync("//Home");
                 return;
             }
 
             PopulateItem(_currentItem);
         }
+        catch (Exception ex) when (IsInactiveSessionError(ex))
+        {
+            await DisplayAlert("Сесията приключи", "Тази сесия вече не е активна. Ще те върна към началния екран.", "OK");
+            await Shell.Current.GoToAsync("//Home");
+        }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
         finally
         {
@@ -66,17 +71,17 @@ public partial class SwipePage : ContentPage
         ItemImage.Source = string.IsNullOrWhiteSpace(item.ImageUrl)
             ? "dotnet_bot.png"
             : ImageSource.FromUri(new Uri(item.ImageUrl));
-        SwipeProgressLabel.Text = $"Viewed cards: {_swipeCount}";
+        SwipeProgressLabel.Text = $"Прегледани карти: {_swipeCount}";
     }
 
     private string BuildMetaText(SessionItemSummary item)
     {
         return item.Category switch
         {
-            "Restaurant" => $"{GetText(item.Meta, "cuisine")} - {GetText(item.Meta, "district")} - rating {GetNumber(item.Meta, "rating")}",
-            "Recipe" => $"{GetText(item.Meta, "cuisine")} - {GetText(item.Meta, "foodType")} - {GetNumber(item.Meta, "prepTime")} min",
-            "BoardGame" => $"{GetText(item.Meta, "gameType")} - {GetNumber(item.Meta, "durationMin")}-{GetNumber(item.Meta, "durationMax")} min - rating {GetNumber(item.Meta, "rating")}",
-            _ => $"{JoinArray(item.Meta, "genres")} - {GetNumber(item.Meta, "year")} - rating {GetNumber(item.Meta, "rating")}"
+            "Restaurant" => $"{GetText(item.Meta, "cuisine")} • {GetText(item.Meta, "district")} • оценка {GetNumber(item.Meta, "rating")}",
+            "Recipe" => $"{GetText(item.Meta, "cuisine")} • {GetText(item.Meta, "foodType")} • {GetNumber(item.Meta, "prepTime")} мин",
+            "BoardGame" => $"{GetText(item.Meta, "gameType")} • {GetNumber(item.Meta, "durationMin")}-{GetNumber(item.Meta, "durationMax")} мин • оценка {GetNumber(item.Meta, "rating")}",
+            _ => $"{JoinArray(item.Meta, "genres")} • {GetNumber(item.Meta, "year")} • оценка {GetNumber(item.Meta, "rating")}"
         };
     }
 
@@ -96,16 +101,21 @@ public partial class SwipePage : ContentPage
             if (isYes && response.MatchFound)
             {
                 var matchedUsers = response.MatchedUsers.Count == 0
-                    ? "your group"
+                    ? "вашата група"
                     : string.Join(", ", response.MatchedUsers);
 
                 if (response.FullGroupMatch)
                 {
                     _appState.CurrentMatch = _currentItem;
-                    _appState.CurrentMatchMessage = $"You all agreed on this choice.";
+                    _appState.CurrentMatchMessage = "Всички се съгласихте с този избор.";
                     _appState.CurrentMatchedUsers = response.MatchedUsers.ToList();
 
-                    var shouldContinue = await DisplayAlert("Full group match", $"All accepted participants matched on this choice: {matchedUsers}. Do you want to continue swiping for more options?", "Continue", "Stop");
+                    var shouldContinue = await DisplayAlert(
+                        "Пълно съвпадение",
+                        $"Всички участници съвпаднаха на този избор: {matchedUsers}. Искаш ли да продължиш с още предложения?",
+                        "Продължи",
+                        "Спри");
+
                     if (!shouldContinue)
                     {
                         await Shell.Current.GoToAsync(nameof(MatchPage));
@@ -114,16 +124,24 @@ public partial class SwipePage : ContentPage
                 }
                 else
                 {
-                    await DisplayAlert("Partial match", $"Current match between: {matchedUsers}. The session will continue until everyone agrees or the suggestions finish.", "OK");
+                    await DisplayAlert(
+                        "Частично съвпадение",
+                        $"Текущото съвпадение е между: {matchedUsers}. Сесията ще продължи, докато всички се съгласят или предложенията свършат.",
+                        "OK");
                     _appState.CurrentMatchedUsers = response.MatchedUsers.ToList();
                 }
             }
 
             await LoadNextItemAsync();
         }
+        catch (Exception ex) when (IsInactiveSessionError(ex))
+        {
+            await DisplayAlert("Сесията приключи", "Тази сесия вече е приключила или затворена. Ще те върна към началния екран.", "OK");
+            await Shell.Current.GoToAsync("//Home");
+        }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
         finally
         {
@@ -138,9 +156,43 @@ public partial class SwipePage : ContentPage
     }
 
     private async void OnRejectClicked(object sender, EventArgs e) => await SubmitSwipeAsync(false);
-    private async void OnLikeClicked(object sender, EventArgs e) => await SubmitSwipeAsync(true);
-    private async void OnHomeClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync("//Home");
 
+    private async void OnLikeClicked(object sender, EventArgs e) => await SubmitSwipeAsync(true);
+
+    private async void OnHomeClicked(object sender, EventArgs e)
+    {
+        if (_appState.CurrentSessionId is Guid sessionId && _appState.CurrentSessionIsOwner)
+        {
+            var closeSession = await DisplayAlert(
+                "Изход от сесия",
+                "Искаш ли да приключиш тази сесия? Ако я приключиш, тя ще се премести в историята и чакащите покани ще бъдат отменени.",
+                "Приключи",
+                "Само излез");
+
+            if (closeSession)
+            {
+                try
+                {
+                    await _apiService.CloseSessionAsync(sessionId, true);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Грешка", ex.Message, "OK");
+                    return;
+                }
+            }
+        }
+
+        await Shell.Current.GoToAsync("//Home");
+    }
+
+    private static bool IsInactiveSessionError(Exception ex)
+    {
+        var message = ex.Message ?? string.Empty;
+        return message.Contains("not active", StringComparison.OrdinalIgnoreCase)
+               || message.Contains("not active yet", StringComparison.OrdinalIgnoreCase)
+               || message.Contains("не е актив", StringComparison.OrdinalIgnoreCase);
+    }
     private static string GetText(JsonElement meta, string property)
         => meta.ValueKind == JsonValueKind.Object && meta.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String
             ? value.GetString() ?? ""
@@ -171,4 +223,3 @@ public partial class SwipePage : ContentPage
         return string.Join(", ", value.EnumerateArray().Select(x => x.GetString()).Where(x => !string.IsNullOrWhiteSpace(x)));
     }
 }
-

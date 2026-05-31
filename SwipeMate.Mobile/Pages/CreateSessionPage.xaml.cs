@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Models;
+﻿using SwipeMate.Mobile.Models;
 using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
@@ -12,6 +12,9 @@ public partial class CreateSessionPage : ContentPage
     private readonly HashSet<string> _selectedFriends = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedMovieGenres = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedRecipeIngredients = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedRecipeCuisines = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedGameTypes = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, List<string>> _restaurantDistrictsByCity = new(StringComparer.OrdinalIgnoreCase);
     private bool _catalogLoaded;
     private string _category = "Movie";
     private Guid? _sessionId;
@@ -69,7 +72,6 @@ public partial class CreateSessionPage : ContentPage
         await LoadFriendsAsync();
     }
 
-
     private void ConfigurePageMode()
     {
         if (PageTitleLabel is null || ContinueButton is null || FriendsCard is null)
@@ -78,10 +80,10 @@ public partial class CreateSessionPage : ContentPage
         }
 
         var isContributionMode = _sessionId.HasValue;
-        PageTitleLabel.Text = isContributionMode ? "Set Session Filters" : "Create Match Session";
-        ContinueButton.Text = isContributionMode ? "Save My Filters" : "Send Invitations";
+        PageTitleLabel.Text = isContributionMode ? "Филтри за сесията" : "Създай сесия за съвпадение";
+        ContinueButton.Text = isContributionMode ? "Запази моите филтри" : "Изпрати покани";
         FriendsCard.IsVisible = !isContributionMode;
-        ContinueButton.IsEnabled = isContributionMode || _selectedFriends.Count > 0;
+        ContinueButton.IsEnabled = true;
     }
 
     private async Task EnsureCatalogOptionsAsync()
@@ -109,25 +111,26 @@ public partial class CreateSessionPage : ContentPage
         PopulateCheckOptions(MovieGenresFlexLayout, options.Movies.Genres, _selectedMovieGenres, OnMovieGenreCheckedChanged);
         PopulateCheckOptions(RecipeIngredientsFlexLayout, options.Recipes.Ingredients, _selectedRecipeIngredients, OnRecipeIngredientCheckedChanged);
 
+        _restaurantDistrictsByCity = options.Restaurants.DistrictsByCity
+            .ToDictionary(x => x.Key, x => x.Value.OrderBy(v => v).ToList(), StringComparer.OrdinalIgnoreCase);
+
         RestaurantCityPicker.ItemsSource = WithAll(options.Restaurants.Cities);
         RestaurantDistrictPicker.ItemsSource = WithAll(options.Restaurants.Districts);
         RestaurantCuisinePicker.ItemsSource = WithAll(options.Restaurants.Cuisines);
 
-        RecipeCuisinePicker.ItemsSource = WithAll(options.Recipes.Cuisines);
+        PopulateCheckOptions(RecipeCuisinesFlexLayout, options.Recipes.Cuisines, _selectedRecipeCuisines, OnRecipeCuisineCheckedChanged);
         RecipeFoodTypePicker.ItemsSource = WithAll(options.Recipes.FoodTypes);
 
-        GameTypePicker.ItemsSource = WithAll(options.BoardGames.GameTypes);
+        PopulateCheckOptions(GameTypesFlexLayout, options.BoardGames.GameTypes, _selectedGameTypes, OnGameTypeCheckedChanged);
 
         ApplyMovieYearRange(options.Movies.YearMin, options.Movies.YearMax);
         ApplyBoardGameRanges(options.BoardGames);
         ApplyRecipeRanges(options.Recipes);
 
         SelectFirstPickerItem(RestaurantCityPicker);
-        SelectFirstPickerItem(RestaurantDistrictPicker);
-        SelectFirstPickerItem(RestaurantCuisinePicker);
-        SelectFirstPickerItem(RecipeCuisinePicker);
-        SelectFirstPickerItem(RecipeFoodTypePicker);
-        SelectFirstPickerItem(GameTypePicker);
+        ApplyRestaurantDistrictOptions();
+        SelectFirstPickerItem(RestaurantCuisinePicker);        SelectFirstPickerItem(RecipeFoodTypePicker);
+
     }
 
     private void ApplyFallbackCatalogOptions()
@@ -174,13 +177,13 @@ public partial class CreateSessionPage : ContentPage
             var friends = await _apiService.GetFriendsAsync();
             FriendsCollectionView.ItemsSource = friends;
             NoFriendsHintLabel.IsVisible = friends.Count == 0;
-            ContinueButton.IsEnabled = friends.Count > 0 && _selectedFriends.Count > 0;
-        ConfigurePageMode();
+            ContinueButton.IsEnabled = true;
+            ConfigurePageMode();
             UpdateSelectedFriendsLabel();
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -193,14 +196,14 @@ public partial class CreateSessionPage : ContentPage
 
         var settings = Category switch
         {
-            "Restaurant" => new CategoryVisuals("Restaurants", "#F97316", "#DC2626"),
-            "Recipe" => new CategoryVisuals("Recipes", "#22C55E", "#059669"),
-            "BoardGame" => new CategoryVisuals("Board Games", "#8B5CF6", "#EC4899"),
-            _ => new CategoryVisuals("Movies & TV", "#0EA5E9", "#A855F7")
+            "Restaurant" => new CategoryVisuals("Ресторанти", "#F97316", "#DC2626"),
+            "Recipe" => new CategoryVisuals("Рецепти", "#22C55E", "#059669"),
+            "BoardGame" => new CategoryVisuals("Настолни игри", "#8B5CF6", "#EC4899"),
+            _ => new CategoryVisuals("Филми и сериали", "#0EA5E9", "#A855F7")
         };
 
         CategoryTitleLabel.Text = settings.Title;
-        CategorySubtitleLabel.Text = _sessionId.HasValue ? "Add your own filters before swiping" : "Select friends to match with";
+        CategorySubtitleLabel.Text = _sessionId.HasValue ? "Добави своите филтри преди гласуването" : "Избери приятели за общото решение";
         CategoryGradientStart.Color = Color.FromArgb(settings.GradientStart);
         CategoryGradientEnd.Color = Color.FromArgb(settings.GradientEnd);
         MovieCategoryIconPath.IsVisible = Category == "Movie";
@@ -238,7 +241,8 @@ public partial class CreateSessionPage : ContentPage
             var stack = new HorizontalStackLayout
             {
                 Spacing = 4,
-                Margin = new Thickness(0, 0, 12, 8),
+                WidthRequest = 132,
+                Margin = new Thickness(0, 0, 8, 8),
                 Children = { checkBox, label }
             };
 
@@ -247,7 +251,7 @@ public partial class CreateSessionPage : ContentPage
     }
 
     private static List<string> WithAll(IEnumerable<string> values)
-        => ["All", .. values.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x)];
+        => ["Всички", .. values.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x)];
 
     private static void SelectFirstPickerItem(Picker picker)
     {
@@ -296,32 +300,26 @@ public partial class CreateSessionPage : ContentPage
         GameDurationMaxSlider.Maximum = maxDuration;
         GameDurationMaxSlider.Value = maxDuration;
 
-        GamePlayersLabel.Text = $"Players: {minPlayers} - {maxPlayers}";
-        GameDurationLabel.Text = $"Duration: {minDuration} - {maxDuration} min";
+        GamePlayersLabel.Text = $"Играчи: {minPlayers} - {maxPlayers}";
+        GameDurationLabel.Text = $"Продължителност: {minDuration} - {maxDuration} мин";
     }
 
     private void ApplyRecipeRanges(RecipeCatalogOptions options)
     {
         var minComplexity = options.ComplexityMin > 0 ? options.ComplexityMin : 1;
         var maxComplexity = options.ComplexityMax >= minComplexity ? options.ComplexityMax : 5;
-        var minBudget = options.BudgetMin > 0 ? options.BudgetMin : 1;
-        var maxBudget = options.BudgetMax >= minBudget ? options.BudgetMax : 3;
 
         RecipeComplexitySlider.Minimum = minComplexity;
         RecipeComplexitySlider.Maximum = maxComplexity;
         RecipeComplexitySlider.Value = maxComplexity;
-        RecipeComplexityLabel.Text = $"Max Complexity: {maxComplexity}";
+        RecipeComplexityLabel.Text = $"Максимална сложност: {maxComplexity}";
 
-        RecipeBudgetSlider.Minimum = minBudget;
-        RecipeBudgetSlider.Maximum = maxBudget;
-        RecipeBudgetSlider.Value = maxBudget;
-        RecipeBudgetLabel.Text = $"Max Budget: {maxBudget}";
     }
 
     private void UpdateSelectedFriendsLabel()
     {
-        SelectedFriendsLabel.Text = $"Select Friends ({_selectedFriends.Count} selected)";
-        ContinueButton.IsEnabled = _sessionId.HasValue || _selectedFriends.Count > 0;
+        SelectedFriendsLabel.Text = $"Избрани приятели ({_selectedFriends.Count})";
+        ContinueButton.IsEnabled = true;
     }
 
     private void OnFriendCheckedChanged(object sender, CheckedChangedEventArgs e)
@@ -341,6 +339,24 @@ public partial class CreateSessionPage : ContentPage
         }
 
         UpdateSelectedFriendsLabel();
+    }
+
+    private void OnRestaurantCityChanged(object? sender, EventArgs e)
+    {
+        ApplyRestaurantDistrictOptions();
+    }
+
+    private void ApplyRestaurantDistrictOptions()
+    {
+        var selectedCity = PickerValue(RestaurantCityPicker);
+        var districts = string.IsNullOrWhiteSpace(selectedCity)
+            ? _restaurantDistrictsByCity.Values.SelectMany(x => x).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x).ToList()
+            : _restaurantDistrictsByCity.TryGetValue(selectedCity, out var cityDistricts)
+                ? cityDistricts
+                : new List<string>();
+
+        RestaurantDistrictPicker.ItemsSource = WithAll(districts);
+        SelectFirstPickerItem(RestaurantDistrictPicker);
     }
 
     private void OnMovieGenreCheckedChanged(object? sender, CheckedChangedEventArgs e)
@@ -377,6 +393,40 @@ public partial class CreateSessionPage : ContentPage
         }
     }
 
+
+    private void OnRecipeCuisineCheckedChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        if (sender is not CheckBox checkBox || checkBox.BindingContext is not string cuisine)
+        {
+            return;
+        }
+
+        if (e.Value)
+        {
+            _selectedRecipeCuisines.Add(cuisine);
+        }
+        else
+        {
+            _selectedRecipeCuisines.Remove(cuisine);
+        }
+    }
+
+    private void OnGameTypeCheckedChanged(object? sender, CheckedChangedEventArgs e)
+    {
+        if (sender is not CheckBox checkBox || checkBox.BindingContext is not string gameType)
+        {
+            return;
+        }
+
+        if (e.Value)
+        {
+            _selectedGameTypes.Add(gameType);
+        }
+        else
+        {
+            _selectedGameTypes.Remove(gameType);
+        }
+    }
     private async void OnStartClicked(object sender, EventArgs e)
     {
         if (_sessionId.HasValue)
@@ -384,12 +434,16 @@ public partial class CreateSessionPage : ContentPage
             try
             {
                 await SaveFiltersAsync(_sessionId.Value);
-                await DisplayAlert("Saved", "Your filters were added to the session. The merged session suggestions will now use everyone's saved filters together.", "OK");
+                if (!await EnsureSessionHasSuggestionsAsync(_sessionId.Value, closeIfEmpty: false))
+                {
+                    return;
+                }
+                await DisplayAlert("Запазено", "Филтрите ти бяха добавени към сесията. Обединените предложения вече ще използват запазените предпочитания на всички участници.", "OK");
                 await Shell.Current.GoToAsync(nameof(ActiveSessionsPage));
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Could not save filters", ex.Message, "OK");
+                await DisplayAlert("Филтрите не можаха да бъдат запазени", ex.Message, "OK");
             }
 
             return;
@@ -397,7 +451,7 @@ public partial class CreateSessionPage : ContentPage
 
         if (_selectedFriends.Count == 0)
         {
-            await DisplayAlert("Select friend", "Choose at least one friend before sending session invitations.", "OK");
+            await DisplayAlert("Избери приятел", "Избери поне един приятел, преди да изпратиш поканите за сесия.", "OK");
             return;
         }
 
@@ -405,20 +459,47 @@ public partial class CreateSessionPage : ContentPage
         {
             var session = await _apiService.CreateSessionAsync(Category, _selectedFriends);
             await SaveFiltersAsync(session.SessionId);
+            if (!await EnsureSessionHasSuggestionsAsync(session.SessionId, closeIfEmpty: true))
+            {
+                return;
+            }
 
             _appState.CurrentSessionId = session.SessionId;
             _appState.CurrentCategory = session.Category;
             _appState.CurrentMatch = null;
 
-            await DisplayAlert("Invites sent", "Session created and invitations were sent to the selected friends. Each participant can now add their own filters before swiping.", "OK");
+            await DisplayAlert("Поканите са изпратени", "Сесията е създадена и поканите бяха изпратени до избраните приятели. Всеки участник вече може да добави собствените си филтри преди гласуването.", "OK");
             await Shell.Current.GoToAsync(nameof(ActiveSessionsPage));
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Could not create session", ex.Message, "OK");
+            await DisplayAlert("Сесията не можа да бъде създадена", ex.Message, "OK");
         }
     }
 
+    private async Task<bool> EnsureSessionHasSuggestionsAsync(Guid sessionId, bool closeIfEmpty)
+    {
+        var availableCount = await _apiService.GetAvailableSuggestionCountAsync(sessionId);
+        if (availableCount > 0)
+        {
+            return true;
+        }
+
+        if (closeIfEmpty)
+        {
+            try
+            {
+                await _apiService.CloseSessionAsync(sessionId);
+            }
+            catch
+            {
+                // Cleanup is best-effort; the important part is to stop the user before swiping.
+            }
+        }
+
+        await DisplayAlert("Няма предложения", "Избраните филтри не намират подходящи предложения. Промени филтрите и опитай отново.", "OK");
+        return false;
+    }
     private Task SaveFiltersAsync(Guid sessionId)
     {
         return Category switch
@@ -430,13 +511,12 @@ public partial class CreateSessionPage : ContentPage
                 SliderValue(RestaurantMinRatingSlider, "0.0")),
             "Recipe" => _apiService.SaveRecipeFiltersAsync(sessionId,
                 SliderValue(RecipeComplexitySlider, "0"),
-                PickerValue(RecipeCuisinePicker),
+                string.Join(",", _selectedRecipeCuisines.OrderBy(x => x)),
                 PickerValue(RecipeFoodTypePicker),
-                SliderValue(RecipeBudgetSlider, "0"),
                 SliderValue(RecipeMinRatingSlider, "0.0"),
                 string.Join(",", _selectedRecipeIngredients.OrderBy(x => x))),
             "BoardGame" => _apiService.SaveBoardGameFiltersAsync(sessionId,
-                PickerValue(GameTypePicker),
+                string.Join(",", _selectedGameTypes.OrderBy(x => x)),
                 SliderValue(GameDurationMinSlider, "0"),
                 SliderValue(GameDurationMaxSlider, "0"),
                 SliderValue(GamePlayersMinSlider, "0"),
@@ -455,14 +535,14 @@ public partial class CreateSessionPage : ContentPage
     private static string PickerValue(Picker picker)
     {
         var value = picker.SelectedItem?.ToString();
-        return string.IsNullOrWhiteSpace(value) || value == "All" ? "" : value;
+        return string.IsNullOrWhiteSpace(value) || value == "Всички" ? "" : value;
     }
 
     private static string SliderValue(Slider slider, string format)
         => Math.Round(slider.Value).ToString(format);
 
     private void OnMovieRatingValueChanged(object sender, ValueChangedEventArgs e)
-        => MovieMinRatingLabel.Text = $"Minimum Rating: {e.NewValue:0.0}+";
+        => MovieMinRatingLabel.Text = $"Минимална оценка: {e.NewValue:0.0}+";
 
     private void OnMovieRatingChanged(object sender, EventArgs e)
         => MovieMinRatingSlider.Value = Math.Round(MovieMinRatingSlider.Value * 2) / 2;
@@ -483,19 +563,17 @@ public partial class CreateSessionPage : ContentPage
     }
 
     private void UpdateMovieYearLabel()
-        => MovieYearLabel.Text = $"Release Year: {(int)Math.Round(MovieYearFromSlider.Value)} - {(int)Math.Round(MovieYearToSlider.Value)}";
+        => MovieYearLabel.Text = $"Година на издаване: {(int)Math.Round(MovieYearFromSlider.Value)} - {(int)Math.Round(MovieYearToSlider.Value)}";
 
     private void OnRestaurantRatingValueChanged(object sender, ValueChangedEventArgs e)
-        => RestaurantMinRatingLabel.Text = $"Minimum Rating: {Math.Round(e.NewValue * 2) / 2:0.0}+";
+        => RestaurantMinRatingLabel.Text = $"Минимална оценка: {Math.Round(e.NewValue * 2) / 2:0.0}+";
 
     private void OnRecipeComplexityValueChanged(object sender, ValueChangedEventArgs e)
-        => RecipeComplexityLabel.Text = $"Max Complexity: {(int)Math.Round(e.NewValue)}";
+        => RecipeComplexityLabel.Text = $"Максимална сложност: {(int)Math.Round(e.NewValue)}";
 
-    private void OnRecipeBudgetValueChanged(object sender, ValueChangedEventArgs e)
-        => RecipeBudgetLabel.Text = $"Max Budget: {(int)Math.Round(e.NewValue)}";
 
     private void OnRecipeRatingValueChanged(object sender, ValueChangedEventArgs e)
-        => RecipeMinRatingLabel.Text = $"Minimum Rating: {Math.Round(e.NewValue * 2) / 2:0.0}+";
+        => RecipeMinRatingLabel.Text = $"Минимална оценка: {Math.Round(e.NewValue * 2) / 2:0.0}+";
 
     private void OnGamePlayersValueChanged(object sender, ValueChangedEventArgs e)
     {
@@ -504,7 +582,7 @@ public partial class CreateSessionPage : ContentPage
             GamePlayersMaxSlider.Value = GamePlayersMinSlider.Value;
         }
 
-        GamePlayersLabel.Text = $"Players: {(int)Math.Round(GamePlayersMinSlider.Value)} - {(int)Math.Round(GamePlayersMaxSlider.Value)}";
+        GamePlayersLabel.Text = $"Играчи: {(int)Math.Round(GamePlayersMinSlider.Value)} - {(int)Math.Round(GamePlayersMaxSlider.Value)}";
     }
 
     private void OnGameDurationValueChanged(object sender, ValueChangedEventArgs e)
@@ -514,13 +592,21 @@ public partial class CreateSessionPage : ContentPage
             GameDurationMaxSlider.Value = GameDurationMinSlider.Value;
         }
 
-        GameDurationLabel.Text = $"Duration: {(int)Math.Round(GameDurationMinSlider.Value)} - {(int)Math.Round(GameDurationMaxSlider.Value)} min";
+        GameDurationLabel.Text = $"Продължителност: {(int)Math.Round(GameDurationMinSlider.Value)} - {(int)Math.Round(GameDurationMaxSlider.Value)} мин";
     }
 
     private void OnGameRatingValueChanged(object sender, ValueChangedEventArgs e)
-        => GameMinRatingLabel.Text = $"Minimum Rating: {Math.Round(e.NewValue * 2) / 2:0.0}+";
+        => GameMinRatingLabel.Text = $"Минимална оценка: {Math.Round(e.NewValue * 2) / 2:0.0}+";
 
     private sealed record CategoryVisuals(string Title, string GradientStart, string GradientEnd);
 }
+
+
+
+
+
+
+
+
 
 

@@ -15,8 +15,8 @@
     <ScrollView>
         <VerticalStackLayout Padding="24,24,24,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
             <Grid ColumnDefinitions="Auto,*">
-                <Button Text="Back" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
-                <Label Grid.Column="1" Text="My Profile" FontSize="22" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
+                <Button Text="Назад" BackgroundColor="Transparent" TextColor="#111827" Clicked="OnBackClicked" />
+                <Label Grid.Column="1" Text="Моят профил" FontSize="22" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
             </Grid>
 
             <Frame Padding="26" CornerRadius="16" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
@@ -35,60 +35,94 @@
                     </Border>
                     <Label x:Name="UserNameLabel" Text="username" FontSize="22" FontAttributes="Bold" TextColor="#111827" HorizontalTextAlignment="Center" />
                     <Border x:Name="AdminRoleBadge" Padding="10,4" BackgroundColor="#FEF3C7" Stroke="#F59E0B" StrokeShape="RoundRectangle 999" IsVisible="False" HorizontalOptions="Center">
-                        <Label Text="Administrator" FontSize="12" FontAttributes="Bold" TextColor="#92400E" />
+                        <Label Text="Администратор" FontSize="12" FontAttributes="Bold" TextColor="#92400E" />
                     </Border>
                     <Label x:Name="EmailLabel" Text="email" FontSize="14" TextColor="#6B7280" HorizontalTextAlignment="Center" />
-                    <Label x:Name="BioPreviewLabel" Text="Love movies and food! Always looking for new experiences." FontSize="13" TextColor="#374151" HorizontalTextAlignment="Center" />
+                    <Label x:Name="BioPreviewLabel" Text="Обича филми и храна! Винаги търси нови преживявания." FontSize="13" TextColor="#374151" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </Frame>
 
             <Frame Padding="22" CornerRadius="16" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Edit Profile" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
-                    <Entry x:Name="DisplayNameEntry" Placeholder="Display name" BackgroundColor="#F9FAFB" />
-                    <Editor x:Name="BioEditor" Placeholder="Short bio" AutoSize="TextChanges" HeightRequest="88" BackgroundColor="#F9FAFB" />
-                    <Entry x:Name="ProfileImageUrlEntry" Placeholder="Profile image URL" BackgroundColor="#F9FAFB" />
-                    <Button Text="Save Profile" BackgroundColor="#C026D3" TextColor="White" CornerRadius="10" HeightRequest="48" Clicked="OnSaveProfileClicked" />
+                    <Label Text="Редакция на профила" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
+                    <Entry x:Name="DisplayNameEntry" Placeholder="Показвано име" BackgroundColor="#F9FAFB" />
+                    <Editor x:Name="BioEditor" Placeholder="Кратко описание" AutoSize="TextChanges" HeightRequest="88" BackgroundColor="#F9FAFB" />
+                    <Label Text="Профилна снимка" FontAttributes="Bold" TextColor="#111827" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Entry x:Name="ProfileImageUrlEntry"
+                               Placeholder="https://.../avatar.jpg"
+                               BackgroundColor="#F9FAFB"
+                               Keyboard="Url"
+                               TextChanged="OnProfileImageUrlChanged" />
+                        <Button Grid.Column="1"
+                                Text="Преглед"
+                                BackgroundColor="#F3E8FF"
+                                TextColor="#7C3AED"
+                                CornerRadius="10"
+                                Padding="14,0"
+                                Clicked="OnPreviewImageClicked" />
+                    </Grid>
+                    <Label Text="Постави директен http/https линк към изображение. Ако няма линк, SwipeMate показва аватар с инициали."
+                           FontSize="12"
+                           TextColor="#6B7280" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label x:Name="ProfileImageStatusLabel"
+                               Text=""
+                               FontSize="12"
+                               TextColor="#6B7280"
+                               VerticalTextAlignment="Center"
+                               IsVisible="False" />
+                        <Button Grid.Column="1"
+                                Text="Премахни"
+                                BackgroundColor="#F9FAFB"
+                                TextColor="#6B7280"
+                                BorderColor="#E5E7EB"
+                                BorderWidth="1"
+                                CornerRadius="10"
+                                Padding="14,0"
+                                Clicked="OnClearProfileImageClicked" />
+                    </Grid>
+                    <Button Text="Запази профила" BackgroundColor="#C026D3" TextColor="White" CornerRadius="10" HeightRequest="48" Clicked="OnSaveProfileClicked" />
                 </VerticalStackLayout>
             </Frame>
 
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
                 <Frame Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                     <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                        <Label Text="Trophy" TextColor="#EAB308" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label Text="Трофей" TextColor="#EAB308" FontAttributes="Bold" HorizontalTextAlignment="Center" />
                         <Label x:Name="MatchesCountLabel" Text="0" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                        <Label Text="Matches" FontSize="12" TextColor="#6B7280" />
+                        <Label Text="Съвпадения" FontSize="12" TextColor="#6B7280" />
                     </VerticalStackLayout>
                 </Frame>
                 <Frame Grid.Column="1" Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                     <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                        <Label Text="Chat" TextColor="#3B82F6" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label Text="Сесии" TextColor="#3B82F6" FontAttributes="Bold" HorizontalTextAlignment="Center" />
                         <Label x:Name="SessionsCountLabel" Text="0" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                        <Label Text="Sessions" FontSize="12" TextColor="#6B7280" />
+                        <Label Text="Сесии" FontSize="12" TextColor="#6B7280" />
                     </VerticalStackLayout>
                 </Frame>
                 <Frame Grid.Column="2" Padding="18" CornerRadius="14" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                     <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                        <Label Text="Star" TextColor="#A855F7" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                        <Label Text="Действия" TextColor="#A855F7" FontAttributes="Bold" HorizontalTextAlignment="Center" />
                         <Label x:Name="RatingsCountLabel" Text="0" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                        <Label Text="Actions" FontSize="12" TextColor="#6B7280" />
+                        <Label Text="Действия" FontSize="12" TextColor="#6B7280" />
                     </VerticalStackLayout>
                 </Frame>
             </Grid>
 
             <Frame Padding="22" CornerRadius="16" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Badges &amp; Achievements" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
+                    <Label Text="Значки и постижения" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
                     <Border Padding="16" Stroke="#FACC15" BackgroundColor="#FEF9C3" StrokeShape="RoundRectangle 10">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Reviewer Level 1" FontAttributes="Bold" TextColor="#111827" />
-                            <Label Text="Used the app and created decisions." FontSize="12" TextColor="#6B7280" />
+                            <Label Text="Ниво Рецензент 1" FontAttributes="Bold" TextColor="#111827" />
+                            <Label Text="Използва приложението и създава решения." FontSize="12" TextColor="#6B7280" />
                         </VerticalStackLayout>
                     </Border>
                     <Border Padding="16" Stroke="#FACC15" BackgroundColor="#FEF3C7" StrokeShape="RoundRectangle 10">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Active User" FontAttributes="Bold" TextColor="#111827" />
-                            <Label Text="Creates sessions and votes actively." FontSize="12" TextColor="#6B7280" />
+                            <Label Text="Активен потребител" FontAttributes="Bold" TextColor="#111827" />
+                            <Label Text="Създава сесии и гласува активно." FontSize="12" TextColor="#6B7280" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
@@ -96,16 +130,15 @@
 
             <Frame Padding="22" CornerRadius="16" BackgroundColor="#FDF2F8" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="14">
-                    <Label Text="Progress to Next Achievement" FontSize="16" FontAttributes="Bold" />
-                    <Grid ColumnDefinitions="*,Auto"><Label Text="Session Builder" FontSize="12" /><Label x:Name="SessionProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
+                    <Label Text="Напредък към следващо постижение" FontSize="16" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="Създател на сесии" FontSize="12" /><Label x:Name="SessionProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
                     <ProgressBar x:Name="SessionProgress" ProgressColor="#EC4899" BackgroundColor="#E5E7EB" />
-                    <Grid ColumnDefinitions="*,Auto"><Label Text="Super User" FontSize="12" /><Label x:Name="RatingProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="Супер потребител" FontSize="12" /><Label x:Name="RatingProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
                     <ProgressBar x:Name="RatingProgress" ProgressColor="#A855F7" BackgroundColor="#E5E7EB" />
-                    <Grid ColumnDefinitions="*,Auto"><Label Text="Match Master" FontSize="12" /><Label x:Name="MatchProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="Майстор на съвпаденията" FontSize="12" /><Label x:Name="MatchProgressLabel" Grid.Column="1" FontSize="12" TextColor="#6B7280" /></Grid>
                     <ProgressBar x:Name="MatchProgress" ProgressColor="#EC4899" BackgroundColor="#E5E7EB" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
-

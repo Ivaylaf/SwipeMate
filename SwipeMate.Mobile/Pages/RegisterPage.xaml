@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="SwipeMate.Mobile.Pages.RegisterPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -15,76 +15,50 @@
 
     <ScrollView>
         <Grid Padding="24" RowDefinitions="*" VerticalOptions="Center">
-            <Frame
-                Padding="24"
-                CornerRadius="24"
-                BackgroundColor="White"
-                HasShadow="True"
-                MaximumWidthRequest="420"
-                HorizontalOptions="Center"
-                VerticalOptions="Center">
-
+            <Frame Padding="24" CornerRadius="24" BackgroundColor="White" HasShadow="True" MaximumWidthRequest="420" HorizontalOptions="Center" VerticalOptions="Center">
                 <VerticalStackLayout Spacing="14">
-                    <Label
-                        Text="Create account"
-                        FontSize="24"
-                        FontAttributes="Bold"
-                        HorizontalTextAlignment="Center"
-                        TextColor="#111827" />
-
-                    <Label
-                        Text="Join SwipeMate"
-                        FontSize="14"
-                        HorizontalTextAlignment="Center"
-                        TextColor="#6B7280" />
+                    <Label Text="Създай акаунт" FontSize="24" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="#111827" />
+                    <Label Text="Присъедини се към SwipeMate" FontSize="14" HorizontalTextAlignment="Center" TextColor="#6B7280" />
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Username" FontSize="12" TextColor="#111827" />
+                        <Label Text="Потребителско име" FontSize="12" TextColor="#111827" />
                         <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
-                            <Entry x:Name="UserNameEntry" Placeholder="Enter username" BackgroundColor="Transparent"
-                                   TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                            <Entry x:Name="UserNameEntry" Placeholder="Въведи потребителско име" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Email" FontSize="12" TextColor="#111827" />
+                        <Label Text="Имейл" FontSize="12" TextColor="#111827" />
                         <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
-                            <Entry x:Name="EmailEntry" Placeholder="Enter email" Keyboard="Email"
-                                   BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                            <Entry x:Name="EmailEntry" Placeholder="Въведи имейл" Keyboard="Email" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Display name" FontSize="12" TextColor="#111827" />
+                        <Label Text="Показвано име" FontSize="12" TextColor="#111827" />
                         <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
-                            <Entry x:Name="DisplayNameEntry" Placeholder="How others see you" BackgroundColor="Transparent"
-                                   TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                            <Entry x:Name="DisplayNameEntry" Placeholder="Как да виждат другите" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Password" FontSize="12" TextColor="#111827" />
+                        <Label Text="Парола" FontSize="12" TextColor="#111827" />
                         <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
-                            <Entry x:Name="PasswordEntry" Placeholder="Enter password" IsPassword="True"
-                                   BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Entry x:Name="PasswordEntry" Placeholder="Въведи парола" IsPassword="True" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                                <Button x:Name="TogglePasswordButton" Grid.Column="1" Text="Покажи" BackgroundColor="Transparent" TextColor="#7C3AED" FontSize="12" Padding="0" Clicked="OnTogglePasswordClicked" />
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout Spacing="6">
-                        <Label Text="Server URL" FontSize="12" TextColor="#111827" />
+                    <VerticalStackLayout x:Name="ServerUrlSection" Spacing="6" IsVisible="False">
+                        <Label Text="Адрес на сървъра" FontSize="12" TextColor="#111827" />
                         <Border StrokeShape="RoundRectangle 12" BackgroundColor="#F3F4F6" Padding="14,10">
-                            <Entry x:Name="ServerUrlEntry" Placeholder="http://10.0.2.2:5274"
-                                   BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                            <Entry x:Name="ServerUrlEntry" Placeholder="http://10.0.2.2:5274" BackgroundColor="Transparent" TextColor="#111827" PlaceholderColor="#9CA3AF" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <Button
-                        Text="Sign Up"
-                        HeightRequest="48"
-                        CornerRadius="14"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        Clicked="OnRegisterClicked">
+                    <Button Text="Регистрация" HeightRequest="48" CornerRadius="14" TextColor="White" FontAttributes="Bold" Clicked="OnRegisterClicked">
                         <Button.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                 <GradientStop Color="#EC4899" Offset="0.0" />
@@ -93,16 +67,9 @@
                         </Button.Background>
                     </Button>
 
-                    <Button
-                        Text="Back to login"
-                        BackgroundColor="Transparent"
-                        TextColor="#7C3AED"
-                        FontSize="12"
-                        Clicked="OnGoLoginClicked" />
-
+                    <Button Text="Обратно към вход" BackgroundColor="Transparent" TextColor="#7C3AED" FontSize="12" Clicked="OnGoLoginClicked" />
                 </VerticalStackLayout>
             </Frame>
         </Grid>
     </ScrollView>
 </ContentPage>
-

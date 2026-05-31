@@ -29,3 +29,8 @@ packages/
 
 # Publish output
 publish/
+# Local secrets
+SwipeMate.Api/appsettings.Development.json
+
+# Hosting temporary output
+.buildcheck/

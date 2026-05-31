@@ -22,6 +22,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(HistoryPage), typeof(HistoryPage));
         Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
         Routing.RegisterRoute(nameof(ActiveSessionsPage), typeof(ActiveSessionsPage));
+        Routing.RegisterRoute(nameof(AdminPage), typeof(AdminPage));
     }
 
     private ShellContent CreateRoot(string route, Type pageType)
