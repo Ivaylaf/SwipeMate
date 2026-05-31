@@ -13,3 +13,4 @@ public class BoardGameFiltersDto
     public double? MinRating { get; set; }
 }
 
+

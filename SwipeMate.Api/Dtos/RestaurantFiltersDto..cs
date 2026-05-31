@@ -8,3 +8,4 @@ public class RestaurantFiltersDto
     public double? MinRating { get; set; }
 }
 
+

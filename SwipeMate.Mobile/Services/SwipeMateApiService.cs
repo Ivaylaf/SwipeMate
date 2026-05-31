@@ -239,3 +239,4 @@ public sealed class SwipeMateApiService
             ? []
             : value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 }
+

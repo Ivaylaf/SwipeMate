@@ -1,4 +1,4 @@
-namespace SwipeMate.Api.Models;
+﻿namespace SwipeMate.Api.Models;
 
 public class SessionInvitation
 {
@@ -10,3 +10,4 @@ public class SessionInvitation
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public DateTime? RespondedAtUtc { get; set; }
 }
+

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 #if ANDROID
 using Android.Content.Res;
-using Android.Widget;
 using Microsoft.Maui.Handlers;
 #endif
 using SwipeMate.Mobile.Pages;
@@ -59,31 +58,9 @@ public static class MauiProgram
 #if ANDROID
     private static void ApplySwipeMateNativeColors()
     {
-        var textColor = Android.Graphics.Color.Rgb(17, 24, 39);
-        var hintColor = Android.Graphics.Color.Rgb(107, 114, 128);
         var accentColor = Android.Graphics.Color.Rgb(109, 40, 217);
         var trackColor = Android.Graphics.Color.Rgb(209, 213, 219);
 
-        EntryHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
-        {
-            handler.PlatformView.SetTextColor(textColor);
-            handler.PlatformView.SetHintTextColor(hintColor);
-            handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(accentColor);
-        });
-
-        EditorHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
-        {
-            handler.PlatformView.SetTextColor(textColor);
-            handler.PlatformView.SetHintTextColor(hintColor);
-            handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(accentColor);
-        });
-
-        PickerHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
-        {
-            handler.PlatformView.SetTextColor(textColor);
-            handler.PlatformView.SetHintTextColor(hintColor);
-            handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(accentColor);
-        });
 
         CheckBoxHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
         {
@@ -99,3 +76,5 @@ public static class MauiProgram
     }
 #endif
 }
+
+

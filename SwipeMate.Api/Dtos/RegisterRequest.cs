@@ -7,3 +7,4 @@ public class RegisterRequest
     public string Password { get; set; } = default!;
     public string? DisplayName { get; set; }
 }
+

@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Models;
+﻿using SwipeMate.Mobile.Models;
 using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
@@ -19,9 +19,9 @@ public partial class ProfilePage : ContentPage
     {
         base.OnAppearing();
 
-        UserNameLabel.Text = _appState.User?.UserName ?? "Потребител";
+        UserNameLabel.Text = _appState.User?.UserName ?? "РџРѕС‚СЂРµР±РёС‚РµР»";
         AdminRoleBadge.IsVisible = _appState.User?.IsAdmin == true;
-        EmailLabel.Text = _appState.User?.Email ?? "Няма наличен имейл";
+        EmailLabel.Text = _appState.User?.Email ?? "РќСЏРјР° РЅР°Р»РёС‡РµРЅ РёРјРµР№Р»";
 
         var initials = (_appState.User?.UserName ?? "SM").Trim();
         AvatarLabel.Text = initials.Length >= 2
@@ -36,18 +36,18 @@ public partial class ProfilePage : ContentPage
         catch (Exception ex)
         {
             if (ex.Message.Contains("Unauthorized", StringComparison.OrdinalIgnoreCase) ||
-                ex.Message.Contains("Неоторизиран", StringComparison.OrdinalIgnoreCase))
+                ex.Message.Contains("РќРµРѕС‚РѕСЂРёР·РёСЂР°РЅ", StringComparison.OrdinalIgnoreCase))
             {
                 MatchesCountLabel.Text = "0";
                 SessionsCountLabel.Text = "0";
                 RatingsCountLabel.Text = "0";
-                MatchProgressLabel.Text = "0/25 съвпадения";
-                SessionProgressLabel.Text = "0/50 сесии";
-                RatingProgressLabel.Text = "0/100 действия";
+                MatchProgressLabel.Text = "0/25 СЃСЉРІРїР°РґРµРЅРёСЏ";
+                SessionProgressLabel.Text = "0/50 СЃРµСЃРёРё";
+                RatingProgressLabel.Text = "0/100 РґРµР№СЃС‚РІРёСЏ";
                 return;
             }
 
-            await DisplayAlert("Грешка", ex.Message, "OK");
+            await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
         }
     }
 
@@ -60,7 +60,7 @@ public partial class ProfilePage : ContentPage
             var profileImageUrl = NormalizeProfileImageUrl(ProfileImageUrlEntry.Text);
             if (!string.IsNullOrWhiteSpace(ProfileImageUrlEntry.Text) && profileImageUrl is null)
             {
-                ShowProfileImageStatus("Моля, въведи валиден http/https линк към изображение.", true);
+                ShowProfileImageStatus("РњРѕР»СЏ, РІСЉРІРµРґРё РІР°Р»РёРґРµРЅ http/https Р»РёРЅРє РєСЉРј РёР·РѕР±СЂР°Р¶РµРЅРёРµ.", true);
                 return;
             }
 
@@ -71,11 +71,11 @@ public partial class ProfilePage : ContentPage
 
             ApplyProfile(profile);
             _appState.UpdateProfile(profile.DisplayName, profile.Email);
-            await DisplayAlert("Запазено", "Профилът беше обновен успешно.", "OK");
+            await DisplayAlert("Р—Р°РїР°Р·РµРЅРѕ", "РџСЂРѕС„РёР»СЉС‚ Р±РµС€Рµ РѕР±РЅРѕРІРµРЅ СѓСЃРїРµС€РЅРѕ.", "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Профилът не можа да бъде запазен", ex.Message, "OK");
+            await DisplayAlert("РџСЂРѕС„РёР»СЉС‚ РЅРµ РјРѕР¶Р° РґР° Р±СЉРґРµ Р·Р°РїР°Р·РµРЅ", ex.Message, "OK");
         }
     }
 
@@ -94,19 +94,19 @@ public partial class ProfilePage : ContentPage
         if (profileImageUrl is null)
         {
             ApplyProfileImage(null);
-            ShowProfileImageStatus("Постави валиден http/https линк към изображение.", true);
+            ShowProfileImageStatus("РџРѕСЃС‚Р°РІРё РІР°Р»РёРґРµРЅ http/https Р»РёРЅРє РєСЉРј РёР·РѕР±СЂР°Р¶РµРЅРёРµ.", true);
             return;
         }
 
         ApplyProfileImage(profileImageUrl);
-        ShowProfileImageStatus("Прегледът е зареден. Натисни „Запази профила“, за да остане снимката.", false);
+        ShowProfileImageStatus("РџСЂРµРіР»РµРґСЉС‚ Рµ Р·Р°СЂРµРґРµРЅ. РќР°С‚РёСЃРЅРё вЂћР—Р°РїР°Р·Рё РїСЂРѕС„РёР»Р°вЂњ, Р·Р° РґР° РѕСЃС‚Р°РЅРµ СЃРЅРёРјРєР°С‚Р°.", false);
     }
 
     private void OnClearProfileImageClicked(object sender, EventArgs e)
     {
         ProfileImageUrlEntry.Text = "";
         ApplyProfileImage(null);
-        ShowProfileImageStatus("Снимката е премахната. Натисни „Запази профила“, за да запазиш промяната.", false);
+        ShowProfileImageStatus("РЎРЅРёРјРєР°С‚Р° Рµ РїСЂРµРјР°С…РЅР°С‚Р°. РќР°С‚РёСЃРЅРё вЂћР—Р°РїР°Р·Рё РїСЂРѕС„РёР»Р°вЂњ, Р·Р° РґР° Р·Р°РїР°Р·РёС€ РїСЂРѕРјСЏРЅР°С‚Р°.", false);
     }
 
     private static string? NormalizeProfileImageUrl(string? value)
@@ -150,9 +150,9 @@ public partial class ProfilePage : ContentPage
     private void ApplyProfile(ProfileSummary profile)
     {
         UserNameLabel.Text = profile.UserName;
-        EmailLabel.Text = profile.Email ?? "Няма наличен имейл";
+        EmailLabel.Text = profile.Email ?? "РќСЏРјР° РЅР°Р»РёС‡РµРЅ РёРјРµР№Р»";
         BioPreviewLabel.Text = string.IsNullOrWhiteSpace(profile.Bio)
-            ? "Обича филми и храна! Винаги търси нови преживявания."
+            ? "РћР±РёС‡Р° С„РёР»РјРё Рё С…СЂР°РЅР°! Р’РёРЅР°РіРё С‚СЉСЂСЃРё РЅРѕРІРё РїСЂРµР¶РёРІСЏРІР°РЅРёСЏ."
             : profile.Bio;
         DisplayNameEntry.Text = profile.DisplayName;
         BioEditor.Text = profile.Bio;
@@ -168,8 +168,9 @@ public partial class ProfilePage : ContentPage
         SessionProgress.Progress = Math.Min(profile.SessionsCount / 50.0, 1.0);
         RatingProgress.Progress = Math.Min(profile.RatingsCount / 100.0, 1.0);
 
-        MatchProgressLabel.Text = $"{profile.MatchesCount}/25 съвпадения";
-        SessionProgressLabel.Text = $"{profile.SessionsCount}/50 сесии";
-        RatingProgressLabel.Text = $"{profile.RatingsCount}/100 действия";
+        MatchProgressLabel.Text = $"{profile.MatchesCount}/25 СЃСЉРІРїР°РґРµРЅРёСЏ";
+        SessionProgressLabel.Text = $"{profile.SessionsCount}/50 СЃРµСЃРёРё";
+        RatingProgressLabel.Text = $"{profile.RatingsCount}/100 РґРµР№СЃС‚РІРёСЏ";
     }
 }
+

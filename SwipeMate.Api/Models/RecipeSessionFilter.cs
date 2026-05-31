@@ -13,13 +13,12 @@ public class RecipeSessionFilter
     [Required]
     public string UserId { get; set; } = default!;
 
-    // Filters
-    public int? Complexity { get; set; }          // 1..5 (пример)
-    public string? Cuisine { get; set; }          // "Bulgarian", "Italian", "Vegetarian"...
-    public string? FoodType { get; set; }         // "Main", "Dessert", "Starter"...
-    public int? BudgetLevel { get; set; }         // 1..5 (пример)
-    public double? MinRating { get; set; }        // 0..10 (или 0..5)
+    public int? Complexity { get; set; }
+    public string? Cuisine { get; set; }
+    public string? FoodType { get; set; }
+    public int? BudgetLevel { get; set; }
+    public double? MinRating { get; set; }
 
-    // MVP: продукти като CSV, напр: "chicken,tomato,cheese"
     public string? IngredientsCsv { get; set; }
 }
+

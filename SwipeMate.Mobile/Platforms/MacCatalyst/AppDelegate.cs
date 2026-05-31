@@ -8,3 +8,4 @@ namespace SwipeMate.Mobile
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
     }
 }
+

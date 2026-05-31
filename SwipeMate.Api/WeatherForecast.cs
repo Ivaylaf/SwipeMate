@@ -1,4 +1,4 @@
-namespace SwipeMate.Api
+﻿namespace SwipeMate.Api
 {
     public class WeatherForecast
     {
@@ -11,3 +11,4 @@ namespace SwipeMate.Api
         public string? Summary { get; set; }
     }
 }
+

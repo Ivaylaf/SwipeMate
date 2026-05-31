@@ -12,3 +12,4 @@ public class ApplicationUser : IdentityUser
     public string? BlockedReason { get; set; }
 }
 
+

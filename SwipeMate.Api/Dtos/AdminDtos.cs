@@ -1,4 +1,4 @@
-namespace SwipeMate.Api.Dtos;
+﻿namespace SwipeMate.Api.Dtos;
 
 public sealed class BlockUserDto
 {
@@ -9,3 +9,4 @@ public sealed class UpdateCatalogItemStatusDto
 {
     public bool IsActive { get; set; }
 }
+

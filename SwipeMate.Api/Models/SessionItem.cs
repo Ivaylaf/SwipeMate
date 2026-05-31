@@ -10,11 +10,9 @@ public class SessionItem
     [Required]
     public Guid SessionId { get; set; }
 
-    // "Movie", "Restaurant" и т.н. (или взимаш от Session.Category)
     [Required]
     public string Category { get; set; } = default!;
 
-    // ID от външен източник или твой вътрешен
     [Required]
     public string ExternalId { get; set; } = default!;
 
@@ -22,5 +20,6 @@ public class SessionItem
     public string Title { get; set; } = default!;
 
     public string? ImageUrl { get; set; }
-    public string? MetaJson { get; set; } // за допълнителни данни (жанр, година...)
+    public string? MetaJson { get; set; }
 }
+

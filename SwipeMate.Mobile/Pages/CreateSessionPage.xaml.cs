@@ -508,7 +508,6 @@ public partial class CreateSessionPage : ContentPage
             }
             catch
             {
-                // Cleanup is best-effort; the important part is to stop the user before swiping.
             }
         }
 
@@ -615,6 +614,7 @@ public partial class CreateSessionPage : ContentPage
 
     private sealed record CategoryVisuals(string Title, string GradientStart, string GradientEnd);
 }
+
 
 
 

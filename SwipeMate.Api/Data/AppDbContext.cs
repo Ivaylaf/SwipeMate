@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SwipeMate.Api.Models;
 
@@ -23,3 +23,4 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<BoardGameSessionFilter> BoardGameSessionFilters => Set<BoardGameSessionFilter>();
     public DbSet<CatalogItem> CatalogItems => Set<CatalogItem>();
 }
+

@@ -1,4 +1,4 @@
-namespace SwipeMate.Api.Dtos;
+﻿namespace SwipeMate.Api.Dtos;
 
 public class UpdateProfileDto
 {
@@ -6,3 +6,4 @@ public class UpdateProfileDto
     public string? Bio { get; set; }
     public string? ProfileImageUrl { get; set; }
 }
+

@@ -1,4 +1,4 @@
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace SwipeMate.Mobile.Services;
 
@@ -19,7 +19,7 @@ public class AuthService
         await EnsureSuccessAsync(resp, ct);
 
         var json = await resp.Content.ReadFromJsonAsync<LoginResponse>(cancellationToken: ct);
-        if (json?.Token is null) throw new Exception("Отговорът при вход не съдържа токен.");
+        if (json?.Token is null) throw new Exception("РћС‚РіРѕРІРѕСЂСЉС‚ РїСЂРё РІС…РѕРґ РЅРµ СЃСЉРґСЉСЂР¶Р° С‚РѕРєРµРЅ.");
         return json.Token;
     }
 
@@ -57,3 +57,4 @@ public class AuthService
         public string? Token { get; set; }
     }
 }
+

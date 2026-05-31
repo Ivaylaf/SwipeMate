@@ -4,3 +4,4 @@ public class UpdateSessionFilterDto
 {
     public string FilterJson { get; set; } = "{}";
 }
+

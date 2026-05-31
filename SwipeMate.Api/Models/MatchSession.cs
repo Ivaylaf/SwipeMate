@@ -7,7 +7,6 @@ public class MatchSession
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    // "Movie", "Restaurant", "Recipe", "BoardGame"...
     [Required]
     public string Category { get; set; } = default!;
 
@@ -16,8 +15,8 @@ public class MatchSession
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
-    // Active / Finished
     [Required]
     public string Status { get; set; } = "Active";
 }
+
 

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace SwipeMate.Api.Controllers
 {
@@ -31,3 +31,4 @@ namespace SwipeMate.Api.Controllers
         }
     }
 }
+

@@ -213,3 +213,4 @@ public partial class AdminPage : ContentPage
     private async void OnRefreshClicked(object sender, EventArgs e) => await LoadAsync();
     private async void OnBackClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync("..");
 }
+

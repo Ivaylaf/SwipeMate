@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using SwipeMate.Api.Models;
 
 namespace SwipeMate.Api.Data;
@@ -72,3 +72,4 @@ public static class AdminSeeder
         }
     }
 }
+

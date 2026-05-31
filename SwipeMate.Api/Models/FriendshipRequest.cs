@@ -15,8 +15,8 @@ public class FriendshipRequest
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
-    // Pending / Accepted / Rejected
     [Required]
     public string Status { get; set; } = "Pending";
 }
+
 

@@ -13,11 +13,11 @@ public class MovieSessionFilter
     [Required]
     public string UserId { get; set; } = default!;
 
-    public double? MinRating { get; set; }       // 0..10
-    public int? YearFrom { get; set; }           // e.g. 1990
-    public int? YearTo { get; set; }             // e.g. 2024
+    public double? MinRating { get; set; }
+    public int? YearFrom { get; set; }
+    public int? YearTo { get; set; }
 
-    // Genres: "Action,Comedy" (лесно за MVP)
     public string? GenresCsv { get; set; }
 }
+
 

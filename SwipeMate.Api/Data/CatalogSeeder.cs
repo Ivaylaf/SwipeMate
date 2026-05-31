@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace SwipeMate.Api.Data;
 
@@ -37,3 +37,4 @@ public static class CatalogSeeder
         await db.SaveChangesAsync();
     }
 }
+

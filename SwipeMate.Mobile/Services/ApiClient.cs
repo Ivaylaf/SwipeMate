@@ -1,4 +1,4 @@
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 
 namespace SwipeMate.Mobile.Services;
 
@@ -108,3 +108,4 @@ public class ApiClient
 
     public HttpClient Http => _http;
 }
+

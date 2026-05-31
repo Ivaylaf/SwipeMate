@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +29,6 @@ public class SessionsController : ControllerBase
         User.FindFirstValue(ClaimTypes.NameIdentifier)
         ?? throw new Exception("No user id claim");
 
-    // POST /api/sessions
     [HttpPost]
     public async Task<IActionResult> Create(CreateSessionDto dto)
     {
@@ -204,7 +203,6 @@ public class SessionsController : ControllerBase
         return Ok(new { message = dto.Accept ? "Invitation accepted" : "Invitation declined" });
     }
 
-    // GET /api/sessions/{id}
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(Guid id)
     {
@@ -295,7 +293,6 @@ public class SessionsController : ControllerBase
         var filtered = await ApplyFiltersAsync(id, session.Category, candidates);
         return Ok(new { Count = filtered.Count });
     }
-    // GET /api/sessions/{id}/next  -> vrushta purviya item, za koyto tekushtiyat user oshte nyama vote
     [HttpGet("{id:guid}/next")]
     public async Task<IActionResult> Next(Guid id)
     {
@@ -341,7 +338,6 @@ public class SessionsController : ControllerBase
         return Ok(ToItemResponse(next));
     }
 
-    // POST /api/sessions/{id}/swipe
     [HttpPost("{id:guid}/swipe")]
     public async Task<IActionResult> Swipe(Guid id, SwipeDto dto)
     {
@@ -418,7 +414,6 @@ public class SessionsController : ControllerBase
         });
     }
 
-    // GET /api/sessions/{id}/matches
     [HttpGet("{id:guid}/matches")]
     public async Task<IActionResult> Matches(Guid id)
     {
@@ -634,8 +629,6 @@ public class SessionsController : ControllerBase
             .Select(f => f.FilterJson)
             .ToListAsync();
 
-        // MVP: ������� ������ �� JSON-� � UI ������ ��� �� �� ��������
-        // (��-����� ����� �� �������� �������� merge � �������)
         return Ok(new { filters });
     }
 
@@ -1395,6 +1388,7 @@ public async Task<IActionResult> PutMyRecipeFilters(Guid sessionId, RecipeFilter
         return groups.Count == 0 ? null : groups[0].Key;
     }
 }
+
 
 
 

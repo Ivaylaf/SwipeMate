@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Pages;
+﻿using SwipeMate.Mobile.Pages;
 
 namespace SwipeMate.Mobile;
 
@@ -34,3 +34,4 @@ public partial class AppShell : Shell
         };
     }
 }
+

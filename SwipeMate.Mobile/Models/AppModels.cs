@@ -311,3 +311,4 @@ public sealed class AvailableSuggestionCountResponse
 {
     public int Count { get; set; }
 }
+

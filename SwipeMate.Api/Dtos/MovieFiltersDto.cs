@@ -7,3 +7,4 @@ public class MovieFiltersDto
     public int? YearFrom { get; set; }
     public int? YearTo { get; set; }
 }
+

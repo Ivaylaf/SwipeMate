@@ -38,25 +38,27 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Frame Margin="0,0,0,10" Padding="14" CornerRadius="12" BackgroundColor="#F9FAFB" BorderColor="#E5E7EB" HasShadow="False">
-                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                            <Border WidthRequest="48" HeightRequest="48" StrokeThickness="0" StrokeShape="RoundRectangle 24" BackgroundColor="#FCE7F3">
-                                                <Label Text="{Binding AvatarInitials}" TextColor="#DB2777" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
-                                            </Border>
-                                            <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                                <Label Text="{Binding UserName}" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
-                                                <Label Text="{Binding DisplayName}" FontSize="13" TextColor="#374151" />
-                                                <Label Text="{Binding Email}" FontSize="12" TextColor="#6B7280" />
-                                                <Label Text="{Binding RoleText, StringFormat='Роли: {0}'}" FontSize="12" TextColor="#6B7280" />
-                                                <Label Text="{Binding StatsText}" FontSize="12" TextColor="#6B7280" />
-                                                <Label Text="{Binding StatusText}" FontSize="12" FontAttributes="Bold" TextColor="#C026D3" />
-                                                <Label Text="{Binding BioPreview}" FontSize="12" TextColor="#374151" LineBreakMode="TailTruncation" MaxLines="2" />
-                                                <Label Text="{Binding BlockedReason}" FontSize="12" TextColor="#B91C1C" />
-                                            </VerticalStackLayout>
-                                            <VerticalStackLayout Grid.Column="2" Spacing="8" WidthRequest="122">
-                                                <Button Text="Детайли" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnUserDetailsClicked" />
-                                                <Button Text="{Binding ActionText}" BackgroundColor="#C026D3" TextColor="White" Clicked="OnBlockToggleClicked" />
-                                            </VerticalStackLayout>
-                                        </Grid>
+                                        <VerticalStackLayout Spacing="12">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                                <Border WidthRequest="52" HeightRequest="52" StrokeThickness="0" StrokeShape="RoundRectangle 26" BackgroundColor="#FCE7F3" VerticalOptions="Start">
+                                                    <Label Text="{Binding AvatarInitials}" TextColor="#DB2777" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                                    <Label Text="{Binding UserName}" FontSize="17" FontAttributes="Bold" TextColor="#111827" LineBreakMode="TailTruncation" MaxLines="1" />
+                                                    <Label Text="{Binding DisplayName}" FontSize="13" TextColor="#374151" LineBreakMode="TailTruncation" MaxLines="1" />
+                                                    <Label Text="{Binding Email}" FontSize="12" TextColor="#6B7280" LineBreakMode="TailTruncation" MaxLines="1" />
+                                                    <Label Text="{Binding RoleText, StringFormat='Роли: {0}'}" FontSize="12" TextColor="#6B7280" LineBreakMode="TailTruncation" MaxLines="1" />
+                                                    <Label Text="{Binding StatsText}" FontSize="12" TextColor="#6B7280" LineBreakMode="WordWrap" MaxLines="2" />
+                                                    <Label Text="{Binding StatusText}" FontSize="12" FontAttributes="Bold" TextColor="#C026D3" />
+                                                    <Label Text="{Binding BioPreview}" FontSize="12" TextColor="#374151" LineBreakMode="TailTruncation" MaxLines="2" />
+                                                    <Label Text="{Binding BlockedReason}" FontSize="12" TextColor="#B91C1C" LineBreakMode="TailTruncation" MaxLines="2" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                                <Button Text="Детайли" HeightRequest="46" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnUserDetailsClicked" />
+                                                <Button Grid.Column="1" Text="{Binding ActionText}" HeightRequest="46" BackgroundColor="#C026D3" TextColor="White" Clicked="OnBlockToggleClicked" />
+                                            </Grid>
+                                        </VerticalStackLayout>
                                     </Frame>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -74,18 +76,18 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Frame Margin="0,0,0,10" Padding="14" CornerRadius="12" BackgroundColor="#F9FAFB" BorderColor="#E5E7EB" HasShadow="False">
-                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <VerticalStackLayout Spacing="12">
                                             <VerticalStackLayout Spacing="4">
-                                                <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
+                                                <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold" TextColor="#111827" LineBreakMode="TailTruncation" MaxLines="1" />
                                                 <Label Text="{Binding Category}" FontSize="12" TextColor="#6B7280" />
                                                 <Label Text="{Binding Summary}" FontSize="12" TextColor="#374151" LineBreakMode="TailTruncation" MaxLines="2" />
                                                 <Label Text="{Binding StatusText}" FontSize="12" FontAttributes="Bold" TextColor="#C026D3" />
                                             </VerticalStackLayout>
-                                            <VerticalStackLayout Grid.Column="1" Spacing="8" WidthRequest="122">
-                                                <Button Text="Детайли" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnCatalogDetailsClicked" />
-                                                <Button Text="{Binding ActionText}" BackgroundColor="#111827" TextColor="White" Clicked="OnCatalogToggleClicked" />
-                                            </VerticalStackLayout>
-                                        </Grid>
+                                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                                <Button Text="Детайли" HeightRequest="46" BackgroundColor="White" BorderColor="#E5E7EB" BorderWidth="1" TextColor="#111827" Clicked="OnCatalogDetailsClicked" />
+                                                <Button Grid.Column="1" Text="{Binding ActionText}" HeightRequest="46" BackgroundColor="#111827" TextColor="White" Clicked="OnCatalogToggleClicked" />
+                                            </Grid>
+                                        </VerticalStackLayout>
                                     </Frame>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -104,3 +106,4 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+

@@ -1,4 +1,4 @@
-namespace SwipeMate.Mobile.Pages.Filters;
+﻿namespace SwipeMate.Mobile.Pages.Filters;
 
 public partial class RestaurantFiltersPage : ContentPage
 {

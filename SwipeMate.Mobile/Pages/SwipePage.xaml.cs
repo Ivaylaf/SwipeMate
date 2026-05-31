@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using SwipeMate.Mobile.Models;
 using SwipeMate.Mobile.Services;
 
@@ -21,7 +21,7 @@ public partial class SwipePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        SwipeTitleLabel.Text = _appState.CurrentCategory ?? "Избор";
+        SwipeTitleLabel.Text = _appState.CurrentCategory ?? "РР·Р±РѕСЂ";
         await LoadNextItemAsync();
     }
 
@@ -29,7 +29,7 @@ public partial class SwipePage : ContentPage
     {
         if (_appState.CurrentSessionId is null)
         {
-            await DisplayAlert("Липсва сесия", "Няма избрана активна сесия.", "OK");
+            await DisplayAlert("Р›РёРїСЃРІР° СЃРµСЃРёСЏ", "РќСЏРјР° РёР·Р±СЂР°РЅР° Р°РєС‚РёРІРЅР° СЃРµСЃРёСЏ.", "OK");
             await Shell.Current.GoToAsync("//Home");
             return;
         }
@@ -41,7 +41,7 @@ public partial class SwipePage : ContentPage
 
             if (_currentItem is null)
             {
-                await DisplayAlert("Готово", "Няма повече предложения в тази сесия. Ако всички участници са приключили, сесията ще се премести в историята.", "OK");
+                await DisplayAlert("Р“РѕС‚РѕРІРѕ", "РќСЏРјР° РїРѕРІРµС‡Рµ РїСЂРµРґР»РѕР¶РµРЅРёСЏ РІ С‚Р°Р·Рё СЃРµСЃРёСЏ. РђРєРѕ РІСЃРёС‡РєРё СѓС‡Р°СЃС‚РЅРёС†Рё СЃР° РїСЂРёРєР»СЋС‡РёР»Рё, СЃРµСЃРёСЏС‚Р° С‰Рµ СЃРµ РїСЂРµРјРµСЃС‚Рё РІ РёСЃС‚РѕСЂРёСЏС‚Р°.", "OK");
                 await Shell.Current.GoToAsync("//Home");
                 return;
             }
@@ -50,12 +50,12 @@ public partial class SwipePage : ContentPage
         }
         catch (Exception ex) when (IsInactiveSessionError(ex))
         {
-            await DisplayAlert("Сесията приключи", "Тази сесия вече не е активна. Ще те върна към началния екран.", "OK");
+            await DisplayAlert("РЎРµСЃРёСЏС‚Р° РїСЂРёРєР»СЋС‡Рё", "РўР°Р·Рё СЃРµСЃРёСЏ РІРµС‡Рµ РЅРµ Рµ Р°РєС‚РёРІРЅР°. Р©Рµ С‚Рµ РІСЉСЂРЅР° РєСЉРј РЅР°С‡Р°Р»РЅРёСЏ РµРєСЂР°РЅ.", "OK");
             await Shell.Current.GoToAsync("//Home");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Грешка", ex.Message, "OK");
+            await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
         }
         finally
         {
@@ -71,17 +71,17 @@ public partial class SwipePage : ContentPage
         ItemImage.Source = string.IsNullOrWhiteSpace(item.ImageUrl)
             ? "dotnet_bot.png"
             : ImageSource.FromUri(new Uri(item.ImageUrl));
-        SwipeProgressLabel.Text = $"Прегледани карти: {_swipeCount}";
+        SwipeProgressLabel.Text = $"РџСЂРµРіР»РµРґР°РЅРё РєР°СЂС‚Рё: {_swipeCount}";
     }
 
     private string BuildMetaText(SessionItemSummary item)
     {
         return item.Category switch
         {
-            "Restaurant" => $"{GetText(item.Meta, "cuisine")} • {GetText(item.Meta, "district")} • оценка {GetNumber(item.Meta, "rating")}",
-            "Recipe" => $"{GetText(item.Meta, "cuisine")} • {GetText(item.Meta, "foodType")} • {GetNumber(item.Meta, "prepTime")} мин",
-            "BoardGame" => $"{GetText(item.Meta, "gameType")} • {GetNumber(item.Meta, "durationMin")}-{GetNumber(item.Meta, "durationMax")} мин • оценка {GetNumber(item.Meta, "rating")}",
-            _ => $"{JoinArray(item.Meta, "genres")} • {GetNumber(item.Meta, "year")} • оценка {GetNumber(item.Meta, "rating")}"
+            "Restaurant" => $"{GetText(item.Meta, "cuisine")} вЂў {GetText(item.Meta, "district")} вЂў РѕС†РµРЅРєР° {GetNumber(item.Meta, "rating")}",
+            "Recipe" => $"{GetText(item.Meta, "cuisine")} вЂў {GetText(item.Meta, "foodType")} вЂў {GetNumber(item.Meta, "prepTime")} РјРёРЅ",
+            "BoardGame" => $"{GetText(item.Meta, "gameType")} вЂў {GetNumber(item.Meta, "durationMin")}-{GetNumber(item.Meta, "durationMax")} РјРёРЅ вЂў РѕС†РµРЅРєР° {GetNumber(item.Meta, "rating")}",
+            _ => $"{JoinArray(item.Meta, "genres")} вЂў {GetNumber(item.Meta, "year")} вЂў РѕС†РµРЅРєР° {GetNumber(item.Meta, "rating")}"
         };
     }
 
@@ -101,20 +101,20 @@ public partial class SwipePage : ContentPage
             if (isYes && response.MatchFound)
             {
                 var matchedUsers = response.MatchedUsers.Count == 0
-                    ? "вашата група"
+                    ? "РІР°С€Р°С‚Р° РіСЂСѓРїР°"
                     : string.Join(", ", response.MatchedUsers);
 
                 if (response.FullGroupMatch)
                 {
                     _appState.CurrentMatch = _currentItem;
-                    _appState.CurrentMatchMessage = "Всички се съгласихте с този избор.";
+                    _appState.CurrentMatchMessage = "Р’СЃРёС‡РєРё СЃРµ СЃСЉРіР»Р°СЃРёС…С‚Рµ СЃ С‚РѕР·Рё РёР·Р±РѕСЂ.";
                     _appState.CurrentMatchedUsers = response.MatchedUsers.ToList();
 
                     var shouldContinue = await DisplayAlert(
-                        "Пълно съвпадение",
-                        $"Всички участници съвпаднаха на този избор: {matchedUsers}. Искаш ли да продължиш с още предложения?",
-                        "Продължи",
-                        "Спри");
+                        "РџСЉР»РЅРѕ СЃСЉРІРїР°РґРµРЅРёРµ",
+                        $"Р’СЃРёС‡РєРё СѓС‡Р°СЃС‚РЅРёС†Рё СЃСЉРІРїР°РґРЅР°С…Р° РЅР° С‚РѕР·Рё РёР·Р±РѕСЂ: {matchedUsers}. РСЃРєР°С€ Р»Рё РґР° РїСЂРѕРґСЉР»Р¶РёС€ СЃ РѕС‰Рµ РїСЂРµРґР»РѕР¶РµРЅРёСЏ?",
+                        "РџСЂРѕРґСЉР»Р¶Рё",
+                        "РЎРїСЂРё");
 
                     if (!shouldContinue)
                     {
@@ -125,8 +125,8 @@ public partial class SwipePage : ContentPage
                 else
                 {
                     await DisplayAlert(
-                        "Частично съвпадение",
-                        $"Текущото съвпадение е между: {matchedUsers}. Сесията ще продължи, докато всички се съгласят или предложенията свършат.",
+                        "Р§Р°СЃС‚РёС‡РЅРѕ СЃСЉРІРїР°РґРµРЅРёРµ",
+                        $"РўРµРєСѓС‰РѕС‚Рѕ СЃСЉРІРїР°РґРµРЅРёРµ Рµ РјРµР¶РґСѓ: {matchedUsers}. РЎРµСЃРёСЏС‚Р° С‰Рµ РїСЂРѕРґСЉР»Р¶Рё, РґРѕРєР°С‚Рѕ РІСЃРёС‡РєРё СЃРµ СЃСЉРіР»Р°СЃСЏС‚ РёР»Рё РїСЂРµРґР»РѕР¶РµРЅРёСЏС‚Р° СЃРІСЉСЂС€Р°С‚.",
                         "OK");
                     _appState.CurrentMatchedUsers = response.MatchedUsers.ToList();
                 }
@@ -136,12 +136,12 @@ public partial class SwipePage : ContentPage
         }
         catch (Exception ex) when (IsInactiveSessionError(ex))
         {
-            await DisplayAlert("Сесията приключи", "Тази сесия вече е приключила или затворена. Ще те върна към началния екран.", "OK");
+            await DisplayAlert("РЎРµСЃРёСЏС‚Р° РїСЂРёРєР»СЋС‡Рё", "РўР°Р·Рё СЃРµСЃРёСЏ РІРµС‡Рµ Рµ РїСЂРёРєР»СЋС‡РёР»Р° РёР»Рё Р·Р°С‚РІРѕСЂРµРЅР°. Р©Рµ С‚Рµ РІСЉСЂРЅР° РєСЉРј РЅР°С‡Р°Р»РЅРёСЏ РµРєСЂР°РЅ.", "OK");
             await Shell.Current.GoToAsync("//Home");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Грешка", ex.Message, "OK");
+            await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
         }
         finally
         {
@@ -164,10 +164,10 @@ public partial class SwipePage : ContentPage
         if (_appState.CurrentSessionId is Guid sessionId && _appState.CurrentSessionIsOwner)
         {
             var closeSession = await DisplayAlert(
-                "Изход от сесия",
-                "Искаш ли да приключиш тази сесия? Ако я приключиш, тя ще се премести в историята и чакащите покани ще бъдат отменени.",
-                "Приключи",
-                "Само излез");
+                "РР·С…РѕРґ РѕС‚ СЃРµСЃРёСЏ",
+                "РСЃРєР°С€ Р»Рё РґР° РїСЂРёРєР»СЋС‡РёС€ С‚Р°Р·Рё СЃРµСЃРёСЏ? РђРєРѕ СЏ РїСЂРёРєР»СЋС‡РёС€, С‚СЏ С‰Рµ СЃРµ РїСЂРµРјРµСЃС‚Рё РІ РёСЃС‚РѕСЂРёСЏС‚Р° Рё С‡Р°РєР°С‰РёС‚Рµ РїРѕРєР°РЅРё С‰Рµ Р±СЉРґР°С‚ РѕС‚РјРµРЅРµРЅРё.",
+                "РџСЂРёРєР»СЋС‡Рё",
+                "РЎР°РјРѕ РёР·Р»РµР·");
 
             if (closeSession)
             {
@@ -177,7 +177,7 @@ public partial class SwipePage : ContentPage
                 }
                 catch (Exception ex)
                 {
-                    await DisplayAlert("Грешка", ex.Message, "OK");
+                    await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
                     return;
                 }
             }
@@ -191,7 +191,7 @@ public partial class SwipePage : ContentPage
         var message = ex.Message ?? string.Empty;
         return message.Contains("not active", StringComparison.OrdinalIgnoreCase)
                || message.Contains("not active yet", StringComparison.OrdinalIgnoreCase)
-               || message.Contains("не е актив", StringComparison.OrdinalIgnoreCase);
+               || message.Contains("РЅРµ Рµ Р°РєС‚РёРІ", StringComparison.OrdinalIgnoreCase);
     }
     private static string GetText(JsonElement meta, string property)
         => meta.ValueKind == JsonValueKind.Object && meta.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String

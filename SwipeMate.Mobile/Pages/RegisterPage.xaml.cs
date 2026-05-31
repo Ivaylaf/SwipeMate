@@ -96,3 +96,4 @@ public partial class RegisterPage : ContentPage
             && password.Any(ch => !char.IsLetterOrDigit(ch));
     }
 }
+

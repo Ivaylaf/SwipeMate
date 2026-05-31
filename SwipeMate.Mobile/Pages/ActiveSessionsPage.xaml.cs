@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Models;
+﻿using SwipeMate.Mobile.Models;
 using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
@@ -46,11 +46,11 @@ public partial class ActiveSessionsPage : ContentPage
 
             SessionsCollectionView.ItemsSource = _currentSessions;
             NoSessionsLabel.IsVisible = _currentSessions.Count == 0;
-            LastRefreshLabel.Text = $"Последно обновяване: {DateTime.Now:HH:mm:ss}";
+            LastRefreshLabel.Text = $"РџРѕСЃР»РµРґРЅРѕ РѕР±РЅРѕРІСЏРІР°РЅРµ: {DateTime.Now:HH:mm:ss}";
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Грешка", ex.Message, "OK");
+            await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
         }
         finally
         {
@@ -70,11 +70,11 @@ public partial class ActiveSessionsPage : ContentPage
         {
             await _apiService.RespondToSessionInvitationAsync(invitation.Id, true);
             await LoadSessionsAsync();
-            await DisplayAlert("Приета покана", "Поканата беше приета. Отвори „Моите филтри“, за да добавиш предпочитанията си преди гласуването.", "OK");
+            await DisplayAlert("РџСЂРёРµС‚Р° РїРѕРєР°РЅР°", "РџРѕРєР°РЅР°С‚Р° Р±РµС€Рµ РїСЂРёРµС‚Р°. РћС‚РІРѕСЂРё вЂћРњРѕРёС‚Рµ С„РёР»С‚СЂРёвЂњ, Р·Р° РґР° РґРѕР±Р°РІРёС€ РїСЂРµРґРїРѕС‡РёС‚Р°РЅРёСЏС‚Р° СЃРё РїСЂРµРґРё РіР»Р°СЃСѓРІР°РЅРµС‚Рѕ.", "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Грешка", ex.Message, "OK");
+            await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
         }
     }
 
@@ -92,7 +92,7 @@ public partial class ActiveSessionsPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Грешка", ex.Message, "OK");
+            await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
         }
     }
 
@@ -105,7 +105,7 @@ public partial class ActiveSessionsPage : ContentPage
 
         if (!string.Equals(session.Status, "Active", StringComparison.OrdinalIgnoreCase))
         {
-            await DisplayAlert("Сесията още не е готова", "Тази сесия още не е активна. Изчакай поканите да бъдат приети или първо запази предпочитанията си чрез „Моите филтри“.", "OK");
+            await DisplayAlert("РЎРµСЃРёСЏС‚Р° РѕС‰Рµ РЅРµ Рµ РіРѕС‚РѕРІР°", "РўР°Р·Рё СЃРµСЃРёСЏ РѕС‰Рµ РЅРµ Рµ Р°РєС‚РёРІРЅР°. РР·С‡Р°РєР°Р№ РїРѕРєР°РЅРёС‚Рµ РґР° Р±СЉРґР°С‚ РїСЂРёРµС‚Рё РёР»Рё РїСЉСЂРІРѕ Р·Р°РїР°Р·Рё РїСЂРµРґРїРѕС‡РёС‚Р°РЅРёСЏС‚Р° СЃРё С‡СЂРµР· вЂћРњРѕРёС‚Рµ С„РёР»С‚СЂРёвЂњ.", "OK");
             return;
         }
 
@@ -135,10 +135,10 @@ public partial class ActiveSessionsPage : ContentPage
         }
 
         var confirm = await DisplayAlert(
-            "Приключване на сесия",
-            "Искаш ли да приключиш тази сесия? Тя ще се премести в историята и чакащите покани ще бъдат отменени.",
-            "Приключи",
-            "Отказ");
+            "РџСЂРёРєР»СЋС‡РІР°РЅРµ РЅР° СЃРµСЃРёСЏ",
+            "РСЃРєР°С€ Р»Рё РґР° РїСЂРёРєР»СЋС‡РёС€ С‚Р°Р·Рё СЃРµСЃРёСЏ? РўСЏ С‰Рµ СЃРµ РїСЂРµРјРµСЃС‚Рё РІ РёСЃС‚РѕСЂРёСЏС‚Р° Рё С‡Р°РєР°С‰РёС‚Рµ РїРѕРєР°РЅРё С‰Рµ Р±СЉРґР°С‚ РѕС‚РјРµРЅРµРЅРё.",
+            "РџСЂРёРєР»СЋС‡Рё",
+            "РћС‚РєР°Р·");
 
         if (!confirm)
         {
@@ -152,10 +152,11 @@ public partial class ActiveSessionsPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Грешка", ex.Message, "OK");
+            await DisplayAlert("Р“СЂРµС€РєР°", ex.Message, "OK");
         }
     }
 
     private async void OnRefreshClicked(object sender, EventArgs e) => await LoadSessionsAsync();
     private async void OnBackClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync("..");
 }
+

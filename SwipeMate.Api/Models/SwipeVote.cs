@@ -20,3 +20,4 @@ public class SwipeVote
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 }
+

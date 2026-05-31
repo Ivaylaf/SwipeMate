@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
@@ -25,7 +25,7 @@ public partial class MatchPage : ContentPage
 
         MatchTitleLabel.Text = match.Title;
         MatchMessageLabel.Text = string.IsNullOrWhiteSpace(_appState.CurrentMatchMessage)
-            ? "Всички се съгласихте с този избор."
+            ? "Р’СЃРёС‡РєРё СЃРµ СЃСЉРіР»Р°СЃРёС…С‚Рµ СЃ С‚РѕР·Рё РёР·Р±РѕСЂ."
             : _appState.CurrentMatchMessage;
         MatchDescriptionLabel.Text = GetText(match.Meta, "description");
         MatchMetaLabel.Text = BuildMetaText(match.Meta, match.Category);
@@ -86,10 +86,10 @@ public partial class MatchPage : ContentPage
     {
         return category switch
         {
-            "Restaurant" => $"★ {GetNumber(meta, "rating")}  •  {GetTextValue(meta, "priceRange")}  •  {GetTextValue(meta, "district")}, {GetTextValue(meta, "city")}",
-            "Recipe" => $"★ {GetNumber(meta, "rating")}  •  {GetTextValue(meta, "cuisine")}  •  {GetNumber(meta, "prepTime")} мин",
-            "BoardGame" => $"★ {GetNumber(meta, "rating")}  •  {GetNumber(meta, "playersMin")}-{GetNumber(meta, "playersMax")} играчи",
-            _ => $"★ {GetNumber(meta, "rating")}  •  {GetNumber(meta, "year")}  •  {JoinArray(meta, "genres")}"
+            "Restaurant" => $"в… {GetNumber(meta, "rating")}  вЂў  {GetTextValue(meta, "priceRange")}  вЂў  {GetTextValue(meta, "district")}, {GetTextValue(meta, "city")}",
+            "Recipe" => $"в… {GetNumber(meta, "rating")}  вЂў  {GetTextValue(meta, "cuisine")}  вЂў  {GetNumber(meta, "prepTime")} РјРёРЅ",
+            "BoardGame" => $"в… {GetNumber(meta, "rating")}  вЂў  {GetNumber(meta, "playersMin")}-{GetNumber(meta, "playersMax")} РёРіСЂР°С‡Рё",
+            _ => $"в… {GetNumber(meta, "rating")}  вЂў  {GetNumber(meta, "year")}  вЂў  {JoinArray(meta, "genres")}"
         };
     }
 
@@ -136,3 +136,4 @@ public partial class MatchPage : ContentPage
         public string Initials => string.Concat(Name.Split([' ', '_', '-'], StringSplitOptions.RemoveEmptyEntries).Select(x => x[0]).Take(2)).ToUpperInvariant();
     }
 }
+

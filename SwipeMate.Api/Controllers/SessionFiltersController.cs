@@ -24,11 +24,9 @@ public class SessionFiltersController : ControllerBase
         User.FindFirstValue(ClaimTypes.NameIdentifier)
         ?? throw new Exception("No user id claim");
 
-    // PUT: /api/sessions/{sessionId}/filters/movies
     [HttpPut("movies")]
     public async Task<IActionResult> UpsertMyMovieFilters(Guid sessionId, UpdateMovieFiltersDto dto)
     {
-        // по желание: провери дали session съществува
         var exists = await _db.MatchSessions.AnyAsync(s => s.Id == sessionId);
         if (!exists) return NotFound(new { message = "Session not found" });
 
@@ -51,7 +49,6 @@ public class SessionFiltersController : ControllerBase
         entity.YearFrom = dto.YearFrom;
         entity.YearTo = dto.YearTo;
 
-        // Съхраняваме жанровете като CSV (Action,Comedy)
         entity.GenresCsv = dto.Genres is { Count: > 0 }
             ? string.Join(",", dto.Genres.Select(g => g.Trim()).Where(g => g.Length > 0))
             : null;
@@ -60,7 +57,6 @@ public class SessionFiltersController : ControllerBase
         return Ok(new { message = "Saved" });
     }
 
-    // GET: /api/sessions/{sessionId}/filters/movies/me
     [HttpGet("movies/me")]
     public async Task<IActionResult> GetMyMovieFilters(Guid sessionId)
     {
@@ -72,14 +68,12 @@ public class SessionFiltersController : ControllerBase
 
         if (entity == null)
         {
-            return Ok(new MovieFiltersDto()); // празни филтри
+            return Ok(new MovieFiltersDto());
         }
 
         return Ok(ToDto(entity));
     }
 
-    // GET: /api/sessions/{sessionId}/filters/movies/merged
-    // "обединение" = genres union, minRating = MIN, yearFrom = MIN, yearTo = MAX
     [HttpGet("movies/merged")]
     public async Task<IActionResult> GetMergedMovieFilters(Guid sessionId)
     {
@@ -143,4 +137,5 @@ public class SessionFiltersController : ControllerBase
         };
     }
 }
+
 

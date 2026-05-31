@@ -6,3 +6,4 @@ public class CreateSessionDto
     public List<string> FriendUserNames { get; set; } = new();
 }
 
+
