@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using SwipeMate.Mobile.Models;
 
@@ -24,7 +24,7 @@ public sealed class AppState
     public string? CurrentMatchMessage { get; set; }
     public List<string> CurrentMatchedUsers { get; set; } = [];
 
-    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(Token);
+    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(Token) && User is not null;
 
     public void UpdateProfile(string? displayName, string? email)
     {
@@ -54,14 +54,30 @@ public sealed class AppState
 
             var storedToken = await SecureStorage.GetAsync("jwt");
 
+            if (!string.IsNullOrWhiteSpace(storedToken) && IsJwtExpired(storedToken))
+            {
+                SecureStorage.Remove("jwt");
+                storedToken = null;
+            }
+
             if (string.IsNullOrWhiteSpace(Token))
             {
-                Token = storedToken;
-                _apiClient.SetBearer(Token);
+                var parsedUser = string.IsNullOrWhiteSpace(storedToken)
+                    ? null
+                    : ParseUserFromJwt(storedToken);
 
-                if (!string.IsNullOrWhiteSpace(Token))
+                if (parsedUser is null)
                 {
-                    User = ParseUserFromJwt(Token);
+                    Token = null;
+                    User = null;
+                    _apiClient.SetBearer(null);
+                    SecureStorage.Remove("jwt");
+                }
+                else
+                {
+                    Token = storedToken;
+                    User = parsedUser;
+                    _apiClient.SetBearer(Token);
                 }
             }
 
@@ -100,20 +116,11 @@ public sealed class AppState
     {
         try
         {
-            var parts = token.Split('.');
-            if (parts.Length < 2)
+            var root = ReadJwtPayload(token);
+            if (IsJwtExpired(root))
             {
                 return null;
             }
-
-            var payload = parts[1]
-                .Replace('-', '+')
-                .Replace('_', '/');
-
-            payload = payload.PadRight(payload.Length + ((4 - payload.Length % 4) % 4), '=');
-            var json = Encoding.UTF8.GetString(Convert.FromBase64String(payload));
-            using var document = JsonDocument.Parse(json);
-            var root = document.RootElement;
 
             var roles = new List<string>();
             AppendRoles(root, roles, "role");
@@ -138,6 +145,47 @@ public sealed class AppState
         {
             return null;
         }
+    }
+
+    private static bool IsJwtExpired(string token)
+    {
+        try
+        {
+            return IsJwtExpired(ReadJwtPayload(token));
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
+    private static bool IsJwtExpired(JsonElement root)
+    {
+        if (!root.TryGetProperty("exp", out var expElement) || !expElement.TryGetInt64(out var expSeconds))
+        {
+            return false;
+        }
+
+        var expiresAt = DateTimeOffset.FromUnixTimeSeconds(expSeconds);
+        return expiresAt <= DateTimeOffset.UtcNow.AddMinutes(1);
+    }
+
+    private static JsonElement ReadJwtPayload(string token)
+    {
+        var parts = token.Split('.');
+        if (parts.Length < 2)
+        {
+            throw new FormatException("Invalid JWT token.");
+        }
+
+        var payload = parts[1]
+            .Replace('-', '+')
+            .Replace('_', '/');
+
+        payload = payload.PadRight(payload.Length + ((4 - payload.Length % 4) % 4), '=');
+        var json = Encoding.UTF8.GetString(Convert.FromBase64String(payload));
+        using var document = JsonDocument.Parse(json);
+        return document.RootElement.Clone();
     }
 
     private static void AppendRoles(JsonElement root, List<string> roles, string propertyName)

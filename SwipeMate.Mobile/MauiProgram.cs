@@ -1,4 +1,9 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+#if ANDROID
+using Android.Content.Res;
+using Android.Widget;
+using Microsoft.Maui.Handlers;
+#endif
 using SwipeMate.Mobile.Pages;
 using SwipeMate.Mobile.Services;
 
@@ -16,6 +21,10 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+
+#if ANDROID
+        ApplySwipeMateNativeColors();
+#endif
 
 #if DEBUG
         builder.Logging.AddDebug();
@@ -46,4 +55,47 @@ public static class MauiProgram
 
         return builder.Build();
     }
+
+#if ANDROID
+    private static void ApplySwipeMateNativeColors()
+    {
+        var textColor = Android.Graphics.Color.Rgb(17, 24, 39);
+        var hintColor = Android.Graphics.Color.Rgb(107, 114, 128);
+        var accentColor = Android.Graphics.Color.Rgb(109, 40, 217);
+        var trackColor = Android.Graphics.Color.Rgb(209, 213, 219);
+
+        EntryHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
+        {
+            handler.PlatformView.SetTextColor(textColor);
+            handler.PlatformView.SetHintTextColor(hintColor);
+            handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(accentColor);
+        });
+
+        EditorHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
+        {
+            handler.PlatformView.SetTextColor(textColor);
+            handler.PlatformView.SetHintTextColor(hintColor);
+            handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(accentColor);
+        });
+
+        PickerHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
+        {
+            handler.PlatformView.SetTextColor(textColor);
+            handler.PlatformView.SetHintTextColor(hintColor);
+            handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(accentColor);
+        });
+
+        CheckBoxHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
+        {
+            handler.PlatformView.ButtonTintList = ColorStateList.ValueOf(accentColor);
+        });
+
+        SliderHandler.Mapper.AppendToMapping("SwipeMateNativeColors", (handler, view) =>
+        {
+            handler.PlatformView.ProgressTintList = ColorStateList.ValueOf(accentColor);
+            handler.PlatformView.ThumbTintList = ColorStateList.ValueOf(accentColor);
+            handler.PlatformView.ProgressBackgroundTintList = ColorStateList.ValueOf(trackColor);
+        });
+    }
+#endif
 }

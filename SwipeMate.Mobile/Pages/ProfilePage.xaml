@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="SwipeMate.Mobile.Pages.ProfilePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -45,13 +45,15 @@
             <Frame Padding="22" CornerRadius="16" BackgroundColor="White" BorderColor="#E5E7EB" HasShadow="False">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="Редакция на профила" FontSize="16" FontAttributes="Bold" TextColor="#111827" />
-                    <Entry x:Name="DisplayNameEntry" Placeholder="Показвано име" BackgroundColor="#F9FAFB" />
-                    <Editor x:Name="BioEditor" Placeholder="Кратко описание" AutoSize="TextChanges" HeightRequest="88" BackgroundColor="#F9FAFB" />
+                    <Entry x:Name="DisplayNameEntry" Placeholder="Показвано име" BackgroundColor="#F9FAFB" TextColor="#111827" PlaceholderColor="#9CA3AF" />
+                    <Editor x:Name="BioEditor" Placeholder="Кратко описание" AutoSize="TextChanges" HeightRequest="88" BackgroundColor="#F9FAFB" TextColor="#111827" PlaceholderColor="#9CA3AF" />
                     <Label Text="Профилна снимка" FontAttributes="Bold" TextColor="#111827" />
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                         <Entry x:Name="ProfileImageUrlEntry"
                                Placeholder="https://.../avatar.jpg"
                                BackgroundColor="#F9FAFB"
+                               TextColor="#111827"
+                               PlaceholderColor="#9CA3AF"
                                Keyboard="Url"
                                TextChanged="OnProfileImageUrlChanged" />
                         <Button Grid.Column="1"
@@ -142,3 +144,6 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+
+
+

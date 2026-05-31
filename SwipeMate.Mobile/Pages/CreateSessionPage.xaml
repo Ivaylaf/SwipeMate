@@ -13,7 +13,7 @@
     </ContentPage.Background>
 
     <ScrollView>
-        <VerticalStackLayout Padding="24,24,24,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
+        <VerticalStackLayout Padding="16,22,16,28" Spacing="18" MaximumWidthRequest="760" HorizontalOptions="Center">
             <Grid ColumnDefinitions="Auto,*">
                 <Button Text="Назад" BackgroundColor="White" TextColor="#111827" CornerRadius="18" Clicked="OnBackClicked" />
                 <Label x:Name="PageTitleLabel" Grid.Column="1" Text="Създай сесия за съвпадение" FontSize="22" FontAttributes="Bold" TextColor="#111827" VerticalTextAlignment="Center" />
@@ -76,11 +76,11 @@
                     <Label Text="Филтри" FontSize="18" FontAttributes="Bold" TextColor="#111827" />
 
                     <VerticalStackLayout x:Name="MovieFiltersLayout" Spacing="14">
-                        <Label Text="Жанрове" FontAttributes="Bold" />
+                        <Label Text="Жанрове" FontAttributes="Bold" TextColor="#111827" />
                         <FlexLayout x:Name="MovieGenresFlexLayout" Wrap="Wrap" Direction="Row" />
-                        <Label x:Name="MovieMinRatingLabel" Text="Минимална оценка: 0.0+" />
+                        <Label x:Name="MovieMinRatingLabel" Text="Минимална оценка: 0.0+" TextColor="#111827" />
                         <Slider x:Name="MovieMinRatingSlider" Minimum="0" Maximum="10" ValueChanged="OnMovieRatingValueChanged" DragCompleted="OnMovieRatingChanged" />
-                        <Label x:Name="MovieYearLabel" Text="Година на издаване: 1990 - 2024" />
+                        <Label x:Name="MovieYearLabel" Text="Година на издаване: 1990 - 2024" TextColor="#111827" />
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <VerticalStackLayout>
                                 <Label Text="От" FontSize="12" TextColor="#6B7280" />
@@ -94,43 +94,43 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="RestaurantFiltersLayout" Spacing="14" IsVisible="False">
-                        <Label Text="Град" FontAttributes="Bold" />
-                        <Picker x:Name="RestaurantCityPicker" SelectedIndexChanged="OnRestaurantCityChanged" />
-                        <Label Text="Квартал" FontAttributes="Bold" />
-                        <Picker x:Name="RestaurantDistrictPicker" />
-                        <Label Text="Кухня" FontAttributes="Bold" />
-                        <Picker x:Name="RestaurantCuisinePicker" />
-                        <Label x:Name="RestaurantMinRatingLabel" Text="Минимална оценка: 0.0+" />
+                        <Label Text="Град" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RestaurantCityPicker" SelectedIndexChanged="OnRestaurantCityChanged" TextColor="#111827" TitleColor="#6B7280" BackgroundColor="#F9FAFB" />
+                        <Label Text="Квартал" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RestaurantDistrictPicker" TextColor="#111827" TitleColor="#6B7280" BackgroundColor="#F9FAFB" />
+                        <Label Text="Кухня" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RestaurantCuisinePicker" TextColor="#111827" TitleColor="#6B7280" BackgroundColor="#F9FAFB" />
+                        <Label x:Name="RestaurantMinRatingLabel" Text="Минимална оценка: 0.0+" TextColor="#111827" />
                         <Slider x:Name="RestaurantMinRatingSlider" Minimum="0" Maximum="10" ValueChanged="OnRestaurantRatingValueChanged" />
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="RecipeFiltersLayout" Spacing="14" IsVisible="False">
-                        <Label Text="Кухня" FontAttributes="Bold" />
+                        <Label Text="Кухня" FontAttributes="Bold" TextColor="#111827" />
                         <FlexLayout x:Name="RecipeCuisinesFlexLayout" Wrap="Wrap" Direction="Row" />
-                        <Label Text="Тип храна" FontAttributes="Bold" />
-                        <Picker x:Name="RecipeFoodTypePicker" />
-                        <Label Text="Съставки" FontAttributes="Bold" />
+                        <Label Text="Тип храна" FontAttributes="Bold" TextColor="#111827" />
+                        <Picker x:Name="RecipeFoodTypePicker" TextColor="#111827" TitleColor="#6B7280" BackgroundColor="#F9FAFB" />
+                        <Label Text="Съставки" FontAttributes="Bold" TextColor="#111827" />
                         <FlexLayout x:Name="RecipeIngredientsFlexLayout" Wrap="Wrap" Direction="Row" />
-                        <Label x:Name="RecipeComplexityLabel" Text="Максимална сложност: 5" />
+                        <Label x:Name="RecipeComplexityLabel" Text="Максимална сложност: 5" TextColor="#111827" />
                         <Slider x:Name="RecipeComplexitySlider" Minimum="1" Maximum="5" ValueChanged="OnRecipeComplexityValueChanged" />
-                        <Label x:Name="RecipeMinRatingLabel" Text="Минимална оценка: 0.0+" />
+                        <Label x:Name="RecipeMinRatingLabel" Text="Минимална оценка: 0.0+" TextColor="#111827" />
                         <Slider x:Name="RecipeMinRatingSlider" Minimum="0" Maximum="10" ValueChanged="OnRecipeRatingValueChanged" />
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="GameFiltersLayout" Spacing="14" IsVisible="False">
-                        <Label Text="Тип игра" FontAttributes="Bold" />
+                        <Label Text="Тип игра" FontAttributes="Bold" TextColor="#111827" />
                         <FlexLayout x:Name="GameTypesFlexLayout" Wrap="Wrap" Direction="Row" />
-                        <Label x:Name="GamePlayersLabel" Text="Играчи: 1 - 8" />
+                        <Label x:Name="GamePlayersLabel" Text="Играчи: 1 - 8" TextColor="#111827" />
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <Slider x:Name="GamePlayersMinSlider" Minimum="1" Maximum="8" ValueChanged="OnGamePlayersValueChanged" />
                             <Slider x:Name="GamePlayersMaxSlider" Grid.Column="1" Minimum="1" Maximum="8" ValueChanged="OnGamePlayersValueChanged" />
                         </Grid>
-                        <Label x:Name="GameDurationLabel" Text="Продължителност: 15 - 180 мин" />
+                        <Label x:Name="GameDurationLabel" Text="Продължителност: 15 - 180 мин" TextColor="#111827" />
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                             <Slider x:Name="GameDurationMinSlider" Minimum="15" Maximum="180" ValueChanged="OnGameDurationValueChanged" />
                             <Slider x:Name="GameDurationMaxSlider" Grid.Column="1" Minimum="15" Maximum="180" ValueChanged="OnGameDurationValueChanged" />
                         </Grid>
-                        <Label x:Name="GameMinRatingLabel" Text="Минимална оценка: 0.0+" />
+                        <Label x:Name="GameMinRatingLabel" Text="Минимална оценка: 0.0+" TextColor="#111827" />
                         <Slider x:Name="GameMinRatingSlider" Minimum="0" Maximum="10" ValueChanged="OnGameRatingValueChanged" />
                     </VerticalStackLayout>
 
@@ -143,5 +143,6 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
+
 
 
