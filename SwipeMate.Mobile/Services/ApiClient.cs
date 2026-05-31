@@ -80,9 +80,9 @@ public class ApiClient
     private static string GetDefaultBaseUrl()
     {
 #if ANDROID
-        return "http://10.0.2.2:5274";
+        return "https://swipemate-api.onrender.com";
 #else
-        return "http://localhost:5274";
+        return "https://swipemate-api.onrender.com";
 #endif
     }
 
