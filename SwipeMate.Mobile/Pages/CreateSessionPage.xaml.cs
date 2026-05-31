@@ -224,31 +224,46 @@ public partial class CreateSessionPage : ContentPage
 
         foreach (var value in values.Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x))
         {
-            var checkBox = new CheckBox
-            {
-                BindingContext = value,
-                VerticalOptions = LayoutOptions.Center
-            };
-            checkBox.CheckedChanged += handler;
-
-            var label = new Label
+            var chip = new Button
             {
                 Text = value,
-                TextColor = Color.FromArgb("#111827"),
-                VerticalTextAlignment = TextAlignment.Center
-            };
-
-            var stack = new HorizontalStackLayout
-            {
-                Spacing = 4,
-                WidthRequest = 132,
+                BindingContext = value,
                 Margin = new Thickness(0, 0, 8, 8),
-                Children = { checkBox, label }
+                Padding = new Thickness(14, 8),
+                CornerRadius = 18,
+                FontSize = 13,
+                MinimumHeightRequest = 38,
+                WidthRequest = DeviceInfo.Idiom == DeviceIdiom.Phone ? 138 : 150
             };
 
-            layout.Children.Add(stack);
+            ApplyChipState(chip, isSelected: false);
+            chip.Clicked += (_, _) =>
+            {
+                var isSelected = selected.Contains(value);
+                if (isSelected)
+                {
+                    selected.Remove(value);
+                }
+                else
+                {
+                    selected.Add(value);
+                }
+
+                ApplyChipState(chip, !isSelected);
+            };
+
+            layout.Children.Add(chip);
         }
     }
+
+    private static void ApplyChipState(Button chip, bool isSelected)
+    {
+        chip.TextColor = isSelected ? Colors.White : Color.FromArgb("#4C1D95");
+        chip.BackgroundColor = isSelected ? Color.FromArgb("#6D28D9") : Color.FromArgb("#F5F3FF");
+        chip.BorderColor = isSelected ? Color.FromArgb("#6D28D9") : Color.FromArgb("#DDD6FE");
+        chip.BorderWidth = 1;
+    }
+
 
     private static List<string> WithAll(IEnumerable<string> values)
         => ["Всички", .. values.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x)];

@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Services;
+﻿using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile;
 
@@ -10,6 +10,7 @@ public partial class App : Application
     public App(AppShell shell, AppState appState)
     {
         InitializeComponent();
+        UserAppTheme = AppTheme.Light;
         _shell = shell;
         _appState = appState;
     }
@@ -38,3 +39,4 @@ public partial class App : Application
         });
     }
 }
+

@@ -23,7 +23,7 @@
 		<RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>
 
 		<!-- Display name -->
-		<ApplicationTitle>SwipeMate.Mobile</ApplicationTitle>
+		<ApplicationTitle>SwipeMate</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.swipemate.mobile</ApplicationId>
@@ -45,7 +45,7 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#D946EF" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -131,3 +131,4 @@
 	</Target>
 
 </Project>
+

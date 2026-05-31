@@ -1,4 +1,4 @@
-using SwipeMate.Mobile.Models;
+﻿using SwipeMate.Mobile.Models;
 using SwipeMate.Mobile.Services;
 
 namespace SwipeMate.Mobile.Pages;
