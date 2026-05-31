@@ -34,3 +34,5 @@ SwipeMate.Api/appsettings.Development.json
 
 # Hosting temporary output
 .buildcheck/
+# Local handoff archives
+*.zip
